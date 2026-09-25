@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#18181b" />
+      <stop offset="100%" stop-color="#09090b" />
+    </linearGradient>
+
+    <!-- Emerald Brand Gradient -->
+    <linearGradient id="brand-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34d399" />
+      <stop offset="50%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+
+    <!-- Subtle Outer Border Glow -->
+    <linearGradient id="border-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.8" />
+      <stop offset="50%" stop-color="#6366f1" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#10b981" stop-opacity="0.2" />
+    </linearGradient>
+
+    <!-- Glow Filter -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="12" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Container Base with Smooth Squircle Corners -->
+  <rect x="16" y="16" width="480" height="480" rx="120" fill="url(#bg-grad)" stroke="url(#border-grad)" stroke-width="12" />
+
+  <!-- Inner Ambient Glow Circle -->
+  <circle cx="256" cy="256" r="180" fill="#10b981" fill-opacity="0.08" filter="url(#glow)" />
+
+  <!-- Markdown "M" Glyphs (Refined proportions) -->
+  <g fill="none" stroke="url(#brand-grad)" stroke-width="36" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Left vertical bar -->
+    <path d="M 120 330 L 120 182" />
+    <!-- Diagonal down to center -->
+    <path d="M 120 182 L 200 274" />
+    <!-- Diagonal up from center -->
+    <path d="M 200 274 L 280 182" />
+    <!-- Right vertical bar -->
+    <path d="M 280 182 L 280 330" />
+  </g>
+
+  <!-- RTL Directional Arrow Badge (Pointing to the Right-to-Left RTL direction: Leftward arrow) -->
+  <g transform="translate(370, 256)" filter="url(#glow)">
+    <!-- RTL Arrow Shaft -->
+    <line x1="42" y1="0" x2="-42" y2="0" stroke="#34d399" stroke-width="32" stroke-linecap="round" />
+    <!-- RTL Arrow Head pointing Left (←) -->
+    <path d="M -10 -32 L -46 0 L -10 32" fill="none" stroke="#34d399" stroke-width="32" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+
+  <!-- Subtle Accent Dot representing bidirectional harmony -->
+  <circle cx="200" cy="336" r="14" fill="#34d399" />
+</svg>
