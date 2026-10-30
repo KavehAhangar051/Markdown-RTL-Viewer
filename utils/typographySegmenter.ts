@@ -1,16 +1,16 @@
 /**
  * @file utils/typographySegmenter.ts
- * @description Intelligent character-by-character and token-level script segmenter for Persian (Vazirmatn) and Latin (JetBrains Mono).
+ * @description Intelligent character-by-character and token-level script segmenter for Persian (Vazirmatn) and Latin (Kode Mono).
  */
 
 import React from 'react';
 import { isPersianChar } from '@/utils/persianizer';
 
 /** CSS font-family string for Persian Vazirmatn */
-export const FONT_VAZIR_STYLE = "'Vazirmatn', var(--font-vazir-local), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+export const FONT_VAZIR_STYLE = "'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
 
-/** CSS font-family string for Latin JetBrains Mono */
-export const FONT_MONO_STYLE = "'JetBrains Mono', monospace";
+/** CSS font-family string for Latin Kode Mono */
+export const FONT_MONO_STYLE = "'Kode Mono', monospace";
 
 /** Script category classification */
 export type ScriptType = 'persian' | 'latin';

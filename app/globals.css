@@ -1,9 +1,10 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400;500;600;700&family=Vazirmatn:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  --font-vazir-local: 'Vazirmatn', 'Segoe UI', Tahoma, sans-serif;
-  --font-code-en-local: 'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  --font-vazir-local: 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-code-en-local: 'Kode Mono', monospace;
+  --font-dual-hybrid: 'Kode Mono', 'Vazirmatn', monospace, system-ui, sans-serif;
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
@@ -30,42 +31,46 @@ html.lenis, html.lenis body {
 }
 
 @theme {
-  --font-vazir: 'Vazirmatn', var(--font-vazir-local), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-code-en: 'JetBrains Mono', var(--font-code-en-local), monospace;
-  --font-code-hybrid: 'JetBrains Mono', 'Vazirmatn', var(--font-vazir-local), monospace;
-  --font-mono: 'JetBrains Mono', 'Vazirmatn', var(--font-vazir-local), monospace;
+  --font-vazir: 'Kode Mono', 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-code-en: 'Kode Mono', monospace;
+  --font-code-hybrid: 'Kode Mono', 'Vazirmatn', monospace;
+  --font-mono: 'Kode Mono', monospace;
+  --font-sans: 'Kode Mono', 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 @layer base {
   :root {
-    --font-vazir: 'Vazirmatn', var(--font-vazir-local), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    --font-code-en: 'JetBrains Mono', var(--font-code-en-local), monospace;
-    --font-code-hybrid: 'JetBrains Mono', 'Vazirmatn', var(--font-vazir-local), monospace;
-    --font-mono: 'JetBrains Mono', 'Vazirmatn', var(--font-vazir-local), monospace;
+    --font-vazir: 'Kode Mono', 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-code-en: 'Kode Mono', monospace;
+    --font-code-hybrid: 'Kode Mono', 'Vazirmatn', monospace;
+    --font-mono: 'Kode Mono', monospace;
+    --font-sans: 'Kode Mono', 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
 
   body {
-    font-family: var(--font-vazir);
+    font-family: 'Kode Mono', 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background-color: #000000;
     color: #f4f4f5;
     overflow-x: hidden;
   }
 
   code, pre, kbd, samp, .hljs {
-    font-family: 'JetBrains Mono', 'Vazirmatn', var(--font-vazir-local), monospace;
+    font-family: 'Kode Mono', 'Vazirmatn', monospace;
     font-feature-settings: 'calt' 1, 'liga' 1;
   }
 
   code .font-persian-token,
   pre .font-persian-token,
-  .hljs .font-persian-token {
-    font-family: 'Vazirmatn', var(--font-vazir-local), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  .hljs .font-persian-token,
+  .font-persian-token {
+    font-family: 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
   }
 
   code .font-latin-token,
   pre .font-latin-token,
-  .hljs .font-latin-token {
-    font-family: 'JetBrains Mono', var(--font-code-en-local), monospace !important;
+  .hljs .font-latin-token,
+  .font-latin-token {
+    font-family: 'Kode Mono', monospace !important;
   }
 }
 
@@ -167,10 +172,21 @@ body.light,
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.markdown-rtl-content {
+.markdown-rtl-content,
+.markdown-rtl-content p,
+.markdown-rtl-content h1,
+.markdown-rtl-content h2,
+.markdown-rtl-content h3,
+.markdown-rtl-content h4,
+.markdown-rtl-content h5,
+.markdown-rtl-content h6,
+.markdown-rtl-content li,
+.markdown-rtl-content blockquote,
+.markdown-rtl-content td,
+.markdown-rtl-content th {
   direction: rtl;
   text-align: right;
-  font-family: var(--font-vazir);
+  font-family: 'Kode Mono', 'Vazirmatn', system-ui, -apple-system, sans-serif;
   line-height: 1.85;
 }
 

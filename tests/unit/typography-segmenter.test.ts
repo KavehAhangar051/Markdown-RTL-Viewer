@@ -84,7 +84,7 @@ describe('Typography Segmenter Unit Tests', () => {
     expect(segmented).toContain('سلام دنیا');
     expect(segmented).toContain('خروجی');
 
-    // Latin code tokens must have JetBrains Mono font token
+    // Latin code tokens must have Kode Mono font token
     expect(segmented).toContain('font-latin-token');
     expect(segmented).toContain('console.log');
 
