@@ -34,16 +34,14 @@ export const metadata: Metadata = {
 };
 
 /**
- * Root Layout Component providing font variables and smooth scroll.
- *
- * @param {object} props - Component props containing children nodes.
- * @returns {React.JSX.Element} Root HTML layout.
+ * Root layout that keeps typography rich without breaking static builds.
+ * We avoid next/font/google here because GitHub Actions builds can fail when
+ * outbound font fetches are blocked or rate-limited.
  */
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fa" dir="rtl" suppressHydrationWarning>
       <body suppressHydrationWarning className="font-vazir bg-black text-zinc-100 antialiased">
-        {/* Instant pre-hydration ASCII line loader */}
         <div
           id="pre-hydration-loader"
           suppressHydrationWarning
