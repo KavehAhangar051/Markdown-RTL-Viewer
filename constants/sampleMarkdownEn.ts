@@ -38,7 +38,7 @@ Markdown provides versatile inline formatting for technical documentation and ev
 ### B) Hierarchical Unordered Lists:
 - Studio Engineering Standards
   - Modular architecture and separation of concerns (SoC)
-  - Hybrid typography pairing **Vazirmatn** and **JetBrains Mono**
+  - Hybrid typography pairing **Vazirmatn** and **Kode Mono**
     - Balanced line heights for enhanced readability in long-form articles
     - Strict directionality isolation for LTR code snippets
 

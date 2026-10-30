@@ -9,14 +9,14 @@ import { FONT_MONO_STYLE, FONT_VAZIR_STYLE, renderHybridChildren } from '@/utils
 import React from 'react';
 
 describe('Inline Code BiDi and Mixed Script Handling', () => {
-  it('guarantees JetBrains Mono is prioritized for Latin and Vazirmatn for Persian', () => {
-    expect(FONT_MONO_STYLE).toContain('JetBrains Mono');
+  it('guarantees Kode Mono is prioritized for Latin and Vazirmatn for Persian', () => {
+    expect(FONT_MONO_STYLE).toContain('Kode Mono');
     expect(FONT_VAZIR_STYLE).toContain('Vazirmatn');
     // Ensure font-code-en-local is not used in FONT_MONO_STYLE to prevent Arial fallback
     expect(FONT_MONO_STYLE).not.toContain('font-code-en-local');
   });
 
-  it('renders hybrid children with Vazirmatn for Persian tokens and JetBrains Mono for Latin', () => {
+  it('renders hybrid children with Vazirmatn for Persian tokens and Kode Mono for Latin', () => {
     const rendered = renderHybridChildren('کلمه text') as React.ReactElement[];
     expect(Array.isArray(rendered)).toBe(true);
     expect(rendered.length).toBe(2);

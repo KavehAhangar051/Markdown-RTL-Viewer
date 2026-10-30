@@ -25,6 +25,7 @@ import {
 import { Eye, FileCode } from 'lucide-react';
 import { SPRING_PRESS } from '@/lib/ease';
 import { AsciiLineLoader } from '@/components/motion/loader';
+import { renderHybridChildren } from '@/utils/typographySegmenter';
 
 interface PreviewEmptyStateProps {
   isDark: boolean;
@@ -89,15 +90,15 @@ const markdownComponents = {
       {children}
     </PreContext.Provider>
   ),
-  p: ({ children }: { children?: React.ReactNode }) => <p>{children}</p>,
-  h1: ({ children }: { children?: React.ReactNode }) => <h1>{children}</h1>,
-  h2: ({ children }: { children?: React.ReactNode }) => <h2>{children}</h2>,
-  h3: ({ children }: { children?: React.ReactNode }) => <h3>{children}</h3>,
-  h4: ({ children }: { children?: React.ReactNode }) => <h4>{children}</h4>,
-  h5: ({ children }: { children?: React.ReactNode }) => <h5>{children}</h5>,
-  h6: ({ children }: { children?: React.ReactNode }) => <h6>{children}</h6>,
-  li: ({ children }: { children?: React.ReactNode }) => <li>{children}</li>,
-  blockquote: ({ children }: { children?: React.ReactNode }) => <blockquote>{children}</blockquote>,
+  p: ({ children }: { children?: React.ReactNode }) => <p>{renderHybridChildren(children, 'persian')}</p>,
+  h1: ({ children }: { children?: React.ReactNode }) => <h1>{renderHybridChildren(children, 'persian')}</h1>,
+  h2: ({ children }: { children?: React.ReactNode }) => <h2>{renderHybridChildren(children, 'persian')}</h2>,
+  h3: ({ children }: { children?: React.ReactNode }) => <h3>{renderHybridChildren(children, 'persian')}</h3>,
+  h4: ({ children }: { children?: React.ReactNode }) => <h4>{renderHybridChildren(children, 'persian')}</h4>,
+  h5: ({ children }: { children?: React.ReactNode }) => <h5>{renderHybridChildren(children, 'persian')}</h5>,
+  h6: ({ children }: { children?: React.ReactNode }) => <h6>{renderHybridChildren(children, 'persian')}</h6>,
+  li: ({ children }: { children?: React.ReactNode }) => <li>{renderHybridChildren(children, 'persian')}</li>,
+  blockquote: ({ children }: { children?: React.ReactNode }) => <blockquote>{renderHybridChildren(children, 'persian')}</blockquote>,
   kbd: ({ children }: { children?: React.ReactNode }) => (
     <kbd className="px-1.5 py-0.5 text-xs font-mono rounded-md border inline-block align-middle mx-1 font-semibold transition-colors shadow-xs">
       {children}
@@ -105,11 +106,11 @@ const markdownComponents = {
   ),
   a: ({ children, href, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
     <a href={href} {...props} className="text-emerald-400 underline hover:text-emerald-300 transition-colors">
-      {children}
+      {renderHybridChildren(children, 'persian')}
     </a>
   ),
-  strong: ({ children }: { children?: React.ReactNode }) => <strong>{children}</strong>,
-  em: ({ children }: { children?: React.ReactNode }) => <em>{children}</em>,
+  strong: ({ children }: { children?: React.ReactNode }) => <strong>{renderHybridChildren(children, 'persian')}</strong>,
+  em: ({ children }: { children?: React.ReactNode }) => <em>{renderHybridChildren(children, 'persian')}</em>,
   del: ({ children }: { children?: React.ReactNode }) => <del className="line-through opacity-70">{children}</del>,
   hr: () => <hr className="my-6 border-t border-zinc-700/60 dark:border-zinc-800" />,
   img: ({ src, alt, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) => (

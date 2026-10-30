@@ -140,13 +140,13 @@ export function segmentHtmlByLanguage(html: string): string {
       continue;
     }
 
-    // Analyze plain text node character-by-character only for Persian segments
+    // Analyze plain text node character-by-character for Persian and Latin segments
     const segments = segmentTextByScript(token, 'latin');
     for (const segment of segments) {
       if (segment.script === 'persian') {
         output += `<span class="font-vazir font-persian-token" style="font-family: ${FONT_VAZIR_STYLE};">${segment.text}</span>`;
       } else {
-        output += segment.text;
+        output += `<span class="font-mono font-latin-token" style="font-family: ${FONT_MONO_STYLE};">${segment.text}</span>`;
       }
     }
   }

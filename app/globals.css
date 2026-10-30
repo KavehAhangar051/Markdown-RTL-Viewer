@@ -31,24 +31,24 @@ html.lenis, html.lenis body {
 }
 
 @theme {
-  --font-vazir: 'Kode Mono', 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-vazir: 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-code-en: 'Kode Mono', monospace;
   --font-code-hybrid: 'Kode Mono', 'Vazirmatn', monospace;
   --font-mono: 'Kode Mono', monospace;
-  --font-sans: 'Kode Mono', 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: 'Kode Mono', 'Vazirmatn', monospace, system-ui, sans-serif;
 }
 
 @layer base {
   :root {
-    --font-vazir: 'Kode Mono', 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-vazir: 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     --font-code-en: 'Kode Mono', monospace;
     --font-code-hybrid: 'Kode Mono', 'Vazirmatn', monospace;
     --font-mono: 'Kode Mono', monospace;
-    --font-sans: 'Kode Mono', 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-sans: 'Kode Mono', 'Vazirmatn', monospace, system-ui, sans-serif;
   }
 
   body {
-    font-family: 'Kode Mono', 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: var(--font-vazir);
     background-color: #000000;
     color: #f4f4f5;
     overflow-x: hidden;
@@ -186,7 +186,7 @@ body.light,
 .markdown-rtl-content th {
   direction: rtl;
   text-align: right;
-  font-family: 'Kode Mono', 'Vazirmatn', system-ui, -apple-system, sans-serif;
+  font-family: var(--font-vazir);
   line-height: 1.85;
 }
 
