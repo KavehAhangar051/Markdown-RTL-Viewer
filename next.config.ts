@@ -1,19 +1,23 @@
 import type {NextConfig} from 'next';
+import {PHASE_DEVELOPMENT_SERVER} from 'next/constants';
 
-const isGithubActions = process.env.GITHUB_ACTIONS === 'true';
-const isExport = process.env.NEXT_EXPORT === 'true' || isGithubActions;
-const rawBasePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
-// Ensure basePath begins with '/' and does not end with '/' unless empty, only active in static export
-const basePath = isExport
-  ? rawBasePath.startsWith('/')
-    ? rawBasePath
-    : rawBasePath
-      ? `/${rawBasePath}`
-      : ''
-  : '';
+export default function config(phase: string): NextConfig {
+  const isDev = phase === PHASE_DEVELOPMENT_SERVER;
+  const isGithubActions = process.env.GITHUB_ACTIONS === 'true';
+  const isExport = process.env.NEXT_EXPORT === 'true' || isGithubActions;
+  const rawBasePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+  // Ensure basePath begins with '/' and does not end with '/' unless empty, only active in static export
+  const basePath = isExport
+    ? rawBasePath.startsWith('/')
+      ? rawBasePath
+      : rawBasePath
+        ? `/${rawBasePath}`
+        : ''
+    : '';
 
-const nextConfig: NextConfig = {
-  reactStrictMode: true,
+  return {
+    distDir: isDev ? '.next-dev' : '.next',
+    reactStrictMode: true,
   compress: true,
   poweredByHeader: false,
   experimental: {
@@ -53,5 +57,4 @@ const nextConfig: NextConfig = {
     return config;
   },
 };
-
-export default nextConfig;
+}
