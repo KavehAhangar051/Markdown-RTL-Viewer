@@ -6,8 +6,11 @@
 import React from 'react';
 import { isPersianChar } from '@/utils/persianizer';
 
-/** CSS font-family string for Persian Vazirmatn */
-export const FONT_VAZIR_STYLE = "'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+/** CSS font-family string for Persian typography (Dana with Vazirmatn fallback) */
+export const FONT_VAZIR_STYLE = "'Dana', 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+
+/** Alias for Persian font style */
+export const FONT_PERSIAN_STYLE = FONT_VAZIR_STYLE;
 
 /** CSS font-family string for Latin Kode Mono */
 export const FONT_MONO_STYLE = "'Kode Mono', monospace";
@@ -19,6 +22,22 @@ export type ScriptType = 'persian' | 'latin';
 export interface ScriptSegment {
   readonly text: string;
   readonly script: ScriptType;
+}
+
+/**
+ * Checks if a character is a numeric digit (ASCII 0-9, Arabic, or Persian digits).
+ *
+ * @param {string} char - Single character.
+ * @returns {boolean} True if character is a digit.
+ */
+export function isDigit(char: string): boolean {
+  if (!char) return false;
+  const code = char.charCodeAt(0);
+  return (
+    (code >= 0x0030 && code <= 0x0039) ||
+    (code >= 0x0660 && code <= 0x0669) ||
+    (code >= 0x06f0 && code <= 0x06f9)
+  );
 }
 
 /**
@@ -34,8 +53,8 @@ export function isLatinLetter(char: string): boolean {
 }
 
 /**
- * Scans ahead in text to identify the script of the first upcoming letter.
- * Returns null if no letter characters are found.
+ * Scans ahead in text to identify the script of the first upcoming letter or digit.
+ * Returns null if no letter or digit characters are found.
  *
  * @param {string} text - Raw string.
  * @param {number} startIndex - Starting search index.
@@ -44,6 +63,7 @@ export function isLatinLetter(char: string): boolean {
 function findFirstScriptInText(text: string, startIndex: number): ScriptType | null {
   for (let i = startIndex; i < text.length; i++) {
     const char = text[i];
+    if (isDigit(char)) return 'latin';
     if (isPersianChar(char)) return 'persian';
     if (isLatinLetter(char)) return 'latin';
   }
@@ -52,6 +72,7 @@ function findFirstScriptInText(text: string, startIndex: number): ScriptType | n
 
 /**
  * Segments an input string into consecutive runs of Persian vs Latin text chunks.
+ * Digits are routed to the Latin/Kode Mono font stack per typography specifications.
  *
  * @param {string} text - Raw string to analyze.
  * @param {ScriptType} [defaultScript='persian'] - Fallback script when context has no letters.
@@ -67,7 +88,18 @@ export function segmentTextByScript(text: string, defaultScript: ScriptType = 'p
   for (let i = 0; i < text.length; i++) {
     const char = text[i];
 
-    if (isPersianChar(char)) {
+    if (isDigit(char)) {
+      // Digits are explicitly rendered with the Latin/Kode Mono font stack
+      if (currentScript === 'latin') {
+        currentBuffer += char;
+      } else {
+        if (currentBuffer) {
+          segments.push({ text: currentBuffer, script: currentScript ?? 'persian' });
+        }
+        currentScript = 'latin';
+        currentBuffer = char;
+      }
+    } else if (isPersianChar(char)) {
       if (currentScript === 'persian') {
         currentBuffer += char;
       } else {
@@ -88,7 +120,7 @@ export function segmentTextByScript(text: string, defaultScript: ScriptType = 'p
         currentBuffer = char;
       }
     } else {
-      // Neutral characters (whitespace, numbers, punctuation, symbols)
+      // Neutral characters (whitespace, punctuation, symbols)
       if (currentScript === null) {
         currentScript = findFirstScriptInText(text, i) ?? defaultScript;
       }

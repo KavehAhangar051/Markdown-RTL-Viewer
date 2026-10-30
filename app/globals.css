@@ -1,10 +1,44 @@
 @import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400;500;600;700&family=Vazirmatn:wght@300;400;500;600;700;800&display=swap');
 
+/* Dana Font Family from public/Fonts */
+@font-face {
+  font-family: 'Dana';
+  src: url('/Fonts/Dana-Medium.woff2') format('woff2');
+  font-weight: 300 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Dana';
+  src: url('/Fonts/Dana-ExtraBold.woff2') format('woff2');
+  font-weight: 600 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DanaFaNum';
+  src: url('/Fonts/DanaFaNum-Regular.woff') format('woff');
+  font-weight: 300 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DanaFaNum';
+  src: url('/Fonts/DanaFaNum-Bold.woff') format('woff');
+  font-weight: 600 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
-  --font-vazir-local: 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-dana: 'Dana', 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-vazir-local: 'Dana', 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-code-en-local: 'Kode Mono', monospace;
-  --font-dual-hybrid: 'Kode Mono', 'Vazirmatn', monospace, system-ui, sans-serif;
+  --font-dual-hybrid: 'Kode Mono', 'Dana', 'Vazirmatn', monospace, system-ui, sans-serif;
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
@@ -31,20 +65,22 @@ html.lenis, html.lenis body {
 }
 
 @theme {
-  --font-vazir: 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-vazir: 'Dana', 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-dana: 'Dana', 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-code-en: 'Kode Mono', monospace;
-  --font-code-hybrid: 'Kode Mono', 'Vazirmatn', monospace;
+  --font-code-hybrid: 'Kode Mono', 'Dana', 'Vazirmatn', monospace;
   --font-mono: 'Kode Mono', monospace;
-  --font-sans: 'Kode Mono', 'Vazirmatn', monospace, system-ui, sans-serif;
+  --font-sans: 'Kode Mono', 'Dana', 'Vazirmatn', monospace, system-ui, sans-serif;
 }
 
 @layer base {
   :root {
-    --font-vazir: 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-vazir: 'Dana', 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-dana: 'Dana', 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     --font-code-en: 'Kode Mono', monospace;
-    --font-code-hybrid: 'Kode Mono', 'Vazirmatn', monospace;
+    --font-code-hybrid: 'Kode Mono', 'Dana', 'Vazirmatn', monospace;
     --font-mono: 'Kode Mono', monospace;
-    --font-sans: 'Kode Mono', 'Vazirmatn', monospace, system-ui, sans-serif;
+    --font-sans: 'Kode Mono', 'Dana', 'Vazirmatn', monospace, system-ui, sans-serif;
   }
 
   body {
@@ -55,7 +91,7 @@ html.lenis, html.lenis body {
   }
 
   code, pre, kbd, samp, .hljs {
-    font-family: 'Kode Mono', 'Vazirmatn', monospace;
+    font-family: 'Kode Mono', 'Dana', 'Vazirmatn', monospace;
     font-feature-settings: 'calt' 1, 'liga' 1;
   }
 
@@ -63,7 +99,7 @@ html.lenis, html.lenis body {
   pre .font-persian-token,
   .hljs .font-persian-token,
   .font-persian-token {
-    font-family: 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    font-family: 'Dana', 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
   }
 
   code .font-latin-token,
