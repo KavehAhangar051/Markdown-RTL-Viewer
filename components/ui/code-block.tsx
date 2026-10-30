@@ -23,9 +23,9 @@ interface CodeBlockProps extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode;
 }
 
-/** Hybrid code font stack guaranteeing Kode Mono for Latin & Vazirmatn for Persian characters */
+/** Hybrid code font stack guaranteeing Kode Mono for Latin & Dana / Vazirmatn for Persian characters */
 const HYBRID_CODE_FONT =
-  "'Kode Mono', 'Vazirmatn', var(--font-vazir-local), monospace";
+  "'Kode Mono', 'Dana', 'Vazirmatn', var(--font-vazir-local), monospace";
 
 /**
  * Code Block Component with full syntax highlighting support for markdown previews.
