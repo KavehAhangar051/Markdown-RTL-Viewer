@@ -9,9 +9,8 @@ import { FONT_MONO_STYLE, FONT_VAZIR_STYLE, renderHybridChildren } from '@/utils
 import React from 'react';
 
 describe('Inline Code BiDi and Mixed Script Handling', () => {
-  it('guarantees Kode Mono is prioritized for Latin and Dana/Vazirmatn for Persian', () => {
+  it('guarantees Kode Mono is prioritized for Latin and Vazirmatn for Persian', () => {
     expect(FONT_MONO_STYLE).toContain('Kode Mono');
-    expect(FONT_VAZIR_STYLE).toContain('Dana');
     expect(FONT_VAZIR_STYLE).toContain('Vazirmatn');
     // Ensure font-code-en-local is not used in FONT_MONO_STYLE to prevent Arial fallback
     expect(FONT_MONO_STYLE).not.toContain('font-code-en-local');

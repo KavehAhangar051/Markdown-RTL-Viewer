@@ -11,14 +11,6 @@
 export function isPersianChar(char: string): boolean {
   if (!char) return false;
   const code = char.charCodeAt(0);
-  // Exclude digits (0-9, Arabic digits ٠-٩, Persian digits ۰-۹) so numbers do not get Persian font
-  if (
-    (code >= 0x0030 && code <= 0x0039) ||
-    (code >= 0x0660 && code <= 0x0669) ||
-    (code >= 0x06f0 && code <= 0x06f9)
-  ) {
-    return false;
-  }
   return (
     (code >= 0x0600 && code <= 0x06ff) ||
     (code >= 0x0750 && code <= 0x077f) ||

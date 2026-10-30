@@ -93,32 +93,12 @@ describe('Typography Segmenter Unit Tests', () => {
     expect(FONT_MONO_STYLE).not.toContain('"');
   });
 
-  it('segments numbers and digits with Kode Mono/Latin script rather than Persian font', () => {
+  it('correctly associates leading numbers with Persian when followed by Persian text', () => {
     const numberedList = '1. تراز خودکار متن';
     const segments = segmentTextByScript(numberedList, 'persian');
 
-    expect(segments.length).toBe(2);
-    expect(segments[0].script).toBe('latin');
-    expect(segments[0].text).toBe('1. ');
-    expect(segments[1].script).toBe('persian');
-    expect(segments[1].text).toBe('تراز خودکار متن');
-  });
-
-  it('keeps numbers in Persian text styled with Latin/Kode Mono font', () => {
-    const mixed = 'قیمت 1000 تومان';
-    const segments = segmentTextByScript(mixed);
-
-    expect(segments.length).toBe(3);
+    expect(segments.length).toBe(1);
     expect(segments[0].script).toBe('persian');
-    expect(segments[0].text).toBe('قیمت ');
-    expect(segments[1].script).toBe('latin');
-    expect(segments[1].text).toBe('1000 ');
-    expect(segments[2].script).toBe('persian');
-    expect(segments[2].text).toBe('تومان');
-  });
-
-  it('verifies Dana font is prioritized in FONT_VAZIR_STYLE', () => {
-    expect(FONT_VAZIR_STYLE).toContain('Dana');
-    expect(FONT_VAZIR_STYLE).toContain('Vazirmatn');
+    expect(segments[0].text).toBe(numberedList);
   });
 });
