@@ -8,7 +8,7 @@
 import React, { createContext, useContext, useState, useMemo, useCallback, useSyncExternalStore, useRef, useDeferredValue } from 'react';
 import { MarkdownContextType } from '@/types/markdown';
 import { ViewMode, Theme } from '@/types/ui';
-import { Language } from '@/types/i18n';
+import { Language, Translations } from '@/types/i18n';
 import { TRANSLATIONS } from '@/constants/translations';
 import { processDocument } from '@/services/markdownEngine';
 import { useTheme } from 'next-themes';
@@ -37,6 +37,7 @@ export const MarkdownProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const theme: Theme = mounted && (resolvedTheme === 'light' || resolvedTheme === 'dark')
     ? resolvedTheme
     : 'dark';
+
   const [language, setLanguage] = useState<Language>('fa');
   const [rawMarkdown, setRawMarkdown] = useState<string>('');
   const [viewMode, setViewMode] = useState<ViewMode>('split');
@@ -61,6 +62,7 @@ export const MarkdownProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     if (toastTimeoutRef.current) {
       clearTimeout(toastTimeoutRef.current);
     }
+
     setToast({ message, type, id: Date.now(), action });
     toastTimeoutRef.current = setTimeout(() => {
       setToast(null);
@@ -77,6 +79,7 @@ export const MarkdownProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setIsSyncScroll((prev) => {
       const next = !prev;
       showToast(next ? t.editor.syncScrollEnabled : t.editor.syncScrollDisabled, 'info');
+
       return next;
     });
   }, [showToast, t.editor.syncScrollEnabled, t.editor.syncScrollDisabled]);
@@ -108,28 +111,30 @@ export const MarkdownProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const clearContent = useCallback(() => {
     if (!rawMarkdown) {
       showToast(t.toasts.editorCleared, 'info');
+
       return;
     }
+
     const backup = rawMarkdown;
     setRawMarkdown('');
     showToast(
       t.toasts.editorCleared,
       'info',
       {
-        label: language === 'fa' ? 'بازیابی (Undo)' : 'Undo',
+        label: t.toasts.undoAction,
         onClick: () => {
           setRawMarkdown(backup);
-          showToast(language === 'fa' ? 'محتوا بازیابی شد' : 'Content restored', 'success');
+          showToast(t.toasts.contentRestored, 'success');
         },
       }
     );
-  }, [rawMarkdown, showToast, t.toasts.editorCleared, language]);
+  }, [rawMarkdown, showToast, t.toasts.editorCleared, t.toasts.undoAction, t.toasts.contentRestored]);
 
   const loadSample = useCallback(() => {
     const sample = language === 'fa' ? SAMPLE_RTL_MARKDOWN_FA : SAMPLE_RTL_MARKDOWN_EN;
     setRawMarkdown(sample);
-    showToast(language === 'fa' ? 'نمونه مارک‌داون بارگذاری شد' : 'Sample Markdown loaded', 'success');
-  }, [language, showToast]);
+    showToast(t.toasts.sampleLoaded, 'success');
+  }, [language, showToast, t.toasts.sampleLoaded]);
 
   const contextValue: MarkdownContextType = useMemo(
     () => ({
@@ -195,11 +200,48 @@ export const MarkdownProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     ]
   );
 
-  return (
-    <MarkdownContext.Provider value={contextValue}>
-      {children}
-    </MarkdownContext.Provider>
+  const uiContextValue = useMemo(
+    () => ({
+      theme,
+      language,
+      t,
+      showToast,
+    }),
+    [theme, language, t, showToast]
   );
+
+  return (
+    <StudioUIContext.Provider value={uiContextValue}>
+      <MarkdownContext.Provider value={contextValue}>
+        {children}
+      </MarkdownContext.Provider>
+    </StudioUIContext.Provider>
+  );
+};
+
+export interface StudioUIContextType {
+  theme: Theme;
+  language: Language;
+  t: Translations;
+  showToast: MarkdownContextType['showToast'];
+}
+
+const StudioUIContext = createContext<StudioUIContextType | undefined>(undefined);
+
+/**
+ * Lightweight hook subscribing only to stable UI settings (theme, language, translations, toast)
+ * so consumers do not re-render on every keystroke in the Markdown editor.
+ *
+ * @returns {StudioUIContextType} Stable UI state and toast dispatcher.
+ */
+export const useStudioUI = (): StudioUIContextType => {
+  const context = useContext(StudioUIContext);
+
+  if (!context) {
+    throw new Error('useStudioUI must be used within a MarkdownProvider');
+  }
+
+  return context;
 };
 
 /**
@@ -210,9 +252,11 @@ export const MarkdownProvider: React.FC<{ children: React.ReactNode }> = ({ chil
  */
 export const useMarkdownContext = (): MarkdownContextType => {
   const context = useContext(MarkdownContext);
+
   if (!context) {
     throw new Error('useMarkdownContext must be used within a MarkdownProvider');
   }
+
   return context;
 };
 

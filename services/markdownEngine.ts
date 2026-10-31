@@ -8,6 +8,7 @@ import { DocumentStats } from '@/types/markdown';
 import { DEFAULT_READING_SPEED_WPM } from '@/constants/domain';
 import { convertToRtlMarkdown } from '@/utils/rtlConverter';
 import { calculateDocumentStats } from '@/utils/statsCalculator';
+import { createBoundedCache, CacheTelemetryStats } from '@/utils/lruCache';
 
 /**
  * Configuration options for document processing across the engine seam.
@@ -48,30 +49,27 @@ export interface ExportBundle {
 const DOCUMENT_CACHE_LIMIT = 64;
 
 /** Internal bounded LRU cache for markdown processing output */
-const documentCache = new Map<string, ProcessedDocument>();
-let documentCacheHits = 0;
-let documentCacheMisses = 0;
+const documentCache = createBoundedCache<ProcessedDocument>(DOCUMENT_CACHE_LIMIT);
 
 /**
  * Clears the markdown document processing LRU cache.
  */
 export function clearDocumentCache(): void {
   documentCache.clear();
-  documentCacheHits = 0;
-  documentCacheMisses = 0;
 }
+
+/**
+ * Snapshot of markdown document cache performance metrics.
+ */
+export type DocumentCacheStats = CacheTelemetryStats;
 
 /**
  * Returns performance metrics for the markdown document processing LRU cache.
  *
- * @returns {{ size: number; hits: number; misses: number }} Cache performance snapshot.
+ * @returns {DocumentCacheStats} Cache performance snapshot.
  */
-export function getDocumentCacheStats(): { size: number; hits: number; misses: number } {
-  return {
-    size: documentCache.size,
-    hits: documentCacheHits,
-    misses: documentCacheMisses,
-  };
+export function getDocumentCacheStats(): DocumentCacheStats {
+  return documentCache.getStats();
 }
 
 /**
@@ -90,6 +88,7 @@ export function processDocument(
 ): ProcessedDocument {
   const safeText = rawText ?? '';
   const alignTables = options?.alignTablesRtl ?? true;
+
   const wpm =
     options?.wordsPerMinute && options.wordsPerMinute > 0
       ? options.wordsPerMinute
@@ -97,16 +96,11 @@ export function processDocument(
 
   const cacheKey = `${alignTables}::${wpm}::${safeText}`;
 
-  // Check LRU cache
-  if (documentCache.has(cacheKey)) {
-    documentCacheHits++;
-    const cached = documentCache.get(cacheKey)!;
-    documentCache.delete(cacheKey);
-    documentCache.set(cacheKey, cached);
+  const cached = documentCache.get(cacheKey);
+
+  if (cached !== undefined) {
     return cached;
   }
-
-  documentCacheMisses++;
 
   const trimmed = safeText.trim();
   const hasContent = trimmed.length > 0;
@@ -114,15 +108,8 @@ export function processDocument(
   // 1. Transform syntax (RTL table alignment while preserving code blocks)
   const rtlMarkdown = alignTables ? convertToRtlMarkdown(safeText) : safeText;
 
-  // 2. Compute document analytics and reading estimates
-  const baseStats = calculateDocumentStats(safeText);
-  const estimatedReadTimeMinutes =
-    baseStats.wordCount === 0 ? 0 : Math.max(1, Math.ceil(baseStats.wordCount / wpm));
-
-  const stats: DocumentStats = {
-    ...baseStats,
-    estimatedReadTimeMinutes,
-  };
+  // 2. Compute document analytics and reading estimates directly with target WPM
+  const stats = calculateDocumentStats(safeText, wpm);
 
   // 3. Extract primary document title if present
   const title = extractDocumentTitle(safeText);
@@ -135,17 +122,15 @@ export function processDocument(
     title,
   };
 
-  // Enforce bounded cache size
-  if (documentCache.size >= DOCUMENT_CACHE_LIMIT) {
-    const oldestKey = documentCache.keys().next().value;
-    if (oldestKey !== undefined) {
-      documentCache.delete(oldestKey);
-    }
-  }
-
   documentCache.set(cacheKey, result);
+
   return result;
 }
+
+/** Pre-compiled regexes for title extraction to prevent re-compilation in loop */
+const TITLE_CODE_FENCE_REGEX = /^\s*(```|~~~)/;
+const ATX_H1_REGEX = /^#\s+(.+)$/;
+const SETEXT_H1_REGEX = /^\s*={3,}\s*$/;
 
 /**
  * Prepares an export bundle for downloading or sharing a processed markdown document.
@@ -173,7 +158,7 @@ export function prepareExportBundle(
 
 /**
  * Extracts the primary heading from markdown source text, ignoring code blocks.
- * Scans line-by-line up to the first 50 lines to avoid allocating massive string arrays.
+ * Scans line-by-line up to the first 60 lines to avoid allocating massive string arrays.
  *
  * @param {string} text - Raw markdown text.
  * @returns {string} Extracted heading title or empty string.
@@ -187,6 +172,7 @@ function extractDocumentTitle(text: string): string {
 
   while (lineStart < text.length && lineCount < 60) {
     let lineEnd = text.indexOf('\n', lineStart);
+
     if (lineEnd === -1) {
       lineEnd = text.length;
     }
@@ -195,7 +181,7 @@ function extractDocumentTitle(text: string): string {
     lineCount++;
     lineStart = lineEnd + 1;
 
-    if (/^\s*(```|~~~)/.test(line)) {
+    if (TITLE_CODE_FENCE_REGEX.test(line)) {
       inCode = !inCode;
       prevLine = line;
       continue;
@@ -203,13 +189,14 @@ function extractDocumentTitle(text: string): string {
 
     if (!inCode) {
       // ATX Level 1 heading: # Title
-      const atxMatch = line.match(/^#\s+(.+)$/);
+      const atxMatch = line.match(ATX_H1_REGEX);
+
       if (atxMatch) {
         return atxMatch[1].trim();
       }
 
       // Setext Level 1 heading: Title on prevLine, ===... on current line
-      if (/^\s*={3,}\s*$/.test(line) && prevLine.trim().length > 0 && !/^\s*(```|~~~)/.test(prevLine)) {
+      if (SETEXT_H1_REGEX.test(line) && prevLine.trim().length > 0 && !TITLE_CODE_FENCE_REGEX.test(prevLine)) {
         return prevLine.trim();
       }
     }

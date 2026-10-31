@@ -27,7 +27,7 @@ export function LanguageToggle(): React.JSX.Element {
         id="header-language-toggle"
         type="button"
         onClick={toggleLanguage}
-        whileTap={reduceMotion ? undefined : { scale: 0.94 }}
+        whileTap={reduceMotion ? undefined : { scale: 0.96 }}
         whileHover={reduceMotion ? undefined : { scale: 1.02 }}
         transition={SPRING_PRESS}
         title={t.header.languageToggleTitle}

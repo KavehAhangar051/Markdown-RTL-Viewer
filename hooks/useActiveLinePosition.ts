@@ -15,6 +15,32 @@ export interface ActiveLineInfo {
 }
 
 /**
+ * Fast newline counter using SIMD-accelerated native indexOf.
+ * Avoids per-character JS loop overhead in hot typing paths.
+ *
+ * @param {string} text - Text string to inspect.
+ * @param {number} limit - Bounded end offset.
+ * @returns {number} Number of newline characters found before limit.
+ */
+function countNewlinesBeforeIndex(text: string, limit: number): number {
+  let count = 0;
+  let pos = 0;
+
+  while (pos < limit) {
+    const next = text.indexOf('\n', pos);
+
+    if (next === -1 || next >= limit) {
+      break;
+    }
+
+    count++;
+    pos = next + 1;
+  }
+
+  return count;
+}
+
+/**
  * Calculates line position metrics from textarea state and dimensions.
  *
  * @param selectionStart - Cursor index in text.
@@ -33,13 +59,7 @@ export function calculateActiveLinePosition(
 ): ActiveLineInfo {
   const text = value ?? '';
   const limit = Math.min(Math.max(0, selectionStart), text.length);
-  let lineNumber = 1;
-
-  for (let i = 0; i < limit; i++) {
-    if (text.charCodeAt(i) === 10) {
-      lineNumber++;
-    }
-  }
+  const lineNumber = 1 + countNewlinesBeforeIndex(text, limit);
 
   const lineHeight = options?.lineHeight && options.lineHeight > 0 ? options.lineHeight : 24;
   const paddingTop = options?.paddingTop ?? 16;
@@ -74,6 +94,7 @@ export function useActiveLinePosition(
 
   const styleMetricsRef = useRef<{ lineHeight: number; paddingTop: number } | null>(null);
   const rafIdRef = useRef<number | null>(null);
+
   const lineCacheRef = useRef<{
     text: string;
     selectionStart: number;
@@ -86,6 +107,7 @@ export function useActiveLinePosition(
 
   const measureMetrics = useCallback(() => {
     const textarea = textareaRef.current;
+
     if (!textarea || typeof window === 'undefined') return;
 
     const style = window.getComputedStyle(textarea);
@@ -93,10 +115,13 @@ export function useActiveLinePosition(
     let paddingTop = 16;
 
     const parsedLineHeight = parseFloat(style.lineHeight);
+
     if (!isNaN(parsedLineHeight) && parsedLineHeight > 0) {
       lineHeight = parsedLineHeight;
     }
+
     const parsedPaddingTop = parseFloat(style.paddingTop);
+
     if (!isNaN(parsedPaddingTop)) {
       paddingTop = parsedPaddingTop;
     }
@@ -107,8 +132,10 @@ export function useActiveLinePosition(
   useEffect(() => {
     measureMetrics();
     window.addEventListener('resize', measureMetrics, { passive: true });
+
     return () => {
       window.removeEventListener('resize', measureMetrics);
+
       if (rafIdRef.current !== null) {
         cancelAnimationFrame(rafIdRef.current);
       }
@@ -121,6 +148,7 @@ export function useActiveLinePosition(
     rafIdRef.current = requestAnimationFrame(() => {
       rafIdRef.current = null;
       const textarea = textareaRef.current;
+
       if (!textarea) return;
 
       if (!styleMetricsRef.current) {
@@ -139,11 +167,7 @@ export function useActiveLinePosition(
         lineNumber = lineCacheRef.current.lineNumber;
       } else {
         const limit = Math.min(Math.max(0, selectionStart), text.length);
-        for (let i = 0; i < limit; i++) {
-          if (text.charCodeAt(i) === 10) {
-            lineNumber++;
-          }
-        }
+        lineNumber = 1 + countNewlinesBeforeIndex(text, limit);
         lineCacheRef.current = { text, selectionStart, lineNumber };
       }
 
@@ -166,6 +190,7 @@ export function useActiveLinePosition(
         ) {
           return prev;
         }
+
         return computed;
       });
     });

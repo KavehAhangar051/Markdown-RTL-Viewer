@@ -53,6 +53,7 @@ export function useThemeToggle({
 
   useEffect(() => {
     if (typeof document === "undefined") return;
+
     if (document.getElementById(VT_STYLE_ID)) return;
     const el = document.createElement("style");
     el.id = VT_STYLE_ID;
@@ -66,11 +67,25 @@ export function useThemeToggle({
     const next = isDark ? "light" : "dark";
 
     if (reduce || typeof document === "undefined" || !("startViewTransition" in document)) {
-      setTheme(next);
+      if (typeof document !== "undefined") {
+        const style = document.createElement("style");
+        style.append(document.createTextNode("*,*::before,*::after{transition:none !important}"));
+        document.head.append(style);
+        setTheme(next);
+        const _flushReflow = document.body.offsetHeight;
+        void _flushReflow;
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => style.remove());
+        });
+      } else {
+        setTheme(next);
+      }
+
       return;
     }
 
     const root = document.documentElement;
+
     if (variant === "rectangle") {
       root.style.setProperty("--beui-vt-from", RECT_FROM[start]);
       root.dataset.beuiVt = "rect";
@@ -82,6 +97,7 @@ export function useThemeToggle({
       root.dataset.beuiVt = variant;
     }
 
+    // SAFETY: startViewTransition existence was verified above in this method
     const docWithVT = document as Document & {
       startViewTransition(cb: () => void | Promise<void>): { finished: Promise<void> };
     };
@@ -113,12 +129,14 @@ export function ThemeToggle({
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     let origin: string | undefined;
+
     if (variant === "circle" || variant === "circle-blur") {
       const rect = e.currentTarget.getBoundingClientRect();
       const x = Math.round(((rect.left + rect.width / 2) / window.innerWidth) * 100);
       const y = Math.round(((rect.top + rect.height / 2) / window.innerHeight) * 100);
       origin = `${x}% ${y}%`;
     }
+
     toggle(origin);
     onToggle?.(isDark ? "light" : "dark");
   };

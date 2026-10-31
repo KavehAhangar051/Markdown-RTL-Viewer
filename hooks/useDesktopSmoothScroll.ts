@@ -26,6 +26,7 @@ export function useDesktopSmoothScroll(): void {
     function initSmoothScroll() {
       if (!isDesktopOrLaptop()) {
         destroyLenis();
+
         return;
       }
 
@@ -64,6 +65,7 @@ export function useDesktopSmoothScroll(): void {
         cancelAnimationFrame(animationFrameId);
         animationFrameId = null;
       }
+
       if (lenisRef.current) {
         lenisRef.current.destroy();
         lenisRef.current = null;
@@ -73,6 +75,7 @@ export function useDesktopSmoothScroll(): void {
     initSmoothScroll();
 
     let resizeTimeout: NodeJS.Timeout | null = null;
+
     const handleResize = () => {
       if (resizeTimeout) clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
@@ -88,10 +91,12 @@ export function useDesktopSmoothScroll(): void {
 
     return () => {
       isCancelled = true;
+
       if (animationFrameId !== null) {
         cancelAnimationFrame(animationFrameId);
         animationFrameId = null;
       }
+
       if (resizeTimeout) clearTimeout(resizeTimeout);
       window.removeEventListener('resize', handleResize);
       destroyLenis();

@@ -59,6 +59,7 @@ export function useCursorListeners({
     const onMouseLeave = () => {
       isVisibleRef.current = false;
       setIsVisible(false);
+
       if (isMouseDownRef.current) {
         isMouseDownRef.current = false;
         setIsMouseDown(false);
@@ -89,6 +90,7 @@ export function useCursorListeners({
         isMouseDownRef.current = false;
         setIsMouseDown(false);
       }
+
       isVisibleRef.current = false;
       setIsVisible(false);
     };
@@ -108,7 +110,9 @@ export function useCursorListeners({
 
     const handleMouseOver = (e: MouseEvent) => {
       if (isScrollingRef.current) return;
+      // SAFETY: DOM MouseEvent target in HTML documents is an HTMLElement or null
       const target = e.target as HTMLElement | null;
+
       if (!target || target === lastTargetRef.current) return;
       pendingHoverTarget = target;
 
@@ -116,16 +120,19 @@ export function useCursorListeners({
       hoverRafId = requestAnimationFrame(() => {
         hoverRafId = null;
         const currentTarget = pendingHoverTarget;
+
         if (!currentTarget || currentTarget === lastTargetRef.current || isScrollingRef.current) return;
         lastTargetRef.current = currentTarget;
 
         const clickable = checkClickable(currentTarget);
+
         if (isClickableRef.current !== clickable) {
           isClickableRef.current = clickable;
           setIsClickable(clickable);
         }
 
         const hoveringText = checkHoveringText(currentTarget, clickable);
+
         if (isHoveringTextRef.current !== hoveringText) {
           isHoveringTextRef.current = hoveringText;
           setIsHoveringText(hoveringText);
@@ -136,15 +143,18 @@ export function useCursorListeners({
     const onScroll = () => {
       if (!isScrollingRef.current) {
         isScrollingRef.current = true;
+
         if (isClickableRef.current) {
           isClickableRef.current = false;
           setIsClickable(false);
         }
+
         if (isHoveringTextRef.current) {
           isHoveringTextRef.current = false;
           setIsHoveringText(false);
         }
       }
+
       if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
       scrollTimeoutRef.current = setTimeout(() => {
         isScrollingRef.current = false;
@@ -175,7 +185,9 @@ export function useCursorListeners({
       window.removeEventListener('scroll', onScroll);
 
       if (hoverRafId !== null) cancelAnimationFrame(hoverRafId);
+
       if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+
       if (typeof document !== 'undefined') {
         document.documentElement.style.cursor = '';
         document.body.style.cursor = '';

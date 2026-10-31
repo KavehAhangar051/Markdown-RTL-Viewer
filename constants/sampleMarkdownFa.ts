@@ -130,6 +130,35 @@ bun install
 bun run dev
 \`\`\`
 
+### ۷. برنامه‌نویسی سیستمی (C Language):
+\`\`\`c
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_NODES 256
+
+typedef struct PacketNode {
+    size_t id;
+    double payload;
+    struct PacketNode *next;
+} PacketNode_t;
+
+int main(void) {
+    PacketNode_t *node = (PacketNode_t *)malloc(sizeof(PacketNode_t));
+    if (node == NULL) {
+        return EXIT_FAILURE;
+    }
+
+    node->id = 101;
+    node->payload = 98.6;
+    node->next = NULL;
+
+    printf("Packet #%zu initialized (limit: %d)\\n", node->id, MAX_NODES);
+    free(node);
+    return EXIT_SUCCESS;
+}
+\`\`\`
+
 ---
 
 ## 📊 ۵. جداول پیشرفته داده‌ها (GFM Data Tables)

@@ -29,24 +29,34 @@ export function FocusModeBar(): React.JSX.Element {
     };
 
     window.addEventListener('keydown', handleKeyDown);
+
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [toggleFocusMode]);
 
   return (
     <m.div
       id="focus-mode-floating-chip"
-      initial={{ opacity: 0, scale: 0.85, y: -10 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.85, y: -8 }}
+      initial={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.9, y: -10 }}
+      animate={reduceMotion ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }}
+      exit={
+        reduceMotion
+          ? { opacity: 0 }
+          : {
+              opacity: 0,
+              scale: 0.96,
+              y: -8,
+              transition: { duration: DURATION.slow * DURATION.exitRatio, ease: EASE_OUT },
+            }
+      }
       transition={{ duration: DURATION.slow, ease: EASE_OUT }}
-      className="fixed top-4 ltr:right-4 ltr:sm:right-6 rtl:left-4 rtl:sm:left-6 z-50 pointer-events-auto"
+      className="fixed top-[calc(1rem+env(safe-area-inset-top,0px))] end-4 sm:end-6 z-50 pointer-events-auto"
     >
       <m.button
         type="button"
         id="focus-mode-exit-btn"
         onClick={toggleFocusMode}
-        whileTap={reduceMotion ? undefined : { scale: 0.92 }}
-        whileHover={reduceMotion ? undefined : { scale: 1.05 }}
+        whileTap={reduceMotion ? undefined : { scale: 0.96 }}
+        whileHover={reduceMotion ? undefined : { scale: 1.04 }}
         transition={SPRING_PRESS}
         title={`${t.focusMode.exitButton} (${t.focusMode.escHint})`}
         aria-label={t.focusMode.exitButton}

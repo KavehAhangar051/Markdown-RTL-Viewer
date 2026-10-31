@@ -6,7 +6,6 @@
 import type { Variants } from "motion/react";
 import { EASE_OUT, SPRING_SWAP } from "@/lib/ease";
 import type {
-  ActionSwapAnimation,
   ActionSwapButtonSize,
   ActionSwapButtonVariant,
 } from "./action-swap-types";
@@ -15,9 +14,11 @@ import type {
 export type CoreAnimation = "blur" | "roll";
 
 const BLUR_TRANSITION = { duration: 0.2, ease: "easeInOut" } as const;
+const ICON_BLUR_TRANSITION = { type: "spring", duration: 0.3, bounce: 0 } as const;
 const ROLL_TRANSITION = SPRING_SWAP;
 const ROLL_EXIT_TRANSITION = { duration: 0.14, ease: EASE_OUT } as const;
 const SWAP_BLUR = "blur(8px)";
+const ICON_SWAP_BLUR = "blur(4px)";
 const ROLL_BLUR = "blur(3px)";
 export const CASCADE_STAGGER = 0.025;
 
@@ -72,18 +73,18 @@ export const TEXT_VARIANTS: Record<CoreAnimation, Variants> = {
 
 export const ICON_VARIANTS: Record<CoreAnimation, Variants> = {
   blur: {
-    initial: { opacity: 0, scale: 0.25, filter: SWAP_BLUR },
+    initial: { opacity: 0, scale: 0.25, filter: ICON_SWAP_BLUR },
     animate: {
       opacity: 1,
       scale: 1,
       filter: "blur(0px)",
-      transition: BLUR_TRANSITION,
+      transition: ICON_BLUR_TRANSITION,
     },
     exit: {
       opacity: 0,
       scale: 0.25,
-      filter: SWAP_BLUR,
-      transition: BLUR_TRANSITION,
+      filter: ICON_SWAP_BLUR,
+      transition: ICON_BLUR_TRANSITION,
     },
   },
   roll: {

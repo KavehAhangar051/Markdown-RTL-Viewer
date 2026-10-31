@@ -39,6 +39,7 @@ const getToastContainerClass = (isDark: boolean, isError: boolean): string => {
       ? 'bg-zinc-950/95 border-rose-500/40 text-rose-100 shadow-[0_10px_30px_rgba(244,63,94,0.15)]'
       : 'bg-zinc-950/95 border-zinc-800 text-zinc-100 shadow-black/80';
   }
+
   return isError
     ? 'bg-white/95 border-rose-300 text-rose-950 shadow-rose-200/50'
     : 'bg-white/95 border-zinc-300 text-zinc-900 shadow-zinc-300/60';
@@ -108,7 +109,7 @@ function ToastAction({
   return (
     <m.button
       type="button"
-      whileTap={reduceMotion ? undefined : { scale: 0.95 }}
+      whileTap={reduceMotion ? undefined : { scale: 0.96 }}
       transition={SPRING_PRESS}
       onClick={() => {
         action.onClick();
@@ -149,7 +150,7 @@ export function ToastNotification({
           exit="exit"
           role="status"
           aria-live="polite"
-          className="fixed bottom-20 sm:bottom-24 left-1/2 -translate-x-1/2 z-50 max-w-md w-auto px-4 pointer-events-auto"
+          className="fixed bottom-[calc(5rem+env(safe-area-inset-bottom,0px))] sm:bottom-[calc(6rem+env(safe-area-inset-bottom,0px))] left-1/2 -translate-x-1/2 z-50 max-w-md w-auto px-4 pointer-events-auto"
           dir={isFa ? 'rtl' : 'ltr'}
         >
           {/* Error Shake Layer (only shakes on error) */}
@@ -180,7 +181,7 @@ export function ToastNotification({
             <m.button
               onClick={onClose}
               type="button"
-              whileTap={reduceMotion ? undefined : { scale: 0.9 }}
+              whileTap={reduceMotion ? undefined : { scale: 0.96 }}
               transition={SPRING_PRESS}
               className={`min-w-[36px] min-h-[36px] flex items-center justify-center rounded-lg transition-colors cursor-pointer touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 ${getCloseButtonClass(isDark)}`}
               aria-label={isFa ? 'بستن پیام' : 'Close notification'}

@@ -32,9 +32,11 @@ export function DockLabel({
 
   useEffect(() => {
     if (!isHovered) return;
+
     const unsubscribe = isHovered.on('change', (latest) => {
       setIsVisible(latest === 1);
     });
+
     return () => unsubscribe();
   }, [isHovered]);
 

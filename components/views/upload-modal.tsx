@@ -11,9 +11,9 @@ import { useMarkdownContext } from '@/store/MarkdownContext';
 import { Modal } from '@/components/ui/modal';
 import { Button } from '@/components/ui/button';
 import { CloudUpload, FileText } from 'lucide-react';
-import { readTextFile } from '@/utils/fileHelpers';
+import { readTextFile, validateMarkdownUploadFile } from '@/utils/fileHelpers';
 import { SPRING_PRESS } from '@/lib/ease';
-import { MAX_UPLOAD_FILE_SIZE_BYTES } from '@/constants/domain';
+import { UPLOAD_ACCEPT_ATTR } from '@/constants/domain';
 
 const getDropzoneClass = (isDragging: boolean, isDark: boolean): string => {
   if (isDragging) {
@@ -21,6 +21,7 @@ const getDropzoneClass = (isDragging: boolean, isDark: boolean): string => {
       ? 'border-emerald-500 bg-emerald-950/20 shadow-lg shadow-emerald-950/30'
       : 'border-emerald-600 bg-emerald-50/80 shadow-lg shadow-emerald-200/50';
   }
+
   return isDark
     ? 'border-zinc-800 bg-zinc-950/80 hover:border-zinc-700'
     : 'border-zinc-300 bg-zinc-50/80 hover:border-zinc-400';
@@ -28,6 +29,7 @@ const getDropzoneClass = (isDragging: boolean, isDark: boolean): string => {
 
 const getCloudUploadIconClass = (isDragging: boolean, isDark: boolean): string => {
   if (isDragging) return 'text-emerald-500';
+
   return isDark ? 'text-zinc-400' : 'text-zinc-600';
 };
 
@@ -38,13 +40,17 @@ export function UploadModal(): React.JSX.Element {
   const isDark = theme === 'dark';
 
   const handleFileSelect = async (file: File) => {
-    if (!file.name.endsWith('.md') && !file.name.endsWith('.txt')) {
+    const validation = validateMarkdownUploadFile(file.name, file.size);
+
+    if (validation === 'invalid_type') {
       showToast(t.toasts.invalidFileType, 'error');
+
       return;
     }
 
-    if (file.size > MAX_UPLOAD_FILE_SIZE_BYTES) {
+    if (validation === 'file_too_large') {
       showToast(t.uploadModal.maxSizeText, 'error');
+
       return;
     }
 
@@ -61,6 +67,7 @@ export function UploadModal(): React.JSX.Element {
   const onDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
+
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       handleFileSelect(e.dataTransfer.files[0]);
     }
@@ -99,8 +106,8 @@ export function UploadModal(): React.JSX.Element {
 
         <label htmlFor="upload-modal-file-input" className="cursor-pointer">
           <Button variant="primary" size="sm" asChild>
-            <span>
-              <FileText className="w-4 h-4 ml-1.5" />
+            <span className="inline-flex items-center gap-1.5">
+              <FileText className="w-4 h-4" />
               {t.uploadModal.selectButton}
             </span>
           </Button>
@@ -108,7 +115,7 @@ export function UploadModal(): React.JSX.Element {
             id="upload-modal-file-input"
             aria-label={t.uploadModal.selectButton}
             type="file"
-            accept=".md,.txt"
+            accept={UPLOAD_ACCEPT_ATTR}
             className="sr-only"
             onChange={(e) => {
               if (e.target.files && e.target.files[0]) {

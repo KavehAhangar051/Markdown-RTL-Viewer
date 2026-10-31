@@ -20,8 +20,14 @@ export function isLowEndDevice(): boolean {
   }
 
   // Check device memory (<= 4GB indicates low-memory device)
-  const nav = navigator as unknown as { deviceMemory?: number };
-  if (nav && typeof nav.deviceMemory === 'number' && nav.deviceMemory <= 4) {
+  interface NavigatorWithDeviceMemory extends Navigator {
+    readonly deviceMemory?: number;
+  }
+
+  // SAFETY: Navigator in modern Chromium browsers optionally provides deviceMemory
+  const nav = navigator as NavigatorWithDeviceMemory;
+
+  if (nav.deviceMemory !== undefined && nav.deviceMemory <= 4) {
     return true;
   }
 

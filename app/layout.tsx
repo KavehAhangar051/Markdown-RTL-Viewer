@@ -1,12 +1,9 @@
 import type { Metadata } from 'next';
-import '@fontsource/vazirmatn/300.css';
 import '@fontsource/vazirmatn/400.css';
 import '@fontsource/vazirmatn/500.css';
 import '@fontsource/vazirmatn/600.css';
 import '@fontsource/vazirmatn/700.css';
-import '@fontsource/vazirmatn/800.css';
 import '@fontsource/kode-mono/400.css';
-import '@fontsource/kode-mono/500.css';
 import '@fontsource/kode-mono/600.css';
 import '@fontsource/kode-mono/700.css';
 import 'katex/dist/katex.min.css';
@@ -67,6 +64,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             fontFamily: 'monospace',
             fontSize: '32px',
             userSelect: 'none',
+            pointerEvents: 'none',
           }}
           dangerouslySetInnerHTML={{
             __html: `

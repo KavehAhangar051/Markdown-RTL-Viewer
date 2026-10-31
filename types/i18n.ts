@@ -67,6 +67,9 @@ export interface Translations {
   };
   toasts: {
     editorCleared: string;
+    undoAction: string;
+    contentRestored: string;
+    sampleLoaded: string;
     pasteSuccess: string;
     clipboardEmpty: string;
     clipboardPermissionDenied: string;

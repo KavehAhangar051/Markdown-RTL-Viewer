@@ -71,6 +71,24 @@ html.lenis, html.lenis body {
   --font-code-hybrid: 'Kode Mono', 'Dana', 'Vazirmatn', monospace;
   --font-mono: 'Kode Mono', monospace;
   --font-sans: 'Kode Mono', 'Dana', 'Vazirmatn', monospace, system-ui, sans-serif;
+
+  /* Semantic Colors (better-colors role tokens) */
+  --color-canvas: var(--color-canvas);
+  --color-surface: var(--color-surface);
+  --color-surface-raised: var(--color-surface-raised);
+  --color-surface-sunken: var(--color-surface-sunken);
+  --color-border-subtle: var(--color-border-subtle);
+  --color-border-default: var(--color-border-default);
+  --color-border-strong: var(--color-border-strong);
+  --color-text-primary: var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-text-disabled: var(--color-text-disabled);
+  --color-accent-solid: #10b981;
+  --color-accent-solid-hover: #059669;
+  --color-accent-text: var(--color-accent-text);
+  --color-accent-subtle: var(--color-accent-subtle);
+  --color-status-danger: #ef4444;
+  --color-status-success: #10b981;
 }
 
 @layer base {
@@ -81,12 +99,43 @@ html.lenis, html.lenis body {
     --font-code-hybrid: 'Kode Mono', 'Dana', 'Vazirmatn', monospace;
     --font-mono: 'Kode Mono', monospace;
     --font-sans: 'Kode Mono', 'Dana', 'Vazirmatn', monospace, system-ui, sans-serif;
+
+    /* Theme Role Semantics - Dark default */
+    --color-canvas: #000000;
+    --color-surface: rgba(12, 12, 15, 0.85);
+    --color-surface-raised: rgba(20, 20, 24, 0.70);
+    --color-surface-sunken: rgba(10, 10, 12, 0.95);
+    --color-border-subtle: rgba(255, 255, 255, 0.08);
+    --color-border-default: rgba(255, 255, 255, 0.12);
+    --color-border-strong: rgba(255, 255, 255, 0.25);
+    --color-text-primary: #fafafa;
+    --color-text-secondary: #a1a1aa;
+    --color-text-disabled: #71717a;
+    --color-accent-text: #34d399;
+    --color-accent-subtle: rgba(16, 185, 129, 0.12);
+  }
+
+  html.light,
+  body.light,
+  .light {
+    --color-canvas: #f8fafc;
+    --color-surface: rgba(255, 255, 255, 0.88);
+    --color-surface-raised: rgba(255, 255, 255, 0.92);
+    --color-surface-sunken: rgba(255, 255, 255, 0.98);
+    --color-border-subtle: rgba(0, 0, 0, 0.08);
+    --color-border-default: rgba(0, 0, 0, 0.14);
+    --color-border-strong: rgba(0, 0, 0, 0.35);
+    --color-text-primary: #09090b;
+    --color-text-secondary: #71717a;
+    --color-text-disabled: #a1a1aa;
+    --color-accent-text: #047857;
+    --color-accent-subtle: rgba(16, 185, 129, 0.08);
   }
 
   body {
     font-family: var(--font-vazir);
-    background-color: #000000;
-    color: #f4f4f5;
+    background-color: var(--color-canvas);
+    color: var(--color-text-primary);
     overflow-x: hidden;
   }
 
@@ -111,29 +160,30 @@ html.lenis, html.lenis body {
 }
 
 .glass-panel {
-  background: rgba(12, 12, 15, 0.85);
+  background: var(--color-surface);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--color-border-subtle);
   box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.8), inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
   transform: translateZ(0);
 }
 
 .glass-card {
-  background: rgba(20, 20, 24, 0.7);
+  background: var(--color-surface-raised);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  border: 1px solid var(--color-border-subtle);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
   transform: translateZ(0);
 }
 
 .glass-input {
-  background: rgba(10, 10, 12, 0.95);
+  background: var(--color-surface-sunken);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.2s ease-in-out;
+  border: 1px solid var(--color-border-default);
+  color: var(--color-text-primary);
+  transition: border-color 0.2s ease-out, box-shadow 0.2s ease-out, background-color 0.2s ease-out;
 }
 
 .glass-panel .glass-input {
@@ -153,26 +203,16 @@ html.lenis, html.lenis body {
 html.light,
 body.light,
 .light {
-  background-color: #f8fafc !important;
-  color: #09090b !important;
+  background-color: var(--color-canvas) !important;
+  color: var(--color-text-primary) !important;
 }
 
 .light .glass-panel {
-  background: rgba(255, 255, 255, 0.88);
-  border: 1px solid rgba(0, 0, 0, 0.08);
   box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.06), inset 0 1px 0 0 rgba(255, 255, 255, 0.9);
 }
 
 .light .glass-card {
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(0, 0, 0, 0.07);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-}
-
-.light .glass-input {
-  background: rgba(255, 255, 255, 0.98);
-  color: #09090b;
-  border: 1px solid rgba(0, 0, 0, 0.14);
 }
 
 .light .glass-input:focus {
@@ -226,6 +266,17 @@ body.light,
   line-height: 1.85;
 }
 
+.markdown-rtl-content h1,
+.markdown-rtl-content h2,
+.markdown-rtl-content h3 {
+  text-wrap: balance;
+  line-height: 1.35;
+}
+
+.markdown-rtl-content p {
+  text-wrap: pretty;
+}
+
 .markdown-rtl-content pre {
   direction: ltr;
   text-align: left;
@@ -238,6 +289,13 @@ body.light,
   font-family: var(--font-code-hybrid);
   font-feature-settings: 'calt' 1, 'liga' 1;
   box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6);
+  content-visibility: auto;
+  contain-intrinsic-size: auto 180px;
+}
+
+.markdown-rtl-content table {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 160px;
 }
 
 .markdown-rtl-content pre code {
@@ -310,6 +368,205 @@ body.light,
 
 .light .editor-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(16, 185, 129, 0.85) !important;
+}
+
+/* KaTeX Math Rendering & RTL Isolation (ChatGPT / Gemini Style) */
+.markdown-rtl-content .katex,
+.markdown-rtl-content .katex-display,
+.katex-block-container {
+  direction: ltr !important;
+  unicode-bidi: isolate !important;
+}
+
+.markdown-rtl-content .katex {
+  font-family: KaTeX_Main, 'Times New Roman', serif !important;
+  font-size: 1.06em;
+  line-height: 1.2;
+  text-align: left !important;
+}
+
+.markdown-rtl-content .katex-inline-wrapper {
+  display: inline-block;
+  direction: ltr !important;
+  unicode-bidi: isolate !important;
+  padding: 0.05em 0.35em;
+  margin: 0 0.12em;
+  border-radius: 0.375rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  vertical-align: middle;
+}
+
+.light .markdown-rtl-content .katex-inline-wrapper {
+  background: rgba(15, 23, 42, 0.04);
+  border-color: rgba(15, 23, 42, 0.08);
+}
+
+.markdown-rtl-content .katex-display {
+  margin: 0 !important;
+  padding: 0.25rem 0;
+  text-align: center !important;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.markdown-rtl-content .katex-display > .katex {
+  display: inline-block;
+  text-align: center !important;
+  font-size: 1.22em;
+}
+
+/* VSCode Dark+ & Light+ Authentic Syntax Highlighting */
+.hljs {
+  color: #d4d4d4;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-operator {
+  color: #569cd6;
+}
+
+.hljs-meta,
+.hljs-meta .hljs-keyword,
+.hljs-doctag {
+  color: #c586c0;
+}
+
+.hljs-type,
+.hljs-class,
+.hljs-title.class_,
+.hljs-built_in {
+  color: #4ec9b0;
+}
+
+.hljs-title,
+.hljs-title.function_,
+.hljs-title.function_.invoke_,
+.hljs-section {
+  color: #dcdcaa;
+}
+
+.hljs-string,
+.hljs-meta .hljs-string,
+.hljs-regexp,
+.hljs-addition {
+  color: #ce9178;
+}
+
+.hljs-number,
+.hljs-deletion {
+  color: #b5cea8;
+}
+
+.hljs-literal,
+.hljs-symbol,
+.hljs-bullet {
+  color: #569cd6;
+}
+
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-property,
+.hljs-params {
+  color: #9cdcfe;
+}
+
+.hljs-variable.constant_,
+.hljs-variable.language_ {
+  color: #4fc1ff;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: #6a9955;
+  font-style: italic;
+}
+
+.hljs-punctuation,
+.hljs-tag {
+  color: #d4d4d4;
+}
+
+/* VSCode Light+ Theme */
+.light .markdown-rtl-content pre {
+  background-color: #f8fafc;
+  border-color: rgba(15, 23, 42, 0.12);
+  box-shadow: inset 0 1px 4px rgba(15, 23, 42, 0.04);
+}
+
+.light .markdown-rtl-content pre code,
+.light .hljs {
+  color: #1e293b;
+}
+
+.light .hljs-keyword,
+.light .hljs-selector-tag,
+.light .hljs-operator {
+  color: #0000ff;
+}
+
+.light .hljs-meta,
+.light .hljs-meta .hljs-keyword,
+.light .hljs-doctag {
+  color: #af00db;
+}
+
+.light .hljs-type,
+.light .hljs-class,
+.light .hljs-title.class_,
+.light .hljs-built_in {
+  color: #267f99;
+}
+
+.light .hljs-title,
+.light .hljs-title.function_,
+.light .hljs-title.function_.invoke_,
+.light .hljs-section {
+  color: #795e26;
+}
+
+.light .hljs-string,
+.light .hljs-meta .hljs-string,
+.light .hljs-regexp,
+.light .hljs-addition {
+  color: #a31515;
+}
+
+.light .hljs-number,
+.light .hljs-deletion {
+  color: #098658;
+}
+
+.light .hljs-literal,
+.light .hljs-symbol,
+.light .hljs-bullet {
+  color: #0000ff;
+}
+
+.light .hljs-attr,
+.light .hljs-variable,
+.light .hljs-template-variable,
+.light .hljs-property,
+.light .hljs-params {
+  color: #001080;
+}
+
+.light .hljs-variable.constant_,
+.light .hljs-variable.language_ {
+  color: #0070c1;
+}
+
+.light .hljs-comment,
+.light .hljs-quote {
+  color: #008000;
+  font-style: italic;
+}
+
+.light .hljs-punctuation,
+.light .hljs-tag {
+  color: #334155;
 }
 
 @media (pointer: fine) {

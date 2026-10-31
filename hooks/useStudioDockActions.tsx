@@ -50,6 +50,7 @@ export function useStudioDockActions(): DockItemData[] {
   const handlePaste = useCallback(async () => {
     try {
       const result = await readFromClipboard();
+
       if (result.success && result.text !== null) {
         if (result.text.length > 0) {
           // Clear previous content completely and set new clipboard content directly
@@ -68,10 +69,13 @@ export function useStudioDockActions(): DockItemData[] {
 
   const handleDownload = useCallback(() => {
     const currentRtl = rtlMarkdownRef.current;
+
     if (!currentRtl.trim()) {
       showToast(t.toasts.noTextToDownload, 'error');
+
       return;
     }
+
     const bundle = prepareExportBundle(currentRtl);
     downloadFile(bundle.content, bundle.filename, bundle.mimeType);
     showToast(t.toasts.downloadSuccess, 'success');

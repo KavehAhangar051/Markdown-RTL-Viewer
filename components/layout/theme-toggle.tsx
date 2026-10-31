@@ -21,6 +21,7 @@ export function ThemeToggle(): React.JSX.Element {
     variant: 'circle-blur',
     start: 'center',
   });
+
   const { t } = useMarkdownContext();
 
   const handleToggle = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -40,7 +41,7 @@ export function ThemeToggle(): React.JSX.Element {
         title={isDark ? t.header.themeToggleLightTitle : t.header.themeToggleDarkTitle}
         aria-label={isDark ? t.header.themeToggleLightTitle : t.header.themeToggleDarkTitle}
         aria-pressed={isDark}
-        className={`group relative flex items-center justify-center gap-1.5 min-h-[44px] min-w-[44px] sm:min-h-[36px] sm:min-w-0 px-2.5 sm:px-3 rounded-full border text-xs font-medium tracking-wide transition-all duration-200 cursor-pointer select-none touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 active:scale-95 ${
+        className={`group relative flex items-center justify-center gap-1.5 min-h-[44px] min-w-[44px] sm:min-h-[36px] sm:min-w-0 px-2.5 sm:px-3 rounded-full border text-xs font-medium tracking-wide transition-[color,background-color,border-color,scale] duration-150 ease-out cursor-pointer select-none touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 active:scale-[0.96] ${
           isDark
             ? 'bg-white/5 hover:bg-white/10 border-white/10 hover:border-white/20 text-zinc-300 hover:text-white focus-visible:ring-offset-zinc-950'
             : 'bg-zinc-100 hover:bg-zinc-200/80 border-zinc-200 hover:border-zinc-300 text-zinc-700 hover:text-zinc-900 focus-visible:ring-offset-white'

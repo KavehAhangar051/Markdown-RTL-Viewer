@@ -15,6 +15,8 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   variant?: 'primary' | 'secondary' | 'ghost' | 'outline' | 'danger';
   size?: 'sm' | 'md' | 'lg';
   asChild?: boolean;
+  /** Disable tactile scale-on-press feedback when motion would distract. */
+  static?: boolean;
 }
 
 const BASE_STYLES =
@@ -22,15 +24,15 @@ const BASE_STYLES =
 
 const BUTTON_VARIANTS = {
   primary:
-    'bg-zinc-100 hover:bg-white text-zinc-950 font-semibold shadow-md border border-zinc-200 active:scale-[0.98]',
+    'bg-zinc-900 hover:bg-zinc-800 text-white border border-zinc-900 dark:bg-zinc-100 dark:hover:bg-white dark:text-zinc-950 dark:border-zinc-200 font-semibold shadow-md',
   secondary:
-    'bg-zinc-900/90 hover:bg-zinc-800/90 text-zinc-100 backdrop-blur-md border border-zinc-800 shadow-sm active:scale-[0.98]',
+    'bg-zinc-100 hover:bg-zinc-200 text-zinc-900 border border-zinc-200 dark:bg-zinc-900/90 dark:hover:bg-zinc-800/90 dark:text-zinc-100 dark:border-zinc-800 shadow-sm backdrop-blur-md',
   outline:
-    'border border-zinc-800 hover:border-zinc-600 bg-black/60 text-zinc-300 hover:text-white backdrop-blur-md hover:bg-zinc-900/60 active:scale-[0.98]',
+    'border border-zinc-300 hover:border-zinc-400 bg-white/70 text-zinc-700 hover:text-zinc-950 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:border-zinc-600 dark:bg-black/60 dark:text-zinc-300 dark:hover:text-white dark:hover:bg-zinc-900/60 backdrop-blur-md',
   ghost:
-    'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/60 backdrop-blur-sm active:scale-[0.98]',
+    'text-zinc-600 hover:text-zinc-950 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:bg-zinc-800/60 backdrop-blur-sm',
   danger:
-    'bg-red-600 hover:bg-red-500 text-white backdrop-blur-md border border-red-500/30 shadow-md shadow-red-950/40 active:scale-[0.98]',
+    'bg-red-600 hover:bg-red-500 text-white backdrop-blur-md border border-red-500/30 shadow-md shadow-red-950/40',
 };
 
 const BUTTON_SIZES = {
@@ -40,7 +42,7 @@ const BUTTON_SIZES = {
 };
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = 'primary', size = 'md', asChild = false, disabled, ...props }, ref) => {
+  ({ className, variant = 'primary', size = 'md', asChild = false, static: isStatic = false, disabled, ...props }, ref) => {
     const reduceMotion = useReducedMotion();
 
     const combinedClassName = clsx(BASE_STYLES, BUTTON_VARIANTS[variant], BUTTON_SIZES[size], className);
@@ -55,14 +57,17 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       );
     }
 
+    const disableMotion = Boolean(reduceMotion || disabled || isStatic);
+
     return (
       <m.button
         ref={ref}
         disabled={disabled}
-        whileTap={reduceMotion || disabled ? undefined : { scale: 0.97 }}
-        whileHover={reduceMotion || disabled ? undefined : { scale: 1.01 }}
+        whileTap={disableMotion ? undefined : { scale: 0.96 }}
+        whileHover={disableMotion ? undefined : { scale: 1.01 }}
         transition={SPRING_PRESS}
         className={combinedClassName}
+        // SAFETY: ButtonProps extends HTMLMotionProps<'button'>; attributes safely pass to motion.button
         {...(props as React.ComponentPropsWithoutRef<typeof m.button>)}
       />
     );

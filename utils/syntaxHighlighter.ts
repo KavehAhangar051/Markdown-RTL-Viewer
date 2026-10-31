@@ -33,36 +33,130 @@ import dart from 'highlight.js/lib/languages/dart';
 import powershell from 'highlight.js/lib/languages/powershell';
 import makefile from 'highlight.js/lib/languages/makefile';
 import { segmentHtmlByLanguage } from '@/utils/typographySegmenter';
+import { createBoundedCache, CacheTelemetryStats } from '@/utils/lruCache';
+import { enhanceHighlightedHtml } from '@/utils/cFamilyEnhancer';
 
 // Register core and popular languages on startup
 hljs.registerLanguage('javascript', javascript);
+
 hljs.registerLanguage('typescript', typescript);
+
 hljs.registerLanguage('python', python);
+
 hljs.registerLanguage('bash', bash);
+
 hljs.registerLanguage('json', json);
+
 hljs.registerLanguage('yaml', yaml);
+
 hljs.registerLanguage('markdown', markdown);
+
 hljs.registerLanguage('xml', xml);
+
 hljs.registerLanguage('css', css);
+
 hljs.registerLanguage('cpp', cpp);
+
 hljs.registerLanguage('csharp', csharp);
+
 hljs.registerLanguage('go', go);
+
 hljs.registerLanguage('rust', rust);
+
 hljs.registerLanguage('sql', sql);
+
 hljs.registerLanguage('ruby', ruby);
+
 hljs.registerLanguage('java', java);
+
 hljs.registerLanguage('php', php);
+
 hljs.registerLanguage('c', c);
+
 hljs.registerLanguage('diff', diff);
+
 hljs.registerLanguage('ini', ini);
+
 hljs.registerLanguage('scss', scss);
+
 hljs.registerLanguage('graphql', graphql);
+
 hljs.registerLanguage('dockerfile', dockerfile);
+
 hljs.registerLanguage('kotlin', kotlin);
+
 hljs.registerLanguage('swift', swift);
+
 hljs.registerLanguage('dart', dart);
+
 hljs.registerLanguage('powershell', powershell);
+
 hljs.registerLanguage('makefile', makefile);
+
+/** Static module-level language alias mapping avoiding per-call object allocations */
+const LANGUAGE_ALIAS_MAP = {
+  js: 'javascript',
+  ts: 'typescript',
+  tsx: 'typescript',
+  jsx: 'javascript',
+  py: 'python',
+  python3: 'python',
+  py3: 'python',
+  sh: 'bash',
+  shell: 'bash',
+  zsh: 'bash',
+  bash: 'bash',
+  yml: 'yaml',
+  yaml: 'yaml',
+  md: 'markdown',
+  markdown: 'markdown',
+  rb: 'ruby',
+  ruby: 'ruby',
+  cs: 'csharp',
+  csharp: 'csharp',
+  'c#': 'csharp',
+  'c++': 'cpp',
+  cpp: 'cpp',
+  c: 'c',
+  golang: 'go',
+  go: 'go',
+  rs: 'rust',
+  rust: 'rust',
+  htm: 'xml',
+  html: 'xml',
+  xhtml: 'xml',
+  svg: 'xml',
+  xml: 'xml',
+  json: 'json',
+  css: 'css',
+  scss: 'scss',
+  sass: 'scss',
+  diff: 'diff',
+  docker: 'dockerfile',
+  dockerfile: 'dockerfile',
+  ini: 'ini',
+  graphql: 'graphql',
+  gql: 'graphql',
+  kt: 'kotlin',
+  kotlin: 'kotlin',
+  swift: 'swift',
+  dart: 'dart',
+  sql: 'sql',
+  ps1: 'powershell',
+  pwsh: 'powershell',
+  powershell: 'powershell',
+  make: 'makefile',
+  makefile: 'makefile',
+  txt: 'text',
+  plain: 'text',
+  plaintext: 'text',
+  none: 'text',
+  raw: 'text',
+  text: 'text',
+  auto: 'auto',
+} as const;
+
+type KnownLanguageAlias = keyof typeof LANGUAGE_ALIAS_MAP;
 
 /**
  * Normalizes common language aliases to highlight.js supported identifiers.
@@ -73,70 +167,13 @@ hljs.registerLanguage('makefile', makefile);
 export function normalizeLanguage(lang?: string): string {
   if (!lang) return '';
   const clean = lang.trim().toLowerCase();
-  
-  const aliasMap: Record<string, string> = {
-    js: 'javascript',
-    ts: 'typescript',
-    tsx: 'typescript',
-    jsx: 'javascript',
-    py: 'python',
-    python3: 'python',
-    py3: 'python',
-    sh: 'bash',
-    shell: 'bash',
-    zsh: 'bash',
-    bash: 'bash',
-    yml: 'yaml',
-    yaml: 'yaml',
-    md: 'markdown',
-    markdown: 'markdown',
-    rb: 'ruby',
-    ruby: 'ruby',
-    cs: 'csharp',
-    csharp: 'csharp',
-    'c#': 'csharp',
-    'c++': 'cpp',
-    cpp: 'cpp',
-    c: 'c',
-    golang: 'go',
-    go: 'go',
-    rs: 'rust',
-    rust: 'rust',
-    htm: 'xml',
-    html: 'xml',
-    xhtml: 'xml',
-    svg: 'xml',
-    xml: 'xml',
-    json: 'json',
-    css: 'css',
-    scss: 'scss',
-    sass: 'scss',
-    diff: 'diff',
-    docker: 'dockerfile',
-    dockerfile: 'dockerfile',
-    ini: 'ini',
-    graphql: 'graphql',
-    gql: 'graphql',
-    kt: 'kotlin',
-    kotlin: 'kotlin',
-    swift: 'swift',
-    dart: 'dart',
-    sql: 'sql',
-    ps1: 'powershell',
-    pwsh: 'powershell',
-    powershell: 'powershell',
-    make: 'makefile',
-    makefile: 'makefile',
-    txt: 'text',
-    plain: 'text',
-    plaintext: 'text',
-    none: 'text',
-    raw: 'text',
-    text: 'text',
-    auto: 'auto',
-  };
 
-  return aliasMap[clean] || clean;
+  if (Object.prototype.hasOwnProperty.call(LANGUAGE_ALIAS_MAP, clean)) {
+    // SAFETY: Verified membership in LANGUAGE_ALIAS_MAP via hasOwnProperty
+    return LANGUAGE_ALIAS_MAP[clean as KnownLanguageAlias];
+  }
+
+  return clean;
 }
 
 /** Maximum number of highlighted code snippets retained in memory */
@@ -148,30 +185,27 @@ interface HighlightResult {
 }
 
 /** Internal bounded LRU cache for syntax highlight computations */
-const highlightCache = new Map<string, HighlightResult>();
-let cacheHits = 0;
-let cacheMisses = 0;
+const highlightCache = createBoundedCache<HighlightResult>(HIGHLIGHT_CACHE_LIMIT);
 
 /**
  * Resets the syntax highlighter LRU cache and tracking metrics.
  */
 export function clearHighlightCache(): void {
   highlightCache.clear();
-  cacheHits = 0;
-  cacheMisses = 0;
 }
+
+/**
+ * Snapshot of syntax highlighter cache performance metrics.
+ */
+export type HighlightCacheStats = CacheTelemetryStats;
 
 /**
  * Retrieves performance metrics for the syntax highlighter LRU cache.
  *
- * @returns {{ size: number; hits: number; misses: number }} Cache performance snapshot.
+ * @returns {HighlightCacheStats} Cache performance snapshot.
  */
-export function getHighlightCacheStats(): { size: number; hits: number; misses: number } {
-  return {
-    size: highlightCache.size,
-    hits: cacheHits,
-    misses: cacheMisses,
-  };
+export function getHighlightCacheStats(): HighlightCacheStats {
+  return highlightCache.getStats();
 }
 
 /**
@@ -185,17 +219,12 @@ export function highlightCode(code: string, language?: string): HighlightResult 
   const normLang = normalizeLanguage(language);
   const cacheKey = `${normLang}::${code}`;
 
-  // Check LRU cache
-  if (highlightCache.has(cacheKey)) {
-    cacheHits++;
-    const cached = highlightCache.get(cacheKey)!;
-    // Re-insert to refresh recency in LRU
-    highlightCache.delete(cacheKey);
-    highlightCache.set(cacheKey, cached);
+  const cached = highlightCache.get(cacheKey);
+
+  if (cached !== undefined) {
     return cached;
   }
 
-  cacheMisses++;
   let result: HighlightResult | null = null;
 
   // Plain text or unlabelled blocks: guarantee zero false-positive syntax guessing
@@ -210,6 +239,7 @@ export function highlightCode(code: string, language?: string): HighlightResult 
         language: normLang,
         ignoreIllegals: true,
       });
+
       result = { html: hlResult.value, language: normLang };
     } catch {
       // Fallback to plain text on highlight error
@@ -219,6 +249,7 @@ export function highlightCode(code: string, language?: string): HighlightResult 
     // Only attempt auto-detection when explicitly requested via "auto"
     try {
       const autoResult = hljs.highlightAuto(code);
+
       if (autoResult.language && (autoResult.relevance ?? 0) >= 4 && autoResult.value) {
         result = { html: autoResult.value, language: autoResult.language };
       }
@@ -235,21 +266,17 @@ export function highlightCode(code: string, language?: string): HighlightResult 
     };
   }
 
+  // Enhance C-family & systems languages with VSCode-level semantic tokens
+  const enhancedHtml = enhanceHighlightedHtml(result.html, result.language);
+
   // Apply character-level font segmentation to HTML tokens
   const segmentedResult: HighlightResult = {
-    html: segmentHtmlByLanguage(result.html),
+    html: segmentHtmlByLanguage(enhancedHtml),
     language: result.language,
   };
 
-  // Enforce bounded cache size
-  if (highlightCache.size >= HIGHLIGHT_CACHE_LIMIT) {
-    const oldestKey = highlightCache.keys().next().value;
-    if (oldestKey !== undefined) {
-      highlightCache.delete(oldestKey);
-    }
-  }
-
   highlightCache.set(cacheKey, segmentedResult);
+
   return segmentedResult;
 }
 
@@ -260,6 +287,10 @@ export function highlightCode(code: string, language?: string): HighlightResult 
  * @returns {string} HTML-escaped string.
  */
 function escapeHtml(text: string): string {
+  if (!text) return '';
+
+  if (!/[&<>"']/.test(text)) return text;
+
   return text
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -267,3 +298,4 @@ function escapeHtml(text: string): string {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
 }
+

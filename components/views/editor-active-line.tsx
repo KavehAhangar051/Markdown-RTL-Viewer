@@ -34,8 +34,8 @@ export const EditorActiveLine: React.FC<EditorActiveLineProps> = React.memo(({
       aria-hidden="true"
       className={`absolute top-0 left-0 right-0 pointer-events-none will-change-transform transform-gpu transition-transform duration-75 ease-out rounded-sm z-0 ${
         isDark
-          ? 'bg-zinc-800/35 border-y border-zinc-700/20 shadow-[inset_2px_0_0_0_#38bdf8]'
-          : 'bg-zinc-200/40 border-y border-zinc-300/40 shadow-[inset_2px_0_0_0_#0284c7]'
+          ? 'bg-zinc-800/35 border-y border-zinc-700/20 shadow-[inset_2px_0_0_0_#10b981]'
+          : 'bg-zinc-200/40 border-y border-zinc-300/40 shadow-[inset_2px_0_0_0_#059669]'
       }`}
       style={{
         transform: `translate3d(0, ${top}px, 0)`,

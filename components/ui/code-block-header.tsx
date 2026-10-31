@@ -6,9 +6,10 @@
  */
 
 import React from 'react';
-import { m, AnimatePresence, useReducedMotion } from 'motion/react';
+import { m, useReducedMotion } from 'motion/react';
 import { Copy, Check } from 'lucide-react';
 import { SPRING_PRESS, EASE_OUT } from '@/lib/ease';
+import { ActionSwapIcon } from '@/components/motion/action-swap';
 
 interface CodeBlockHeaderProps {
   languageName: string;
@@ -30,52 +31,50 @@ function getButtonClass(copied: boolean, isDark: boolean): string {
       ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50 shadow-xs'
       : 'bg-emerald-50 text-emerald-600 border-emerald-300 shadow-xs';
   }
+
   if (isDark) {
     return 'bg-zinc-800/80 text-zinc-300 border-zinc-700/70 hover:bg-zinc-700 hover:text-white focus-visible:ring-offset-zinc-950';
   }
+
   return 'bg-white text-zinc-900 border-zinc-300 hover:bg-zinc-50 hover:text-black shadow-xs focus-visible:ring-offset-white';
 }
 
-function getCopyLabels(isPersian: boolean, copied: boolean): { title: string; ariaLabel: string } {
+interface CopyLabels {
+  readonly title: string;
+  readonly ariaLabel: string;
+}
+
+function getCopyLabels(isPersian: boolean, copied: boolean): CopyLabels {
   if (isPersian) {
     return {
       title: copied ? 'کپی شد' : 'کپی کد',
       ariaLabel: copied ? 'کد در کلیپ‌بورد کپی شد' : 'کپی کد در کلیپ‌بورد',
     };
   }
+
   return {
     title: copied ? 'Copied' : 'Copy code',
     ariaLabel: copied ? 'Code copied to clipboard' : 'Copy code to clipboard',
   };
 }
 
-function CopyButtonContent({ copied }: { copied: boolean }): React.JSX.Element {
-  if (copied) {
-    return (
-      <m.span
-        key="copied-state"
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.8 }}
-        transition={{ duration: 0.12 }}
-        className="flex items-center justify-center"
-      >
-        <Check className="w-3.5 h-3.5 text-emerald-500 stroke-[2.5]" />
-      </m.span>
-    );
-  }
-
+function CopyButtonContent({
+  copied,
+}: {
+  copied: boolean;
+}): React.JSX.Element {
   return (
-    <m.span
-      key="copy-state"
-      initial={{ opacity: 0, scale: 0.8 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.8 }}
-      transition={{ duration: 0.12 }}
-      className="flex items-center justify-center"
+    <ActionSwapIcon
+      value={copied ? 'copied' : 'copy'}
+      animation="blur"
+      className="w-3.5 h-3.5"
     >
-      <Copy className="w-3.5 h-3.5" />
-    </m.span>
+      {copied ? (
+        <Check className="w-3.5 h-3.5 text-emerald-500 stroke-[2.5]" />
+      ) : (
+        <Copy className="w-3.5 h-3.5" />
+      )}
+    </ActionSwapIcon>
   );
 }
 
@@ -90,7 +89,8 @@ function formatLanguageName(lang?: string, isPersian?: boolean): string {
   if (!lang || lang === 'text' || lang === 'plain' || lang === 'plaintext') {
     return isPersian ? 'متن' : 'TEXT';
   }
-  const displayMap: Record<string, string> = {
+
+  const displayMap = {
     javascript: 'JavaScript',
     typescript: 'TypeScript',
     python: 'Python',
@@ -119,8 +119,12 @@ function formatLanguageName(lang?: string, isPersian?: boolean): string {
     ini: 'INI',
     makefile: 'Makefile',
     powershell: 'PowerShell',
-  };
-  return displayMap[lang.toLowerCase()] || lang.toUpperCase();
+  } as const;
+
+  // SAFETY: Key is normalized to lower case and safely falls back via index lookup
+  const key = lang.toLowerCase() as keyof typeof displayMap;
+
+  return displayMap[key] || lang.toUpperCase();
 }
 
 /**
@@ -157,7 +161,7 @@ export function CodeBlockHeader({
       <m.button
         type="button"
         onClick={onCopy}
-        whileTap={reduceMotion ? undefined : { scale: 0.92 }}
+        whileTap={reduceMotion ? undefined : { scale: 0.96 }}
         animate={
           copied && !reduceMotion
             ? { scale: [1, 1.1, 1], transition: { duration: 0.2, ease: EASE_OUT } }
@@ -168,9 +172,7 @@ export function CodeBlockHeader({
         title={title}
         aria-label={ariaLabel}
       >
-        <AnimatePresence mode="wait" initial={false}>
-          <CopyButtonContent copied={copied} />
-        </AnimatePresence>
+        <CopyButtonContent copied={copied} />
       </m.button>
     </div>
   );

@@ -11,6 +11,7 @@
  */
 export function isTouchDevice(): boolean {
   if (typeof window === 'undefined') return true;
+
   return window.matchMedia('(pointer: coarse)').matches;
 }
 
@@ -23,6 +24,7 @@ export function isTouchDevice(): boolean {
  */
 export function checkClickable(target: HTMLElement | null): boolean {
   if (!target) return false;
+
   return !!target.closest(
     'a, button, input, select, textarea, [role="button"], [role="tab"], [role="menuitem"], [role="switch"], .cursor-pointer, [onclick], [tabindex]:not([tabindex="-1"]), label, summary'
   );
@@ -37,6 +39,7 @@ export function checkClickable(target: HTMLElement | null): boolean {
  */
 export function checkHoveringText(target: HTMLElement | null, isClickable: boolean): boolean {
   if (!target || isClickable) return false;
+
   return !!target.closest('p, h1, h2, h3, h4, h5, h6, span, li, blockquote, code, pre, td, th');
 }
 

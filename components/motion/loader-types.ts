@@ -3,8 +3,6 @@
  * @description Type definitions and ASCII glyph datasets for the modular motion loader system.
  */
 
-import React from 'react';
-
 /**
  * All supported visual variants for the motion loader component.
  */
@@ -30,13 +28,25 @@ export type LoaderVariant =
 /**
  * Terminal-style frame sequences used by ASCII loaders.
  */
-export const ASCII_SETS: Record<string, string[]> = {
+export const ASCII_SETS = {
   ascii: ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'],
   'ascii-line': ['|', '/', '-', '\\'],
   'ascii-braille': ['⣾', '⣽', '⣻', '⢿', '⡿', '⣟', '⣯', '⣷'],
   'ascii-blocks': ['▁', '▂', '▃', '▄', '▅', '▆', '▇', '█', '▇', '▆', '▅', '▄', '▃', '▂'],
   'ascii-bounce': ['⠁', '⠂', '⠄', '⡀', '⢀', '⠠', '⠐', '⠈'],
-};
+} as const;
+
+export type AsciiLoaderVariant = keyof typeof ASCII_SETS;
+
+/**
+ * Type guard for ASCII loader variant selection.
+ *
+ * @param {LoaderVariant} variant - Current loader variant.
+ * @returns {boolean} Whether the variant is an ASCII set.
+ */
+export function isAsciiVariant(variant: LoaderVariant): variant is AsciiLoaderVariant {
+  return variant in ASCII_SETS;
+}
 
 /**
  * Props for the primary Loader component.

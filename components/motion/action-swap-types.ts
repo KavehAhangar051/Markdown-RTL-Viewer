@@ -14,7 +14,9 @@ export type ActionSwapItem = {
 };
 
 export type ActionSwapButtonVariant = "primary" | "secondary" | "outline" | "ghost";
+
 export type ActionSwapButtonSize = "sm" | "md" | "lg" | "icon";
+
 export type ActionSwapAnimation = "blur" | "roll" | "cascade";
 
 export interface ActionSwapButtonProps

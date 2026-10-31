@@ -28,6 +28,7 @@ export function PasteModal(): React.JSX.Element {
       const timer = setTimeout(() => {
         textareaRef.current?.focus();
       }, 80);
+
       return () => clearTimeout(timer);
     }
   }, [isPasteOpen]);
@@ -40,8 +41,10 @@ export function PasteModal(): React.JSX.Element {
   const handleApply = () => {
     if (!pastedText.trim()) {
       showToast(t.toasts.noTextToApply, 'error');
+
       return;
     }
+
     setRawMarkdown(pastedText);
     showToast(t.toasts.textApplied, 'success');
     handleClose();
@@ -80,7 +83,7 @@ export function PasteModal(): React.JSX.Element {
             disabled={!pastedText}
             className={isDark ? 'text-zinc-400 hover:text-zinc-200' : 'text-zinc-600 hover:text-zinc-900'}
           >
-            <Trash className="w-4 h-4 ml-1.5" />
+            <Trash className="w-4 h-4" />
             {t.pasteModal.clearButton}
           </Button>
 
@@ -98,7 +101,7 @@ export function PasteModal(): React.JSX.Element {
               onClick={handleApply}
               disabled={!pastedText.trim()}
             >
-              <Clipboard className="w-4 h-4 ml-1.5" />
+              <Clipboard className="w-4 h-4" />
               {t.pasteModal.applyButton}
             </Button>
           </div>

@@ -6,11 +6,14 @@
  */
 
 import React, { useState, useCallback, useRef } from 'react';
+import { m, useReducedMotion } from 'motion/react';
 import { useMarkdownContext } from '@/store/MarkdownContext';
 import { useActiveLinePosition } from '@/hooks/useActiveLinePosition';
 import { FileText, Link2, Unlink } from 'lucide-react';
 import { EditorStatsBadges } from './editor-stats-badges';
 import { EditorActiveLine } from './editor-active-line';
+import { SPRING_PRESS } from '@/lib/ease';
+import { ActionSwapIcon } from '@/components/motion/action-swap';
 
 /**
  * Raw Markdown Editor View containing integrated metric pills and interactive text area.
@@ -32,12 +35,14 @@ export const EditorView = React.memo(function EditorView(): React.JSX.Element {
     toggleSyncScroll,
     setEditorElement,
   } = useMarkdownContext();
+
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const { activeLine, recalculateLine } = useActiveLinePosition(textareaRef);
 
   const isDark = theme === 'dark';
   const locale = language === 'fa' ? 'fa-IR' : 'en-US';
+  const reduceMotion = useReducedMotion();
 
   const handleCursorUpdate = useCallback(() => {
     recalculateLine();
@@ -76,34 +81,43 @@ export const EditorView = React.memo(function EditorView(): React.JSX.Element {
 
         {/* SyncScroll Switcher in Split View */}
         {viewMode === 'split' && (
-          <button
+          <m.button
             id="sync-scroll-toggle-btn"
             type="button"
             onClick={toggleSyncScroll}
+            whileTap={reduceMotion ? undefined : { scale: 0.96 }}
+            whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+            transition={SPRING_PRESS}
             title={isSyncScroll ? t.editor.syncScrollEnabled : t.editor.syncScrollDisabled}
             aria-label={t.editor.syncScroll}
-            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium border transition-all duration-200 cursor-pointer ${
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium border transition-colors cursor-pointer select-none touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 ${
               isSyncScroll
                 ? isDark
-                  ? 'bg-emerald-950/40 border-emerald-500/30 text-emerald-400 hover:bg-emerald-950/60 shadow-xs'
-                  : 'bg-emerald-50 border-emerald-300/80 text-emerald-700 hover:bg-emerald-100 shadow-xs'
+                  ? 'bg-emerald-950/40 border-emerald-500/30 text-emerald-400 hover:bg-emerald-950/60 shadow-xs focus-visible:ring-offset-zinc-950'
+                  : 'bg-emerald-50 border-emerald-300/80 text-emerald-700 hover:bg-emerald-100 shadow-xs focus-visible:ring-offset-white'
                 : isDark
-                ? 'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/60'
-                : 'bg-zinc-100 border-zinc-300 text-zinc-600 hover:text-zinc-900 hover:bg-zinc-200'
+                ? 'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/60 focus-visible:ring-offset-zinc-950'
+                : 'bg-zinc-100 border-zinc-300 text-zinc-600 hover:text-zinc-900 hover:bg-zinc-200 focus-visible:ring-offset-white'
             }`}
           >
-            {isSyncScroll ? (
-              <Link2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-            ) : (
-              <Unlink className="w-3.5 h-3.5 opacity-60 shrink-0" />
-            )}
+            <ActionSwapIcon
+              value={isSyncScroll ? 'sync' : 'unsync'}
+              animation="blur"
+              className="w-3.5 h-3.5"
+            >
+              {isSyncScroll ? (
+                <Link2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+              ) : (
+                <Unlink className="w-3.5 h-3.5 opacity-60 shrink-0" />
+              )}
+            </ActionSwapIcon>
             <span>{t.editor.syncScroll}</span>
             <span
-              className={`w-1.5 h-1.5 rounded-full ${
-                isSyncScroll ? 'bg-emerald-500 animate-pulse' : 'bg-zinc-500'
+              className={`w-1.5 h-1.5 rounded-full transition-colors ${
+                isSyncScroll ? 'bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.6)] animate-pulse' : 'bg-zinc-500'
               }`}
             />
-          </button>
+          </m.button>
         )}
       </div>
 
@@ -111,7 +125,7 @@ export const EditorView = React.memo(function EditorView(): React.JSX.Element {
       <div className={`relative flex-1 p-2 pb-2.5 transition-colors ${isDark ? 'bg-black' : 'bg-zinc-50/50'}`}>
         <div
           data-lenis-prevent="true"
-          className={`relative w-full rounded-xl overflow-hidden transition-all duration-300 ${
+          className={`relative w-full rounded-xl overflow-hidden transition-colors duration-300 ${
             isFocusMode
               ? 'h-[calc(100vh-110px)] min-h-[480px]'
               : 'h-[calc(100vh-195px)] min-h-[480px] max-h-[820px]'
@@ -150,7 +164,7 @@ export const EditorView = React.memo(function EditorView(): React.JSX.Element {
             onBlur={() => setIsFocused(false)}
             placeholder={t.editor.placeholder}
             dir={language === 'fa' ? 'rtl' : 'ltr'}
-            className={`relative z-10 w-full h-full p-3.5 sm:p-4 pb-12 sm:pb-16 text-sm leading-relaxed overflow-y-auto overscroll-contain editor-scrollbar focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/60 focus-visible:ring-offset-2 resize-none glass-input rounded-xl border shadow-inner transition-all bg-transparent ${
+            className={`relative z-10 w-full h-full p-3.5 sm:p-4 pb-12 sm:pb-16 text-sm leading-relaxed overflow-y-auto overscroll-contain editor-scrollbar focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/60 focus-visible:ring-offset-2 resize-none glass-input rounded-xl border shadow-inner transition-colors bg-transparent ${
               isDark
                 ? 'text-zinc-100 border-zinc-800 placeholder:text-zinc-600 focus-visible:ring-offset-zinc-950'
                 : 'text-zinc-900 border-zinc-300 placeholder:text-zinc-500 focus-visible:ring-offset-white'

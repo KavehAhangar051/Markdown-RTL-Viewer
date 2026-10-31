@@ -88,11 +88,11 @@ export function MarkdownTableHeaderCell({
   return (
     <th
       style={style}
-      className={`py-3 px-4 text-right font-bold text-xs sm:text-sm tracking-tight border-b border-l ${
+      className={`py-3 px-4 text-start font-bold text-xs sm:text-sm tracking-tight border-b border-e ${
         isDark
-          ? 'border-zinc-800 text-zinc-100 border-l-zinc-800/60'
-          : 'border-zinc-200 text-zinc-900 border-l-zinc-200/80'
-      } last:border-l-0 ${className || ''}`}
+          ? 'border-zinc-800 text-zinc-100 border-e-zinc-800/60'
+          : 'border-zinc-200 text-zinc-900 border-e-zinc-200/80'
+      } last:border-e-0 ${className || ''}`}
       {...props}
     >
       {children}
@@ -115,11 +115,11 @@ export function MarkdownTableCell({
   return (
     <td
       style={style}
-      className={`py-2.5 px-4 text-right align-middle text-xs sm:text-sm leading-relaxed border-b border-l ${
+      className={`py-2.5 px-4 text-start align-middle text-xs sm:text-sm leading-relaxed border-b border-e ${
         isDark
-          ? 'border-zinc-800/50 text-zinc-300 border-l-zinc-800/40'
-          : 'border-zinc-200/60 text-zinc-700 border-l-zinc-200/60'
-      } last:border-l-0 ${className || ''}`}
+          ? 'border-zinc-800/50 text-zinc-300 border-e-zinc-800/40'
+          : 'border-zinc-200/60 text-zinc-700 border-e-zinc-200/60'
+      } last:border-e-0 ${className || ''}`}
       {...props}
     >
       {children}

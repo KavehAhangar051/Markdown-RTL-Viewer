@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useMemo, useContext } from 'react';
-import { useMarkdownContext } from '@/store/MarkdownContext';
+import { useStudioUI } from '@/store/MarkdownContext';
 import { highlightCode, normalizeLanguage } from '@/utils/syntaxHighlighter';
 import { hasPersianText } from '@/utils/persianizer';
 import { CodeBlockHeader } from '@/components/ui/code-block-header';
@@ -39,7 +39,7 @@ export const CodeBlock = React.memo(function CodeBlock({
   children,
   ...props
 }: CodeBlockProps): React.JSX.Element {
-  const { theme, language, showToast } = useMarkdownContext();
+  const { theme, language, showToast } = useStudioUI();
   const isDark = theme === 'dark';
   const { copied, copyToClipboard } = useClipboard(CLIPBOARD_RESET_DURATION_MS);
   const isInsidePre = useContext(PreContext);
@@ -64,6 +64,7 @@ export const CodeBlock = React.memo(function CodeBlock({
     if (isInlineCode || !rawCode) {
       return { html: '', language: specifiedLang || 'text' };
     }
+
     return highlightCode(rawCode, specifiedLang);
   }, [rawCode, specifiedLang, isInlineCode]);
 
@@ -117,9 +118,7 @@ export const CodeBlock = React.memo(function CodeBlock({
 
       {/* Highlighted Code Container */}
       <pre
-        className={`p-4 overflow-x-auto text-[13px] leading-relaxed !rounded-none !border-0 !m-0 !shadow-none ${
-          blockDir === 'rtl' ? 'text-right' : 'text-left'
-        } ${
+        className={`p-4 overflow-x-auto text-[13px] leading-relaxed !rounded-none !border-0 !m-0 !shadow-none text-start ${
           isDark
             ? '!bg-[#0b0c0e] !text-zinc-100'
             : '!bg-[#f8fafc] !text-zinc-900'

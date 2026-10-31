@@ -34,6 +34,7 @@ export function useDecodeText(targetText: string, speed = 22): string {
       if (currentIndex >= targetText.length) {
         clearInterval(interval);
         setDisplayText(targetText);
+
         return;
       }
 
@@ -44,6 +45,7 @@ export function useDecodeText(targetText: string, speed = 22): string {
         currentIndex += 1;
         subTick = 0;
         setDisplayText(targetText.slice(0, currentIndex));
+
         return;
       }
 

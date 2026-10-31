@@ -7,10 +7,11 @@
 
 import React from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import { m, AnimatePresence } from 'motion/react';
+import { m, AnimatePresence, useReducedMotion } from 'motion/react';
 import { X } from 'lucide-react';
 import { useMarkdownContext } from '@/store/MarkdownContext';
 import { modalBackdropVariants, modalContentVariants } from '@/components/motion/motion-variants';
+import { SPRING_PRESS } from '@/lib/ease';
 
 interface ModalProps {
   isOpen: boolean;
@@ -29,6 +30,7 @@ export function Modal({
 }: ModalProps): React.JSX.Element {
   const { theme, language } = useMarkdownContext();
   const isDark = theme === 'dark';
+  const reduceMotion = useReducedMotion();
 
   return (
     <DialogPrimitive.Root open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -71,16 +73,22 @@ export function Modal({
                     >
                       {title}
                     </DialogPrimitive.Title>
-                    <DialogPrimitive.Close
-                      onClick={onClose}
-                      className={`min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl transition-colors cursor-pointer touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 ${
-                        isDark
-                          ? 'text-zinc-400 hover:text-white hover:bg-zinc-800/80 focus-visible:ring-offset-zinc-950'
-                          : 'text-zinc-600 hover:text-zinc-950 hover:bg-zinc-100 focus-visible:ring-offset-white'
-                      }`}
-                      aria-label={language === 'fa' ? 'بستن پنجره' : 'Close dialog'}
-                    >
-                      <X className="w-4 h-4" />
+                    <DialogPrimitive.Close asChild>
+                      <m.button
+                        type="button"
+                        onClick={onClose}
+                        whileTap={reduceMotion ? undefined : { scale: 0.96 }}
+                        whileHover={reduceMotion ? undefined : { scale: 1.04 }}
+                        transition={SPRING_PRESS}
+                        className={`min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl transition-colors cursor-pointer touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 ${
+                          isDark
+                            ? 'text-zinc-400 hover:text-white hover:bg-zinc-800/80 focus-visible:ring-offset-zinc-950'
+                            : 'text-zinc-600 hover:text-zinc-950 hover:bg-zinc-100 focus-visible:ring-offset-white'
+                        }`}
+                        aria-label={language === 'fa' ? 'بستن پنجره' : 'Close dialog'}
+                      >
+                        <X className="w-4 h-4" />
+                      </m.button>
                     </DialogPrimitive.Close>
                   </div>
                   {description && (
@@ -99,4 +107,6 @@ export function Modal({
       </AnimatePresence>
     </DialogPrimitive.Root>
   );
-};
+}
+
+;

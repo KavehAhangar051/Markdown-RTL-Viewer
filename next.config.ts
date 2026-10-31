@@ -6,6 +6,7 @@ export default function config(phase: string): NextConfig {
   const isGithubActions = process.env.GITHUB_ACTIONS === 'true';
   const isExport = process.env.NEXT_EXPORT === 'true' || isGithubActions;
   const rawBasePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+
   // Ensure basePath begins with '/' and does not end with '/' unless empty, only active in static export
   const basePath = isExport
     ? rawBasePath.startsWith('/')
@@ -21,7 +22,7 @@ export default function config(phase: string): NextConfig {
   compress: true,
   poweredByHeader: false,
   experimental: {
-    optimizePackageImports: ['lucide-react'],
+    optimizePackageImports: ['lucide-react', 'motion'],
   },
   eslint: {
     ignoreDuringBuilds: true,
@@ -54,6 +55,7 @@ export default function config(phase: string): NextConfig {
         ignored: /.*/,
       };
     }
+
     return config;
   },
 };

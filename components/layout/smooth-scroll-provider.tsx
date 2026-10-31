@@ -20,5 +20,6 @@ interface SmoothScrollProviderProps {
  */
 export function SmoothScrollProvider({ children }: SmoothScrollProviderProps): React.JSX.Element {
   useDesktopSmoothScroll();
+
   return <>{children}</>;
 }

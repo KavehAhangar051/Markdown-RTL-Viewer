@@ -68,6 +68,9 @@ export const TRANSLATIONS: Record<Language, Translations> = {
     },
     toasts: {
       editorCleared: 'محتوای ویرایشگر پاک شد',
+      undoAction: 'بازیابی (Undo)',
+      contentRestored: 'محتوا بازیابی شد',
+      sampleLoaded: 'نمونه مارک‌داون بارگذاری شد',
       pasteSuccess: 'متن با موفقیت در ویرایشگر قرار گرفت',
       clipboardEmpty: 'کلیپ‌بورد خالی است',
       clipboardPermissionDenied: 'دسترسی به کلیپ‌بورد مقدور نیست. از Ctrl+V در ویرایشگر استفاده کنید',
@@ -143,6 +146,9 @@ export const TRANSLATIONS: Record<Language, Translations> = {
     },
     toasts: {
       editorCleared: 'Editor content cleared',
+      undoAction: 'Undo',
+      contentRestored: 'Content restored',
+      sampleLoaded: 'Sample Markdown loaded',
       pasteSuccess: 'Text pasted into editor',
       clipboardEmpty: 'Clipboard is empty',
       clipboardPermissionDenied: 'Clipboard access not allowed. Use Ctrl+V inside the editor.',

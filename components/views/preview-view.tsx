@@ -26,6 +26,8 @@ import { Eye, FileCode } from 'lucide-react';
 import { SPRING_PRESS } from '@/lib/ease';
 import { AsciiLineLoader } from '@/components/motion/loader';
 import { renderHybridChildren } from '@/utils/typographySegmenter';
+import { ambientAuraVariants } from '@/components/motion/motion-variants';
+import { MathDisplayBlock } from '@/components/ui/math-block';
 
 interface PreviewEmptyStateProps {
   isDark: boolean;
@@ -42,7 +44,7 @@ function PreviewEmptyState({
   loadSample,
   reduceMotion,
 }: PreviewEmptyStateProps): React.JSX.Element {
-  const buttonClass = `mt-4 px-4 py-2.5 min-h-[44px] rounded-xl text-xs font-semibold border flex items-center justify-center gap-2 transition-all cursor-pointer touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 ${
+  const buttonClass = `mt-4 px-4 py-2.5 min-h-[44px] rounded-xl text-xs font-semibold border flex items-center justify-center gap-2 transition-colors cursor-pointer touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 ${
     isDark
       ? 'bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border-zinc-700/80 shadow-md hover:border-zinc-600 focus-visible:ring-offset-zinc-950'
       : 'bg-white hover:bg-zinc-50 text-zinc-900 border-zinc-300 shadow-xs hover:border-zinc-400 focus-visible:ring-offset-white'
@@ -50,13 +52,23 @@ function PreviewEmptyState({
 
   return (
     <div className={`h-full flex flex-col items-center justify-center text-center p-8 select-none ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>
-      <m.div
-        animate={reduceMotion ? undefined : { y: [-3, 3, -3] }}
-        transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
-        className={`p-3.5 rounded-2xl border mb-3 ${isDark ? 'bg-zinc-900/60 border-zinc-800/80 shadow-lg shadow-black/40' : 'bg-zinc-100 border-zinc-200 shadow-sm'}`}
-      >
-        <Eye className={`w-8 h-8 opacity-70 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`} />
-      </m.div>
+      <div className="relative mb-3 flex items-center justify-center">
+        {/* Ambient Layer: Subtle breathing radial aura */}
+        {!reduceMotion && (
+          <m.div
+            variants={ambientAuraVariants}
+            animate="idle"
+            className="absolute -inset-3 rounded-full bg-emerald-500/10 blur-xl pointer-events-none"
+          />
+        )}
+        <m.div
+          animate={reduceMotion ? undefined : { y: [-3, 3, -3] }}
+          transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
+          className={`relative p-3.5 rounded-2xl border ${isDark ? 'bg-zinc-900/60 border-zinc-800/80 shadow-lg shadow-black/40' : 'bg-zinc-100 border-zinc-200 shadow-sm'}`}
+        >
+          <Eye className={`w-8 h-8 opacity-70 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`} />
+        </m.div>
+      </div>
       <p className={`text-sm font-semibold ${isDark ? 'text-zinc-300' : 'text-zinc-800'} ${isFa ? 'font-vazir' : 'font-sans'}`}>
         {t.preview.emptyTitle}
       </p>
@@ -90,6 +102,31 @@ const markdownComponents = {
       {children}
     </PreContext.Provider>
   ),
+  span: ({ className, children, ...props }: React.HTMLAttributes<HTMLSpanElement>) => {
+    const cls = className ?? '';
+
+    if (cls.includes('katex-display')) {
+      return (
+        <MathDisplayBlock className={cls} {...props}>
+          {children}
+        </MathDisplayBlock>
+      );
+    }
+
+    if (cls === 'katex') {
+      return (
+        <span className={`${cls} katex-inline-wrapper`} dir="ltr" {...props}>
+          {children}
+        </span>
+      );
+    }
+
+    return (
+      <span className={className} {...props}>
+        {children}
+      </span>
+    );
+  },
   p: ({ children }: { children?: React.ReactNode }) => <p>{renderHybridChildren(children, 'persian')}</p>,
   h1: ({ children }: { children?: React.ReactNode }) => <h1>{renderHybridChildren(children, 'persian')}</h1>,
   h2: ({ children }: { children?: React.ReactNode }) => <h2>{renderHybridChildren(children, 'persian')}</h2>,
@@ -105,22 +142,29 @@ const markdownComponents = {
     </kbd>
   ),
   a: ({ children, href, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
-    <a href={href} {...props} className="text-emerald-400 underline hover:text-emerald-300 transition-colors">
+    <a
+      href={href}
+      {...props}
+      className="text-emerald-700 dark:text-emerald-400 underline hover:text-emerald-800 dark:hover:text-emerald-300 transition-colors"
+    >
       {renderHybridChildren(children, 'persian')}
     </a>
   ),
   strong: ({ children }: { children?: React.ReactNode }) => <strong>{renderHybridChildren(children, 'persian')}</strong>,
   em: ({ children }: { children?: React.ReactNode }) => <em>{renderHybridChildren(children, 'persian')}</em>,
   del: ({ children }: { children?: React.ReactNode }) => <del className="line-through opacity-70">{children}</del>,
-  hr: () => <hr className="my-6 border-t border-zinc-700/60 dark:border-zinc-800" />,
-  img: ({ src, alt, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) => (
+  hr: () => <hr className="my-6 border-t border-zinc-200 dark:border-zinc-800" />,
+  img: ({ src, alt, width, height, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) => (
     /* eslint-disable-next-line @next/next/no-img-element */
     <img
       src={src}
-      alt={alt}
+      alt={alt ?? ''}
+      width={width ?? 900}
+      height={height ?? 260}
       {...props}
-      className="rounded-xl border border-zinc-700/40 my-4 max-w-full h-auto shadow-md"
+      className="rounded-xl outline outline-1 -outline-offset-1 outline-black/10 dark:outline-white/10 my-4 max-w-full h-auto shadow-md"
       loading="lazy"
+      decoding="async"
     />
   ),
   input: (props: React.InputHTMLAttributes<HTMLInputElement>) => (
@@ -153,6 +197,7 @@ const MemoizedMarkdown = React.memo(function MemoizedMarkdown({
     </div>
   );
 });
+
 MemoizedMarkdown.displayName = 'MemoizedMarkdown';
 
 export const PreviewView = React.memo(function PreviewView(): React.JSX.Element {
@@ -167,6 +212,7 @@ export const PreviewView = React.memo(function PreviewView(): React.JSX.Element 
     viewMode,
     setPreviewElement,
   } = useMarkdownContext();
+
   const isDark = theme === 'dark';
   const reduceMotion = useReducedMotion();
 
@@ -215,7 +261,7 @@ export const PreviewView = React.memo(function PreviewView(): React.JSX.Element 
             isPreviewOnly
               ? 'px-4 sm:px-8 md:px-10 pt-4 sm:pt-6 pb-12 sm:pb-16'
               : 'px-3 sm:px-4 md:px-4.5 pt-2 sm:pt-2.5 pb-12 sm:pb-16'
-          } transition-all duration-300 glass-input border shadow-inner ${
+          } transition-colors duration-300 glass-input border shadow-inner ${
             isDark
               ? 'text-zinc-100 border-zinc-800 bg-black/40'
               : 'text-zinc-900 border-zinc-300 bg-white/80'
@@ -231,7 +277,7 @@ export const PreviewView = React.memo(function PreviewView(): React.JSX.Element 
           {rtlMarkdown.trim() ? (
             <MemoizedMarkdown
               content={rtlMarkdown}
-              className={`markdown-rtl-content text-right ${isPreviewOnly ? 'max-w-[960px] mx-auto' : ''}`}
+              className={`markdown-rtl-content text-start ${isPreviewOnly ? 'max-w-[960px] mx-auto' : ''}`}
             />
           ) : (
             <PreviewEmptyState

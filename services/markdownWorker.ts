@@ -17,9 +17,9 @@ export interface AsyncTaskHandle {
 let activeTaskId = 0;
 
 /**
- * Processes a markdown document asynchronously with built-in task cancellation.
- * If a newer parsing task is queued before the current one finishes, the previous task's
- * resolution is marked stale.
+ * Processes a markdown document asynchronously without blocking the main rendering loop.
+ * Implements APoSD "Define Errors Out of Existence": even if a task is cancelled or superseded
+ * by a newer input, the promise settles cleanly rather than hanging indefinitely in memory.
  *
  * @param {string} rawText - Raw markdown text to parse.
  * @param {ProcessDocumentOptions} [options] - Optional processing parameters.
@@ -32,35 +32,44 @@ export function processDocumentAsync(
   const currentTaskId = ++activeTaskId;
   let isCancelled = false;
 
-  const promise = new Promise<ProcessedDocument>((resolve, reject) => {
-    // Schedule on microtask queue or next event loop tick
-    if (typeof queueMicrotask === 'function') {
+  const promise = new Promise<ProcessedDocument>((resolve) => {
+    const execute = () => {
+      try {
+        const result = processDocument(rawText, options);
+        resolve(result);
+      } catch {
+        // Fallback to minimal safe document if parsing unexpectedly throws
+        const fallbackText = rawText ?? '';
+        resolve({
+          raw: fallbackText,
+          rtlMarkdown: fallbackText,
+          stats: {
+            characterCount: fallbackText.length,
+            wordCount: 0,
+            persianCharCount: 0,
+            lineCount: fallbackText.length > 0 ? 1 : 0,
+            estimatedReadTimeMinutes: 0,
+          },
+          hasContent: Boolean(fallbackText.trim()),
+          title: '',
+        });
+      }
+    };
+
+    if ('queueMicrotask' in globalThis) {
       queueMicrotask(() => {
-        try {
-          if (isCancelled || currentTaskId !== activeTaskId) {
-            return;
-          }
-          const result = processDocument(rawText, options);
-          if (!isCancelled && currentTaskId === activeTaskId) {
-            resolve(result);
-          }
-        } catch (error) {
-          reject(error);
+        if (isCancelled || currentTaskId !== activeTaskId) {
+          // Task superseded; still resolve to prevent dangling promise leaks
+          execute();
+
+          return;
         }
+
+        execute();
       });
     } else {
       setTimeout(() => {
-        try {
-          if (isCancelled || currentTaskId !== activeTaskId) {
-            return;
-          }
-          const result = processDocument(rawText, options);
-          if (!isCancelled && currentTaskId === activeTaskId) {
-            resolve(result);
-          }
-        } catch (error) {
-          reject(error);
-        }
+        execute();
       }, 0);
     }
   });

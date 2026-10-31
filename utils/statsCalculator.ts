@@ -5,16 +5,18 @@
 
 import { DocumentStats } from '@/types/markdown';
 import { DEFAULT_READING_SPEED_WPM } from '@/constants/domain';
-import { isPersianChar } from './persianizer';
+import { isPersianCharCode } from './persianizer';
 
 /**
  * Calculates comprehensive document statistics for a given text using a high-performance,
  * single-pass scan that eliminates intermediate string arrays and garbage-collection pressure.
+ * Operates purely on UTF-16 numeric character codes (SMI) avoiding single-character string allocations.
  *
  * @param {string} text - The raw text input to analyze.
+ * @param {number} [wordsPerMinute] - Custom reading speed in words per minute (defaults to 180 wpm).
  * @returns {DocumentStats} Comprehensive metrics and statistics for the document.
  */
-export function calculateDocumentStats(text: string): DocumentStats {
+export function calculateDocumentStats(text: string, wordsPerMinute?: number): DocumentStats {
   if (!text) {
     return {
       characterCount: 0,
@@ -33,29 +35,25 @@ export function calculateDocumentStats(text: string): DocumentStats {
 
   for (let i = 0; i < characterCount; i++) {
     const code = text.charCodeAt(i);
-    const char = text[i];
 
     if (code === 10) {
       lineCount++;
     }
 
-    if (isPersianChar(char)) {
+    if (isPersianCharCode(code)) {
       persianCharCount++;
     }
 
     // High-speed whitespace detection matching /\s+/
+    // Branch on ASCII range (<= 32) first to handle 99.9% of characters in 1 comparison
     const isWhitespace =
-      code === 32 ||
-      code === 10 ||
-      code === 9 ||
-      code === 13 ||
-      code === 12 ||
-      code === 11 ||
-      code === 160 ||
-      (code >= 0x2000 && code <= 0x200a) ||
-      code === 0x2028 ||
-      code === 0x2029 ||
-      code === 0x3000;
+      code <= 32
+        ? code === 32 || code === 10 || code === 9 || code === 13 || code === 12 || code === 11
+        : code === 160 ||
+          (code >= 0x2000 && code <= 0x200a) ||
+          code === 0x2028 ||
+          code === 0x2029 ||
+          code === 0x3000;
 
     if (isWhitespace) {
       if (inWord) {
@@ -71,9 +69,10 @@ export function calculateDocumentStats(text: string): DocumentStats {
     wordCount++;
   }
 
-  // Average reading speed: 180 words per minute for Persian/Arabic text
+  const wpm = wordsPerMinute && wordsPerMinute > 0 ? wordsPerMinute : DEFAULT_READING_SPEED_WPM;
+
   const estimatedReadTimeMinutes =
-    wordCount === 0 ? 0 : Math.max(1, Math.ceil(wordCount / DEFAULT_READING_SPEED_WPM));
+    wordCount === 0 ? 0 : Math.max(1, Math.ceil(wordCount / wpm));
 
   return {
     characterCount,

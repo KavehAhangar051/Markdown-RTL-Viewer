@@ -4,6 +4,7 @@
  */
 
 export type ViewMode = 'split' | 'editor' | 'preview';
+
 export type Theme = 'dark' | 'light';
 
 export interface DecodeEffectOptions {

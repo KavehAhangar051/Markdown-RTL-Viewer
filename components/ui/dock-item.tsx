@@ -20,6 +20,7 @@ import { DockLabel, DockIcon, DockLabelProps, DockIconProps } from '@/components
 import { SPRING_LAYOUT, SPRING_PRESS } from '@/lib/ease';
 
 export { DockLabel, DockIcon };
+
 export type { DockLabelProps, DockIconProps };
 
 export interface DockItemProps {
@@ -42,12 +43,14 @@ function getDockItemStateClass(isActive: boolean, isDark: boolean): string {
     if (isDark) {
       return 'bg-zinc-800/95 border-emerald-500/60 text-emerald-400 shadow-emerald-950/40';
     }
+
     return 'bg-emerald-50 border-emerald-500 text-emerald-700 shadow-emerald-200/50';
   }
 
   if (isDark) {
     return 'bg-zinc-900/80 border-white/10 text-zinc-300 hover:text-zinc-100 hover:bg-zinc-800/80 hover:border-white/20';
   }
+
   return 'bg-white border-zinc-200 text-zinc-700 hover:text-zinc-900 hover:bg-zinc-100 hover:border-zinc-300';
 }
 
@@ -85,7 +88,9 @@ export const DockItem = React.memo(function DockItem({
     const handleRecalculate = () => {
       cachedCenterXRef.current = null;
     };
+
     window.addEventListener('resize', handleRecalculate, { passive: true });
+
     return () => {
       window.removeEventListener('resize', handleRecalculate);
     };
@@ -100,6 +105,7 @@ export const DockItem = React.memo(function DockItem({
     }
 
     const centerX = cachedCenterXRef.current ?? 0;
+
     return val - centerX;
   });
 
@@ -108,6 +114,7 @@ export const DockItem = React.memo(function DockItem({
     [-distance, 0, distance],
     [baseItemSize, magnification, baseItemSize]
   );
+
   const size = useSpring(targetSize, spring);
 
   /**
@@ -134,7 +141,7 @@ export const DockItem = React.memo(function DockItem({
         width: size,
         height: size,
       }}
-      whileTap={reduceMotion ? undefined : { scale: 0.92 }}
+      whileTap={reduceMotion ? undefined : { scale: 0.96 }}
       transition={SPRING_PRESS}
       onHoverStart={() => isHovered.set(1)}
       onHoverEnd={() => isHovered.set(0)}
@@ -148,19 +155,21 @@ export const DockItem = React.memo(function DockItem({
       aria-label={computedAriaLabel}
       aria-pressed={isActive}
     >
-      {Children.map(children, (child) =>
-        React.isValidElement(child)
-          ? cloneElement(
-              child as React.ReactElement<{ isHovered?: MotionValue<number> }>,
-              { isHovered }
-            )
-          : child
-      )}
+      {Children.map(children, (child) => {
+        if (!React.isValidElement(child)) {
+          return child;
+        }
+
+        // SAFETY: React.isValidElement confirms child is a ReactElement; injecting optional isHovered prop
+        const element = child as React.ReactElement<{ isHovered?: MotionValue<number> }>;
+
+        return cloneElement(element, { isHovered });
+      })}
       {isActive && (
         <m.span
           layoutId="dock-active-indicator"
           transition={SPRING_LAYOUT}
-          className="absolute bottom-1 w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#10b981]"
+          className="absolute bottom-1 w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.7)]"
         />
       )}
     </m.div>

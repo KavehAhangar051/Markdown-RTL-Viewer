@@ -52,6 +52,7 @@ export function useSyncScroll({
 
     // Keep dimensions synchronized when container sizes change or content expands
     let resizeObserver: ResizeObserver | null = null;
+
     if (typeof ResizeObserver !== 'undefined') {
       resizeObserver = new ResizeObserver(() => {
         refreshDimensions();
@@ -87,6 +88,7 @@ export function useSyncScroll({
     const handleEditorScroll = () => {
       if (isProgrammaticScrollRef.current) {
         isProgrammaticScrollRef.current = false;
+
         return;
       }
 
@@ -97,6 +99,7 @@ export function useSyncScroll({
       if (editorRafId !== null) return;
       editorRafId = requestAnimationFrame(() => {
         editorRafId = null;
+
         if (!editorEl || !previewEl) return;
 
         // Verify dimensions if empty or zeroed
@@ -122,6 +125,7 @@ export function useSyncScroll({
     const handlePreviewScroll = () => {
       if (isProgrammaticScrollRef.current) {
         isProgrammaticScrollRef.current = false;
+
         return;
       }
 
@@ -132,6 +136,7 @@ export function useSyncScroll({
       if (previewRafId !== null) return;
       previewRafId = requestAnimationFrame(() => {
         previewRafId = null;
+
         if (!editorEl || !previewEl) return;
 
         // Verify dimensions if empty or zeroed
@@ -169,8 +174,11 @@ export function useSyncScroll({
 
     return () => {
       if (resizeObserver) resizeObserver.disconnect();
+
       if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+
       if (editorRafId !== null) cancelAnimationFrame(editorRafId);
+
       if (previewRafId !== null) cancelAnimationFrame(previewRafId);
       editorEl.removeEventListener('wheel', onEditorInput);
       editorEl.removeEventListener('pointerdown', onEditorInput);

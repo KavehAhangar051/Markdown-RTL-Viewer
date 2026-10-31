@@ -4,7 +4,9 @@
  */
 
 import React from 'react';
-import { isPersianChar } from '@/utils/persianizer';
+import { isPersianCharCode, isDigitCode, hasPersianText } from '@/utils/persianizer';
+
+export { isDigitCode };
 
 /** CSS font-family string for Persian typography (Dana with Vazirmatn fallback) */
 export const FONT_VAZIR_STYLE = "'Dana', 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
@@ -32,12 +34,18 @@ export interface ScriptSegment {
  */
 export function isDigit(char: string): boolean {
   if (!char) return false;
-  const code = char.charCodeAt(0);
-  return (
-    (code >= 0x0030 && code <= 0x0039) ||
-    (code >= 0x0660 && code <= 0x0669) ||
-    (code >= 0x06f0 && code <= 0x06f9)
-  );
+
+  return isDigitCode(char.charCodeAt(0));
+}
+
+/**
+ * Fast numeric check if UTF-16 character code is a Latin letter (A-Z, a-z).
+ *
+ * @param {number} code - Character code.
+ * @returns {boolean} True if character code represents an English/Latin letter.
+ */
+export function isLatinLetterCode(code: number): boolean {
+  return (code >= 0x0041 && code <= 0x005a) || (code >= 0x0061 && code <= 0x007a);
 }
 
 /**
@@ -48,8 +56,8 @@ export function isDigit(char: string): boolean {
  */
 export function isLatinLetter(char: string): boolean {
   if (!char) return false;
-  const code = char.charCodeAt(0);
-  return (code >= 0x0041 && code <= 0x005a) || (code >= 0x0061 && code <= 0x007a);
+
+  return isLatinLetterCode(char.charCodeAt(0));
 }
 
 /**
@@ -61,17 +69,24 @@ export function isLatinLetter(char: string): boolean {
  * @returns {ScriptType | null} Detected upcoming script or null.
  */
 function findFirstScriptInText(text: string, startIndex: number): ScriptType | null {
-  for (let i = startIndex; i < text.length; i++) {
-    const char = text[i];
-    if (isDigit(char)) return 'latin';
-    if (isPersianChar(char)) return 'persian';
-    if (isLatinLetter(char)) return 'latin';
+  const len = text.length;
+
+  for (let i = startIndex; i < len; i++) {
+    const code = text.charCodeAt(i);
+
+    if (isDigitCode(code)) return 'latin';
+
+    if (isPersianCharCode(code)) return 'persian';
+
+    if (isLatinLetterCode(code)) return 'latin';
   }
+
   return null;
 }
 
 /**
  * Segments an input string into consecutive runs of Persian vs Latin text chunks.
+ * Uses range-based slicing instead of per-character string concatenation to minimize GC pressure.
  * Digits are routed to the Latin/Kode Mono font stack per typography specifications.
  *
  * @param {string} text - Raw string to analyze.
@@ -83,57 +98,56 @@ export function segmentTextByScript(text: string, defaultScript: ScriptType = 'p
 
   const segments: ScriptSegment[] = [];
   let currentScript: ScriptType | null = null;
-  let currentBuffer = '';
+  let segmentStart = 0;
+  const len = text.length;
 
-  for (let i = 0; i < text.length; i++) {
-    const char = text[i];
+  for (let i = 0; i < len; i++) {
+    const code = text.charCodeAt(i);
 
-    if (isDigit(char)) {
-      // Digits are explicitly rendered with the Latin/Kode Mono font stack
-      if (currentScript === 'latin') {
-        currentBuffer += char;
-      } else {
-        if (currentBuffer) {
-          segments.push({ text: currentBuffer, script: currentScript ?? 'persian' });
+    if (isDigitCode(code)) {
+      if (currentScript !== 'latin') {
+        if (i > segmentStart) {
+          segments.push({ text: text.slice(segmentStart, i), script: currentScript ?? 'persian' });
         }
+
         currentScript = 'latin';
-        currentBuffer = char;
+        segmentStart = i;
       }
-    } else if (isPersianChar(char)) {
-      if (currentScript === 'persian') {
-        currentBuffer += char;
-      } else {
-        if (currentBuffer) {
-          segments.push({ text: currentBuffer, script: currentScript ?? 'latin' });
+    } else if (isPersianCharCode(code)) {
+      if (currentScript !== 'persian') {
+        if (i > segmentStart) {
+          segments.push({ text: text.slice(segmentStart, i), script: currentScript ?? 'latin' });
         }
+
         currentScript = 'persian';
-        currentBuffer = char;
+        segmentStart = i;
       }
-    } else if (isLatinLetter(char)) {
-      if (currentScript === 'latin') {
-        currentBuffer += char;
-      } else {
-        if (currentBuffer) {
-          segments.push({ text: currentBuffer, script: currentScript ?? 'persian' });
+    } else if (isLatinLetterCode(code)) {
+      if (currentScript !== 'latin') {
+        if (i > segmentStart) {
+          segments.push({ text: text.slice(segmentStart, i), script: currentScript ?? 'persian' });
         }
+
         currentScript = 'latin';
-        currentBuffer = char;
+        segmentStart = i;
       }
     } else {
       // Neutral characters (whitespace, punctuation, symbols)
       if (currentScript === null) {
         currentScript = findFirstScriptInText(text, i) ?? defaultScript;
       }
-      currentBuffer += char;
     }
   }
 
-  if (currentBuffer && currentScript) {
-    segments.push({ text: currentBuffer, script: currentScript });
+  if (segmentStart < len && currentScript) {
+    segments.push({ text: text.slice(segmentStart), script: currentScript });
   }
 
   return segments;
 }
+
+/** Pre-compiled token regex for HTML segmentation */
+const HTML_TOKEN_REGEX = /(<[^>]+>|&(?:[a-zA-Z0-9]+|#\d+|#x[0-9a-fA-F]+);|[^<>&]+)/g;
 
 /**
  * Transforms an HTML string (such as highlight.js output) by wrapping text runs in font-specific spans.
@@ -147,34 +161,36 @@ export function segmentHtmlByLanguage(html: string): string {
   if (!html) return '';
 
   // Fast-path: If the highlighted HTML contains no Persian characters, return as-is.
-  // JetBrains Mono handles all Latin and code symbols natively via CSS font-family fallback.
-  if (!isPersianCharInString(html)) {
+  if (!hasPersianText(html)) {
     return html;
   }
 
-  // Match HTML tags, HTML entities, and plain text sequences
-  const tokenRegex = /(<[^>]+>|&(?:[a-zA-Z0-9]+|#\d+|#x[0-9a-fA-F]+);|[^<>&]+)/g;
+  HTML_TOKEN_REGEX.lastIndex = 0;
   let output = '';
   let match: RegExpExecArray | null;
 
-  while ((match = tokenRegex.exec(html)) !== null) {
+  while ((match = HTML_TOKEN_REGEX.exec(html)) !== null) {
     const token = match[0];
 
     // Preserve HTML tags as-is
-    if (token.startsWith('<') && token.endsWith('>')) {
+    if (token.charCodeAt(0) === 60 && token.charCodeAt(token.length - 1) === 62) { // '<' and '>'
       output += token;
       continue;
     }
 
     // Treat entities (e.g. &quot;, &#39;, &lt;) as Latin/syntax tokens without wrapping
-    if (token.startsWith('&') && token.endsWith(';')) {
+    if (token.charCodeAt(0) === 38 && token.charCodeAt(token.length - 1) === 59) { // '&' and ';'
       output += token;
       continue;
     }
 
-    // Analyze plain text node character-by-character for Persian and Latin segments
+    // Analyze plain text node for Persian and Latin segments
     const segments = segmentTextByScript(token, 'latin');
-    for (const segment of segments) {
+    const segCount = segments.length;
+
+    for (let s = 0; s < segCount; s++) {
+      const segment = segments[s];
+
       if (segment.script === 'persian') {
         output += `<span class="font-vazir font-persian-token" style="font-family: ${FONT_VAZIR_STYLE};">${segment.text}</span>`;
       } else {
@@ -184,19 +200,6 @@ export function segmentHtmlByLanguage(html: string): string {
   }
 
   return output;
-}
-
-/**
- * Fast check whether a string contains any Persian Unicode characters.
- *
- * @param {string} str - String to check.
- * @returns {boolean} True if at least one Persian character exists.
- */
-function isPersianCharInString(str: string): boolean {
-  for (let i = 0; i < str.length; i++) {
-    if (isPersianChar(str[i])) return true;
-  }
-  return false;
 }
 
 /**
@@ -215,7 +218,9 @@ export function segmentMixedTextToReact(
   if (!text) return text;
 
   const segments = segmentTextByScript(text, defaultScript);
+
   if (segments.length === 0) return text;
+
   if (segments.length === 1 && segments[0].script === 'persian') {
     return React.createElement(
       'span',
@@ -223,6 +228,7 @@ export function segmentMixedTextToReact(
       text
     );
   }
+
   if (segments.length === 1 && segments[0].script === 'latin') {
     return React.createElement(
       'span',
@@ -246,8 +252,21 @@ export function segmentMixedTextToReact(
   );
 }
 
+function isBooleanPrimitive(val: React.ReactNode): val is boolean {
+  return Object.prototype.toString.call(val) === '[object Boolean]';
+}
+
+function isStringPrimitive(val: React.ReactNode): val is string {
+  return Object.prototype.toString.call(val) === '[object String]';
+}
+
+function isNumberPrimitive(val: React.ReactNode): val is number {
+  return Object.prototype.toString.call(val) === '[object Number]';
+}
+
 /**
- * Recursively analyzes React children and applies character-level font segmentation to text nodes.
+ * Traverses React children recursively and applies typography script segmentation to plain text strings.
+ * Preserves existing JSX component trees while isolating Persian tokens with Dana and Latin with Kode Mono.
  *
  * @param {React.ReactNode} children - React children to process.
  * @param {ScriptType} [defaultScript='persian'] - Fallback script for neutral text.
@@ -257,15 +276,15 @@ export function renderHybridChildren(
   children: React.ReactNode,
   defaultScript: ScriptType = 'persian'
 ): React.ReactNode {
-  if (children === null || children === undefined || typeof children === 'boolean') {
+  if (children === null || children === undefined || isBooleanPrimitive(children)) {
     return children;
   }
 
-  if (typeof children === 'string') {
+  if (isStringPrimitive(children)) {
     return segmentMixedTextToReact(children, 'seg', defaultScript);
   }
 
-  if (typeof children === 'number') {
+  if (isNumberPrimitive(children)) {
     return String(children);
   }
 
@@ -276,7 +295,26 @@ export function renderHybridChildren(
   }
 
   if (React.isValidElement(children)) {
-    const element = children as React.ReactElement<{ children?: React.ReactNode }>;
+    // SAFETY: React.isValidElement confirms children is a valid ReactElement
+    const element = children as React.ReactElement<{
+      children?: React.ReactNode;
+      className?: string;
+    }>;
+
+    // Preserve KaTeX math trees and MathML nodes untouched so KaTeX fonts and metrics are never overridden
+    const cls = element.props?.className ?? '';
+    const tagType = String(element.type);
+
+    if (
+      cls.includes('katex') ||
+      cls.includes('math') ||
+      tagType === 'math' ||
+      tagType === 'semantics' ||
+      tagType === 'annotation'
+    ) {
+      return children;
+    }
+
     if (element.props && element.props.children !== undefined) {
       return React.cloneElement(element, {
         ...element.props,

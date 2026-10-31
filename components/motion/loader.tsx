@@ -14,6 +14,7 @@ import {
   LoaderVariant,
   PartProps,
   ASCII_SETS,
+  isAsciiVariant,
 } from './loader-types';
 import {
   Morph,
@@ -28,6 +29,7 @@ import {
 } from './loader-shapes';
 
 export type { LoaderProps, LoaderVariant };
+
 export { ASCII_SETS };
 
 const REDUCED = {
@@ -41,6 +43,7 @@ const REDUCED = {
 function Spinner({ size, speed, reduce }: PartProps): React.JSX.Element {
   const stroke = Math.max(2, size * 0.09);
   const r = (size - stroke) / 2;
+
   return (
     <motion.svg
       width={size}
@@ -78,6 +81,7 @@ function Spinner({ size, speed, reduce }: PartProps): React.JSX.Element {
  */
 function Dots({ size, speed, reduce }: PartProps): React.JSX.Element {
   const dot = size * 0.24;
+
   return (
     <span className="flex items-center" style={{ gap: size * 0.14 }}>
       {[0, 1, 2].map((i) => (
@@ -107,6 +111,7 @@ function Dots({ size, speed, reduce }: PartProps): React.JSX.Element {
  */
 function Bars({ size, speed, reduce }: PartProps): React.JSX.Element {
   const bar = size * 0.16;
+
   return (
     <span className="flex items-center" style={{ gap: size * 0.1, height: size }}>
       {[0, 1, 2, 3].map((i) => (
@@ -137,15 +142,17 @@ export function Ascii({
   size,
   speed,
   reduce,
-}: PartProps & { frames: string[] }): React.JSX.Element {
+}: PartProps & { frames: readonly string[] }): React.JSX.Element {
   const [frame, setFrame] = useState(0);
 
   useEffect(() => {
     const step = ((reduce ? speed * 2.5 : speed) / frames.length) * 1000;
+
     const id = setInterval(
       () => setFrame((f) => (f + 1) % frames.length),
       step,
     );
+
     return () => clearInterval(id);
   }, [frames.length, speed, reduce]);
 
@@ -193,7 +200,7 @@ export function Loader({
         <DotMatrix size={size} speed={effectiveSpeed} reduce={reduce} />
       )}
       {variant === 'dither' && <Dither size={size} speed={effectiveSpeed} reduce={reduce} />}
-      {ASCII_SETS[variant] && (
+      {isAsciiVariant(variant) && (
         <Ascii frames={ASCII_SETS[variant]} size={size} speed={effectiveSpeed} reduce={reduce} />
       )}
       {variant === 'morph' && <Morph size={size} speed={effectiveSpeed} reduce={reduce} />}

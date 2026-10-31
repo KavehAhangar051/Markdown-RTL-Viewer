@@ -24,6 +24,7 @@ export function CustomCursor() {
     () => true,
     () => false
   );
+
   const state = useCursorState();
 
   if (!mounted) {

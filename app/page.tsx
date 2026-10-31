@@ -6,6 +6,7 @@
  */
 
 import React from 'react';
+import dynamic from 'next/dynamic';
 import { m, AnimatePresence } from 'motion/react';
 import { MarkdownProvider, useMarkdownContext } from '@/store/MarkdownContext';
 import { Header } from '@/components/layout/header';
@@ -13,12 +14,20 @@ import { StudioDock } from '@/components/layout/studio-dock';
 import { FocusModeBar } from '@/components/layout/focus-mode-bar';
 import { EditorView } from '@/components/views/editor-view';
 import { PreviewView } from '@/components/views/preview-view';
-import { UploadModal } from '@/components/views/upload-modal';
-import { PasteModal } from '@/components/views/paste-modal';
 import { ToastNotification } from '@/components/ui/toast-notification';
 import { useSyncScroll } from '@/hooks/useSyncScroll';
 import { viewModeVariants } from '@/components/motion/motion-variants';
 import { DURATION, EASE_OUT } from '@/lib/ease';
+
+const UploadModal = dynamic(
+  () => import('@/components/views/upload-modal').then((mod) => mod.UploadModal),
+  { ssr: false }
+);
+
+const PasteModal = dynamic(
+  () => import('@/components/views/paste-modal').then((mod) => mod.PasteModal),
+  { ssr: false }
+);
 
 function MainAppContent() {
   const {
@@ -26,12 +35,15 @@ function MainAppContent() {
     language,
     theme,
     isFocusMode,
+    isUploadOpen,
+    isPasteOpen,
     toast,
     closeToast,
     editorElement,
     previewElement,
     isSyncScroll,
   } = useMarkdownContext();
+
   const isDark = theme === 'dark';
 
   // Synchronize scrolling between editor and preview in Split View mode
@@ -80,7 +92,9 @@ function MainAppContent() {
         className={`flex-1 max-w-[1580px] w-full mx-auto flex flex-col gap-2.5 sm:gap-3 z-10 ${
           isPageScrollable ? '' : 'min-h-0 overflow-hidden'
         } ${
-          isFocusMode ? 'p-1.5 sm:p-2 pt-1.5 sm:pt-2 pb-2' : 'p-2 sm:p-3 md:p-3.5 pb-16 sm:pb-20'
+          isFocusMode
+            ? 'p-1.5 sm:p-2 pt-1.5 sm:pt-2 pb-2'
+            : 'p-2 sm:p-3 md:p-3.5 pb-[calc(4rem+env(safe-area-inset-bottom,0px))] sm:pb-[calc(5rem+env(safe-area-inset-bottom,0px))]'
         }`}
       >
         <div className="flex-1 w-full flex flex-col gap-2.5 sm:gap-3 items-start">
@@ -134,7 +148,7 @@ function MainAppContent() {
       </m.main>
 
       {/* Interactive macOS-style Magnification Dock (Exits with motion in Focus Mode) */}
-      <AnimatePresence>
+      <AnimatePresence initial={false}>
         {!isFocusMode && <StudioDock key="studio-dock" />}
       </AnimatePresence>
 
@@ -146,9 +160,9 @@ function MainAppContent() {
         isFa={language === 'fa'}
       />
 
-      {/* Modals */}
-      <UploadModal />
-      <PasteModal />
+      {/* Lazy-Loaded Modals */}
+      {isUploadOpen && <UploadModal />}
+      {isPasteOpen && <PasteModal />}
     </div>
   );
 }

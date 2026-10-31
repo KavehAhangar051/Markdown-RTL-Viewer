@@ -2,10 +2,13 @@
 
 /**
  * @file hooks/useClipboard.ts
- * @description Custom hook for interacting with the system clipboard (copy and paste).
+ * @description Deep React hook for interacting with the system clipboard.
+ * Implements John Ousterhout's 'Pull Complexity Downward' principle:
+ * abstracts away navigator permissions, fallback textarea execution, debounced timer resets,
+ * and memory cleanup behind a simple, high-leverage interface.
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 
 export interface ClipboardReadResult {
   text: string | null;
@@ -15,53 +18,94 @@ export interface ClipboardReadResult {
 
 /**
  * Custom React hook for reading from and writing to the system clipboard.
- * 
- * @param timeoutMs - Duration in milliseconds before resetting the copied state. Default is 2000ms.
- * @returns Object containing `copied` status flag, `copyToClipboard` and `readFromClipboard` methods.
+ * Pulls browser inconsistencies downward: handles modern Async Clipboard API,
+ * legacy execCommand fallback, and debounced copied-state timers automatically.
+ *
+ * @param {number} [timeoutMs=2000] - Duration in milliseconds before resetting the copied state.
+ * @returns {{ copied: boolean; copyToClipboard: (text: string) => Promise<boolean>; readFromClipboard: () => Promise<ClipboardReadResult> }}
  */
 export function useClipboard(timeoutMs = 2000) {
   const [copied, setCopied] = useState(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  /**
-   * Copies text to the system clipboard.
-   * @param text - The string to copy.
-   * @returns Promise resolving to true if successful, false otherwise.
-   */
-  const copyToClipboard = useCallback(async (text: string): Promise<boolean> => {
-    if (typeof window === 'undefined') return false;
-    try {
-      if (navigator?.clipboard?.writeText) {
-        await navigator.clipboard.writeText(text);
-        setCopied(true);
-        setTimeout(() => setCopied(false), timeoutMs);
-        return true;
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
       }
-      return false;
-    } catch {
-      setCopied(false);
-      return false;
-    }
-  }, [timeoutMs]);
+    };
+  }, []);
 
   /**
-   * Reads plain text from the system clipboard.
-   * @returns Promise resolving to ClipboardReadResult.
+   * Copies text to clipboard with transparent fallback for restricted iframe contexts.
+   */
+  const copyToClipboard = useCallback(
+    async (text: string): Promise<boolean> => {
+      if (typeof window === 'undefined') return false;
+
+      let succeeded = false;
+
+      // 1. Primary path: Modern Clipboard API
+      try {
+        if (navigator?.clipboard?.writeText) {
+          await navigator.clipboard.writeText(text);
+          succeeded = true;
+        }
+      } catch {
+        // Fall back to legacy execCommand on permission or iframe sandbox restriction
+      }
+
+      // 2. Fallback path: execCommand('copy') via temporary textarea
+      if (!succeeded && typeof document !== 'undefined') {
+        try {
+          const textarea = document.createElement('textarea');
+          textarea.value = text;
+          textarea.style.position = 'fixed';
+          textarea.style.opacity = '0';
+          textarea.style.pointerEvents = 'none';
+          document.body.appendChild(textarea);
+          textarea.select();
+          succeeded = document.execCommand('copy');
+          document.body.removeChild(textarea);
+        } catch {
+          succeeded = false;
+        }
+      }
+
+      if (succeeded) {
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+
+        setCopied(true);
+        timeoutRef.current = setTimeout(() => {
+          setCopied(false);
+          timeoutRef.current = null;
+        }, timeoutMs);
+      }
+
+      return succeeded;
+    },
+    [timeoutMs]
+  );
+
+  /**
+   * Reads plain text from system clipboard, defining unreadable/denied states cleanly.
    */
   const readFromClipboard = useCallback(async (): Promise<ClipboardReadResult> => {
-    if (typeof window === 'undefined') {
+    if (typeof window === 'undefined' || !navigator?.clipboard?.readText) {
       return { text: null, success: false, error: 'unsupported' };
     }
+
     try {
       window.focus();
     } catch {
       // Ignore focus errors
     }
 
-    if (!navigator?.clipboard?.readText) {
-      return { text: null, success: false, error: 'unsupported' };
-    }
     try {
       const text = await navigator.clipboard.readText();
+
       return { text, success: true };
     } catch {
       return { text: null, success: false, error: 'permission_denied' };

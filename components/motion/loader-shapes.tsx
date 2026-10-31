@@ -24,6 +24,7 @@ function ngonRadius(ang: number, n: number, phase = 0): number {
   const seg = (2 * Math.PI) / n;
   const a = ang - phase;
   const local = (((a % seg) + seg) % seg) - seg / 2;
+
   return Math.cos(Math.PI / n) / Math.cos(local);
 }
 
@@ -32,6 +33,7 @@ function ngonRadius(ang: number, n: number, phase = 0): number {
  */
 function morphPath(radiusAt: (ang: number) => number): string {
   const parts: string[] = [];
+
   for (let i = 0; i < MORPH_POINTS; i++) {
     const ang = (i / MORPH_POINTS) * 2 * Math.PI - Math.PI / 2;
     const r = Math.min(1.05, radiusAt(ang));
@@ -39,6 +41,7 @@ function morphPath(radiusAt: (ang: number) => number): string {
     const y = (50 + Math.sin(ang) * 46 * r).toFixed(2);
     parts.push(`${i === 0 ? 'M' : 'L'}${x} ${y}`);
   }
+
   return `${parts.join(' ')} Z`;
 }
 
@@ -92,6 +95,7 @@ const COMET_TRAIL = [0, 1, 2, 3, 4, 5];
 export function Comet({ size, speed, reduce }: PartProps): React.JSX.Element {
   const head = size * 0.2;
   const r = size / 2 - head / 2;
+
   return (
     <span className="relative inline-block" style={{ width: size, height: size }}>
       <motion.span
@@ -106,6 +110,7 @@ export function Comet({ size, speed, reduce }: PartProps): React.JSX.Element {
         {COMET_TRAIL.map((i) => {
           const scale = 1 - i * 0.13;
           const sz = head * scale;
+
           return (
             <span
               key={i}
@@ -135,12 +140,15 @@ export function Scramble({ size, speed, reduce }: PartProps): React.JSX.Element 
     if (reduce) {
       return;
     }
+
     let tick = 0;
     const total = SCRAMBLE_TARGET.length + 4;
+
     const id = setInterval(
       () => {
         const reveal = tick % total;
         let s = '';
+
         for (let i = 0; i < SCRAMBLE_TARGET.length; i++) {
           s +=
             i < reveal
@@ -149,11 +157,13 @@ export function Scramble({ size, speed, reduce }: PartProps): React.JSX.Element 
                   Math.floor(Math.random() * SCRAMBLE_GLYPHS.length)
                 ];
         }
+
         setText(s);
         tick++;
       },
       (speed / SCRAMBLE_TARGET.length) * 1000 * 0.55,
     );
+
     return () => clearInterval(id);
   }, [speed, reduce]);
 
@@ -171,6 +181,7 @@ export function Scramble({ size, speed, reduce }: PartProps): React.JSX.Element 
 
 export function Metaballs({ size, speed, reduce }: PartProps): React.JSX.Element {
   const id = useId().replace(/:/g, '');
+
   return (
     <svg width={size} height={size} viewBox="0 0 100 100" role="img">
       <title>Loading</title>
@@ -208,15 +219,24 @@ const NEWTON_BALLS = [0, 1, 2, 3, 4];
 export function Newton({ size, speed, reduce }: PartProps): React.JSX.Element {
   const d = size * 0.2;
   const out = d * 1.1;
-  const moves: Record<number, { x: number[]; times: number[] }> = {
-    0: { x: [0, -out, 0, 0], times: [0, 0.28, 0.5, 1] },
-    4: { x: [0, 0, out, 0], times: [0, 0.5, 0.78, 1] },
+
+  const getNewtonMove = (ballIndex: number): { x: number[]; times: number[] } | undefined => {
+    if (ballIndex === 0) {
+      return { x: [0, -out, 0, 0], times: [0, 0.28, 0.5, 1] };
+    }
+
+    if (ballIndex === 4) {
+      return { x: [0, 0, out, 0], times: [0, 0.5, 0.78, 1] };
+    }
+
+    return undefined;
   };
 
   return (
     <span className="flex items-center justify-center" style={{ height: d }}>
       {NEWTON_BALLS.map((i) => {
-        const move = moves[i];
+        const move = getNewtonMove(i);
+
         return (
           <motion.span
             key={i}
@@ -244,11 +264,13 @@ export function Helix({ size, speed, reduce }: PartProps): React.JSX.Element {
   const rows = 7;
   const dot = size * 0.14;
   const amp = size * 0.32;
+
   return (
     <span className="relative inline-block" style={{ width: size, height: size }}>
       {Array.from({ length: rows }, (_, r) => {
         const top = (r / (rows - 1)) * (size - dot);
         const delay = (r / rows) * speed;
+
         return (
           <span key={`row-${top}`}>
             <motion.span
@@ -302,12 +324,15 @@ export function Percent({ size, speed, reduce }: PartProps): React.JSX.Element {
     const dur = (reduce ? speed * 2 : speed) * 1000;
     const start = { t: 0 };
     const tickMs = 40;
+
     const id = setInterval(() => {
       start.t += tickMs;
       const next = Math.min(100, Math.round((start.t / dur) * 100));
       setP(next);
+
       if (next >= 100) start.t = 0;
     }, tickMs);
+
     return () => clearInterval(id);
   }, [speed, reduce]);
 
@@ -340,6 +365,7 @@ export function DotMatrix({ size, speed, reduce }: PartProps): React.JSX.Element
   const gap = size * 0.14;
   const dot = (size - gap * (n - 1)) / n;
   const cells = Array.from({ length: n * n }, (_, idx) => idx);
+
   return (
     <span
       className="grid"
@@ -352,6 +378,7 @@ export function DotMatrix({ size, speed, reduce }: PartProps): React.JSX.Element
         const x = idx % n;
         const y = Math.floor(idx / n);
         const delay = ((x + y) / (2 * (n - 1))) * speed;
+
         return (
           <motion.span
             key={idx}
@@ -383,6 +410,7 @@ export function Dither({ size, speed, reduce }: PartProps): React.JSX.Element {
   const n = 4;
   const gap = Math.max(1, size * 0.05);
   const cell = (size - gap * (n - 1)) / n;
+
   return (
     <span
       className="grid"

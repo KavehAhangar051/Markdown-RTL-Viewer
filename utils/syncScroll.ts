@@ -1,24 +1,32 @@
 /**
  * @file utils/syncScroll.ts
  * @description Pure calculation utilities for proportional synchronized scrolling between split editor panels.
+ * Implements John Ousterhout's 'Define Errors Out of Existence' principle by absorbing NaN and negative bounds.
  */
 
 /**
  * Calculates the normalized scroll progress ratio (0 to 1) for a given scroll container.
+ * Absorbs edge-cases: returns 0 for non-scrollable, negative, or invalid numeric states.
  *
  * @param {number} scrollTop - Current vertical scroll offset in pixels.
  * @param {number} scrollHeight - Total scrollable height of the element.
  * @param {number} clientHeight - Visible client height of the element viewport.
- * @returns {number} Normalized progress ratio between 0 and 1.
+ * @returns {number} Normalized progress ratio guaranteed between 0 and 1.
  */
 export function getScrollProgress(
   scrollTop: number,
   scrollHeight: number,
   clientHeight: number,
 ): number {
+  if (isNaN(scrollTop) || isNaN(scrollHeight) || isNaN(clientHeight)) {
+    return 0;
+  }
+
   const maxScroll = scrollHeight - clientHeight;
+
   if (maxScroll <= 0) return 0;
   const progress = scrollTop / maxScroll;
+
   return Math.min(1, Math.max(0, progress));
 }
 
@@ -30,7 +38,7 @@ export function getScrollProgress(
  * @param {number} sourceClientHeight - Visible height of the driving container.
  * @param {number} targetScrollHeight - Total scrollable height of the target container.
  * @param {number} targetClientHeight - Visible height of the target container.
- * @returns {number} Target scroll offset in pixels rounded to whole integer.
+ * @returns {number} Target scroll offset in pixels rounded to whole non-negative integer.
  */
 export function calculateTargetScrollTop(
   sourceScrollTop: number,
@@ -40,8 +48,10 @@ export function calculateTargetScrollTop(
   targetClientHeight: number,
 ): number {
   const maxTargetScroll = targetScrollHeight - targetClientHeight;
+
   if (maxTargetScroll <= 0) return 0;
 
   const progress = getScrollProgress(sourceScrollTop, sourceScrollHeight, sourceClientHeight);
-  return Math.round(progress * maxTargetScroll);
+
+  return Math.max(0, Math.round(progress * maxTargetScroll));
 }

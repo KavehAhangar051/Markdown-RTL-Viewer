@@ -16,7 +16,6 @@ import { cn } from "@/lib/utils";
 import type {
   ActionSwapButtonProps,
   ActionSwapIconProps,
-  ActionSwapItem,
   ActionSwapTextProps,
 } from "./action-swap-types";
 import {
@@ -39,6 +38,10 @@ export type {
   ActionSwapTextProps,
 } from "./action-swap-types";
 
+function isStringText(val: unknown): val is string {
+  return Object.prototype.toString.call(val) === '[object String]';
+}
+
 /**
  * Text element with animated transitions for label swaps.
  *
@@ -52,7 +55,7 @@ function ActionSwapText({
   className,
 }: ActionSwapTextProps) {
   const reduce = useReducedMotion();
-  const label = typeof children === "string" ? children : null;
+  const label = isStringText(children) ? children : null;
   const cascade = animation === "cascade" && label !== null && !reduce;
   const coreAnimation: CoreAnimation = animation === "cascade" ? "roll" : animation;
 
@@ -182,13 +185,13 @@ export function ActionSwapButton({
 
   const accessibleLabel =
     activeItem.ariaLabel ??
-    (iconOnly && typeof activeItem.label === "string" ? activeItem.label : undefined);
+    (iconOnly && isStringText(activeItem.label) ? activeItem.label : undefined);
 
   return (
     <m.button
       type="button"
       disabled={disabled}
-      whileTap={reduce || disabled ? undefined : { scale: 0.97 }}
+      whileTap={reduce || disabled ? undefined : { scale: 0.96 }}
       transition={SPRING_PRESS}
       className={cn(
         "inline-flex items-center justify-center overflow-hidden font-medium transition-colors",
@@ -200,7 +203,9 @@ export function ActionSwapButton({
       aria-label={accessibleLabel}
       onClick={(event) => {
         onClick?.(event);
+
         if (event.defaultPrevented || disabled || !cycle || !nextItem) return;
+
         if (value === undefined) setInternalValue(nextItem.id);
         onValueChange?.(nextItem.id, nextItem);
       }}

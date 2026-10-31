@@ -4,21 +4,33 @@
  */
 
 /**
- * Checks if a character is a Persian/Arabic character.
- * @param char - Single character to test.
- * @returns Boolean indicating whether the character belongs to the Persian/Arabic Unicode blocks.
+ * Fast numeric check if UTF-16 character code is a digit (ASCII 0-9, Arabic ٠-٩, or Persian ۰-۹).
+ * Authoritative single source of truth for numeric character detection across the studio.
+ *
+ * @param {number} code - UTF-16 character code.
+ * @returns {boolean} True if character code represents a digit.
  */
-export function isPersianChar(char: string): boolean {
-  if (!char) return false;
-  const code = char.charCodeAt(0);
-  // Exclude digits (0-9, Arabic digits ٠-٩, Persian digits ۰-۹) so numbers do not get Persian font
-  if (
+export function isDigitCode(code: number): boolean {
+  return (
     (code >= 0x0030 && code <= 0x0039) ||
     (code >= 0x0660 && code <= 0x0669) ||
     (code >= 0x06f0 && code <= 0x06f9)
-  ) {
+  );
+}
+
+/**
+ * Fast character code checker for Persian/Arabic Unicode blocks.
+ * Operates purely on numeric SMI character codes avoiding string materialization in hot loops.
+ *
+ * @param {number} code - UTF-16 character code.
+ * @returns {boolean} True if character code belongs to Persian/Arabic Unicode blocks (excluding digits).
+ */
+export function isPersianCharCode(code: number): boolean {
+  // Exclude digits (0-9, Arabic digits ٠-٩, Persian digits ۰-۹) so numbers do not get Persian font
+  if (isDigitCode(code)) {
     return false;
   }
+
   return (
     (code >= 0x0600 && code <= 0x06ff) ||
     (code >= 0x0750 && code <= 0x077f) ||
@@ -31,12 +43,32 @@ export function isPersianChar(char: string): boolean {
 }
 
 /**
- * Checks if a string contains any Persian/Arabic characters.
+ * Checks if a character is a Persian/Arabic character.
+ * @param char - Single character to test.
+ * @returns Boolean indicating whether the character belongs to the Persian/Arabic Unicode blocks.
+ */
+export function isPersianChar(char: string): boolean {
+  if (!char) return false;
+
+  return isPersianCharCode(char.charCodeAt(0));
+}
+
+/**
+ * Checks if a string contains any Persian/Arabic characters using the authoritative charCode rule.
  * @param text - Input string to check.
- * @returns True if text contains any Persian/Arabic glyphs.
+ * @returns True if text contains any non-digit Persian/Arabic glyphs.
  */
 export function hasPersianText(text: string): boolean {
   if (!text) return false;
-  return /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF\u200C\u200D]/.test(text);
+
+  const len = text.length;
+
+  for (let i = 0; i < len; i++) {
+    if (isPersianCharCode(text.charCodeAt(i))) {
+      return true;
+    }
+  }
+
+  return false;
 }
 

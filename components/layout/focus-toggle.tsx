@@ -27,7 +27,7 @@ export function FocusToggle(): React.JSX.Element {
         id="header-focus-toggle"
         type="button"
         onClick={toggleFocusMode}
-        whileTap={reduceMotion ? undefined : { scale: 0.94 }}
+        whileTap={reduceMotion ? undefined : { scale: 0.96 }}
         whileHover={reduceMotion ? undefined : { scale: 1.02 }}
         transition={SPRING_PRESS}
         title={isFocusMode ? t.dock.exitFocusMode : t.dock.focusMode}

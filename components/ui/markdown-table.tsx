@@ -28,7 +28,7 @@ export function MarkdownTable({ children, className, ...props }: MarkdownTablePr
 
   return (
     <div
-      className={`my-5 rounded-xl border overflow-hidden transition-all duration-200 shadow-lg ${
+      className={`my-5 rounded-xl border overflow-hidden transition-colors duration-200 shadow-lg ${
         isDark
           ? 'bg-zinc-950/80 border-zinc-800/80 shadow-black/30'
           : 'bg-white/95 border-zinc-200/90 shadow-zinc-200/40'
@@ -38,7 +38,7 @@ export function MarkdownTable({ children, className, ...props }: MarkdownTablePr
       {/* Horizontal Scroll Area */}
       <div className="overflow-x-auto w-full max-w-full">
         <table
-          className={`w-full border-collapse text-right text-xs sm:text-sm font-vazir m-0 border-0 ${className || ''}`}
+          className={`w-full border-collapse text-start text-xs sm:text-sm font-vazir m-0 border-0 ${className || ''}`}
           {...props}
         >
           {children}

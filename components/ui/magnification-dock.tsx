@@ -12,6 +12,10 @@ import { DockItem, DockIcon, DockLabel } from '@/components/ui/dock-item';
 import { useMarkdownContext } from '@/store/MarkdownContext';
 import { SPRING_DOCK } from '@/lib/ease';
 
+function isStringLabel(val: unknown): val is string {
+  return Object.prototype.toString.call(val) === '[object String]';
+}
+
 /**
  * MagnificationDock Component providing fluid dock interaction with spring physics.
  *
@@ -53,7 +57,7 @@ export function MagnificationDock({
           <DockItem
             key={item.id}
             id={item.id}
-            label={typeof item.label === 'string' ? item.label : undefined}
+            label={isStringLabel(item.label) ? item.label : undefined}
             isActive={item.isActive}
             onClick={item.onClick}
             className={item.className}

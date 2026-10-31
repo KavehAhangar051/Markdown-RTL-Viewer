@@ -8,7 +8,6 @@ import type { Variants } from 'motion/react';
 import {
   DURATION,
   EASE_OUT,
-  EASE_IN,
   EASE_IN_OUT,
   SPRING_PANEL,
   SPRING_BOUNCE,
@@ -31,7 +30,7 @@ export const modalBackdropVariants: Variants = {
     opacity: 0,
     transition: {
       duration: DURATION.standard * DURATION.exitRatio,
-      ease: EASE_IN,
+      ease: EASE_OUT,
     },
   },
 };
@@ -39,7 +38,7 @@ export const modalBackdropVariants: Variants = {
 /**
  * Modal content dialog variants.
  * Emergent entrance: scale 94% + 14px Y offset to 100%.
- * Exit: accelerates away with slight shrink and Y drop.
+ * Exit: softens away with slight shrink and Y drop using ease-out.
  */
 export const modalContentVariants: Variants = {
   hidden: {
@@ -59,7 +58,7 @@ export const modalContentVariants: Variants = {
     y: 8,
     transition: {
       duration: DURATION.quick,
-      ease: EASE_IN,
+      ease: EASE_OUT,
     },
   },
 };
@@ -89,7 +88,7 @@ export const viewModeVariants: Variants = {
     y: -6,
     transition: {
       duration: DURATION.quick,
-      ease: EASE_IN,
+      ease: EASE_OUT,
     },
   },
 };
@@ -119,7 +118,7 @@ export const toastNotificationVariants: Variants = {
     scale: 0.95,
     transition: {
       duration: DURATION.quick,
-      ease: EASE_IN,
+      ease: EASE_OUT,
     },
   },
 };
@@ -129,6 +128,7 @@ export const toastNotificationVariants: Variants = {
  * Follows patterns/state-feedback.md for firm, decisive error feedback.
  */
 export const ERROR_SHAKE_X = [0, -10, 10, -6, 6, -2, 2, 0];
+
 export const ERROR_SHAKE_TRANSITION = {
   duration: 0.35,
   ease: EASE_IN_OUT,
@@ -157,6 +157,53 @@ export const ambientPulseVariants: Variants = {
     opacity: [0.85, 1, 0.85],
     transition: {
       duration: DURATION.ambient,
+      repeat: Infinity,
+      ease: 'easeInOut',
+    },
+  },
+};
+
+/**
+ * Staggered badge container variants for toolbar metrics.
+ * Implements micro-cascade pattern (30-40ms stagger, total budget < 150ms).
+ */
+export const badgeContainerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.035,
+      delayChildren: 0.02,
+    },
+  },
+};
+
+/**
+ * Individual metric badge entrance variants with subtle upward glide.
+ */
+export const badgeItemVariants: Variants = {
+  hidden: { opacity: 0, scale: 0.92, y: 4 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: {
+      duration: DURATION.quick,
+      ease: EASE_OUT,
+    },
+  },
+};
+
+/**
+ * Ambient aura glow variants for empty states and focal points.
+ * Continuous gentle pulsing without distracting from content.
+ */
+export const ambientAuraVariants: Variants = {
+  idle: {
+    scale: [1, 1.15, 1],
+    opacity: [0.3, 0.6, 0.3],
+    transition: {
+      duration: 3.2,
       repeat: Infinity,
       ease: 'easeInOut',
     },

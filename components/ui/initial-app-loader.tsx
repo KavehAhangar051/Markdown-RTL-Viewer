@@ -10,6 +10,10 @@ import { m, AnimatePresence } from 'motion/react';
 import { AsciiLineLoader } from '@/components/motion/loader';
 import { EASE_OUT } from '@/lib/ease';
 
+interface PreHydrationWindow extends Window {
+  __asciiPreInterval?: number;
+}
+
 /**
  * Clean initial application loader using only the raw ASCII Line animation.
  * Disappears once the page and all assets are fully loaded.
@@ -21,32 +25,34 @@ export function InitialAppLoader(): React.JSX.Element {
 
   useEffect(() => {
     // Clean up pre-hydration interval and remove fallback element
-    if (typeof window !== 'undefined' && (window as unknown as { __asciiPreInterval?: number }).__asciiPreInterval) {
-      clearInterval((window as unknown as { __asciiPreInterval?: number }).__asciiPreInterval);
+    if (typeof window !== 'undefined') {
+      // SAFETY: Window optionally stores the pre-hydration ASCII animation timer ID
+      const win = window as PreHydrationWindow;
+
+      if (win.__asciiPreInterval !== undefined) {
+        clearInterval(win.__asciiPreInterval);
+      }
     }
+
     const preFallback = document.getElementById('pre-hydration-loader');
+
     if (preFallback) {
       preFallback.remove();
     }
 
-    let timerId: ReturnType<typeof setTimeout> | null = null;
+    let rafId: number | null = null;
 
     const finishLoading = () => {
-      // Hold loader for 2.5 seconds (between 2 and 3 seconds) after content has loaded
-      timerId = setTimeout(() => {
+      // Dismiss loader on next animation frame once hydrated so LCP (< 2.5s) and INP are never blocked
+      rafId = window.requestAnimationFrame(() => {
         setIsLoading(false);
-      }, 2500);
+      });
     };
 
-    if (document.readyState === 'complete') {
-      finishLoading();
-    } else {
-      window.addEventListener('load', finishLoading, { once: true });
-    }
+    finishLoading();
 
     return () => {
-      window.removeEventListener('load', finishLoading);
-      if (timerId) clearTimeout(timerId);
+      if (rafId !== null) window.cancelAnimationFrame(rafId);
     };
   }, []);
 
@@ -57,8 +63,8 @@ export function InitialAppLoader(): React.JSX.Element {
           id="app-initial-loading-screen"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.2, ease: EASE_OUT }}
-          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black text-zinc-200 select-none pointer-events-auto"
+          transition={{ duration: 0.15, ease: EASE_OUT }}
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black text-zinc-200 select-none pointer-events-none"
         >
           <AsciiLineLoader size={32} />
         </m.div>
