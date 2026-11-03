@@ -45,6 +45,7 @@ export const MarkdownProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [isUploadOpen, setIsUploadOpen] = useState<boolean>(false);
   const [isPasteOpen, setIsPasteOpen] = useState<boolean>(false);
   const [isFocusMode, setIsFocusModeState] = useState<boolean>(false);
+  const [isShowcaseOpen, setIsShowcaseOpenState] = useState<boolean>(true);
   const [isSyncScroll, setIsSyncScroll] = useState<boolean>(true);
   const [editorElement, setEditorElement] = useState<HTMLTextAreaElement | null>(null);
   const [previewElement, setPreviewElement] = useState<HTMLDivElement | null>(null);
@@ -127,6 +128,15 @@ export const MarkdownProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const setIsFocusMode = useCallback((value: boolean) => {
     runStudioTransition(value ? 'focus-enter' : 'focus-exit', () => {
       setIsFocusModeState(value);
+    });
+  }, []);
+
+  const setIsShowcaseOpen = useCallback((value: boolean) => {
+    runStudioTransition('content-load', () => {
+      setIsShowcaseOpenState(value);
+      if (value) {
+        setIsFocusModeState(false);
+      }
     });
   }, []);
 
@@ -229,6 +239,7 @@ export const MarkdownProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       rawMarkdown, setRawMarkdown, applyExternalMarkdown, rtlMarkdown, documentTitle,
       viewMode, setViewMode, stats, isProcessing, isUploadOpen, setIsUploadOpen,
       isPasteOpen, setIsPasteOpen, isFocusMode, setIsFocusMode, toggleFocusMode,
+      isShowcaseOpen, setIsShowcaseOpen,
       isSyncScroll, setIsSyncScroll, toggleSyncScroll, editorElement, setEditorElement,
       previewElement, setPreviewElement, clearContent, loadSample, toast, showToast, closeToast,
     }),
@@ -236,7 +247,8 @@ export const MarkdownProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       theme, setTheme, toggleTheme, language, setLanguage, toggleLanguage, t,
       rawMarkdown, setRawMarkdown, applyExternalMarkdown, rtlMarkdown, documentTitle,
       viewMode, setViewMode, stats, isProcessing, isUploadOpen, isPasteOpen,
-      isFocusMode, setIsFocusMode, toggleFocusMode, isSyncScroll, toggleSyncScroll,
+      isFocusMode, setIsFocusMode, toggleFocusMode, isShowcaseOpen, setIsShowcaseOpen,
+      isSyncScroll, toggleSyncScroll,
       editorElement, previewElement, clearContent, loadSample, toast, showToast, closeToast,
     ]
   );
@@ -245,6 +257,7 @@ export const MarkdownProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     () => ({
       theme, setTheme, toggleTheme, language, setLanguage, toggleLanguage, t,
       viewMode, setViewMode, isFocusMode, setIsFocusMode, toggleFocusMode,
+      isShowcaseOpen, setIsShowcaseOpen,
       isSyncScroll, setIsSyncScroll, toggleSyncScroll, isUploadOpen, setIsUploadOpen,
       isPasteOpen, setIsPasteOpen, editorElement, setEditorElement,
       previewElement, setPreviewElement, applyExternalMarkdown, clearContent,
@@ -253,6 +266,7 @@ export const MarkdownProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     [
       theme, setTheme, toggleTheme, language, setLanguage, toggleLanguage, t,
       viewMode, setViewMode, isFocusMode, setIsFocusMode, toggleFocusMode,
+      isShowcaseOpen, setIsShowcaseOpen,
       isSyncScroll, toggleSyncScroll, isUploadOpen, isPasteOpen,
       editorElement, previewElement, applyExternalMarkdown, clearContent,
       loadSample, getExportSnapshot, toast, showToast, closeToast,
@@ -293,6 +307,8 @@ export interface StudioUIContextType {
   isFocusMode: boolean;
   setIsFocusMode: (focus: boolean) => void;
   toggleFocusMode: () => void;
+  isShowcaseOpen: boolean;
+  setIsShowcaseOpen: (open: boolean) => void;
   isSyncScroll: boolean;
   setIsSyncScroll: (val: boolean | ((prev: boolean) => boolean)) => void;
   toggleSyncScroll: () => void;

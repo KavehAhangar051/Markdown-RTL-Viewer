@@ -18,6 +18,7 @@ import { ToastNotification } from '@/components/ui/toast-notification';
 import { useSyncScroll } from '@/hooks/useSyncScroll';
 import { viewModeVariants } from '@/components/motion/motion-variants';
 import { SharedPanelTransition } from '@/components/motion/studio-view-transition';
+import { StudioShowcase } from '@/components/showcase/studio-showcase';
 import { DURATION, EASE_OUT } from '@/lib/ease';
 
 const UploadModal = dynamic(
@@ -93,6 +94,8 @@ function MainAppContent() {
     language,
     theme,
     isFocusMode,
+    isShowcaseOpen,
+    setIsShowcaseOpen,
     toast,
     closeToast,
     editorElement,
@@ -107,10 +110,10 @@ function MainAppContent() {
   useSyncScroll({
     editorEl: editorElement,
     previewEl: previewElement,
-    enabled: isSyncScroll && viewMode === 'split',
+    enabled: !isShowcaseOpen && isSyncScroll && viewMode === 'split',
   });
 
-  const isPageScrollable = viewMode === 'preview';
+  const isPageScrollable = isShowcaseOpen || viewMode === 'preview';
 
   const scrollContainerClass = isPageScrollable
     ? 'min-h-screen overflow-x-clip'
@@ -147,26 +150,39 @@ function MainAppContent() {
 
       {/* Floating Exit Widget for Focus Mode */}
       <AnimatePresence>
-        {isFocusMode && <FocusModeBar key="focus-exit-widget" />}
+        {!isShowcaseOpen && isFocusMode && <FocusModeBar key="focus-exit-widget" />}
       </AnimatePresence>
 
-      {/* Main Workspace Grid (Extends to top in Focus Mode with layout animation) */}
-      <m.main
-        layout
-        transition={{ duration: DURATION.slow, ease: EASE_OUT }}
-        className={`flex-1 max-w-[1580px] w-full mx-auto flex flex-col gap-2.5 sm:gap-3 z-10 ${
-          isPageScrollable ? '' : 'min-h-0 overflow-hidden'
-        } ${mainPaddingClass}`}
-      >
-        <div className="flex-1 w-full flex flex-col gap-2.5 sm:gap-3 items-start">
-          <WorkspaceViews viewMode={viewMode} />
-        </div>
-      </m.main>
+      {isShowcaseOpen ? (
+        <StudioShowcase
+          onClose={() => {
+            setIsShowcaseOpen(false);
+            if (typeof window !== 'undefined') {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+          }}
+        />
+      ) : (
+        <>
+          {/* Main Workspace Grid (Extends to top in Focus Mode with layout animation) */}
+          <m.main
+            layout
+            transition={{ duration: DURATION.slow, ease: EASE_OUT }}
+            className={`flex-1 max-w-[1580px] w-full mx-auto flex flex-col gap-2.5 sm:gap-3 z-10 ${
+              isPageScrollable ? '' : 'min-h-0 overflow-hidden'
+            } ${mainPaddingClass}`}
+          >
+            <div className="flex-1 w-full flex flex-col gap-2.5 sm:gap-3 items-start">
+              <WorkspaceViews viewMode={viewMode} />
+            </div>
+          </m.main>
 
-      {/* Interactive macOS-style Magnification Dock (Exits with motion in Focus Mode) */}
-      <AnimatePresence initial={false}>
-        {!isFocusMode && <StudioDock key="studio-dock" />}
-      </AnimatePresence>
+          {/* Interactive macOS-style Magnification Dock (Exits with motion in Focus Mode) */}
+          <AnimatePresence initial={false}>
+            {!isFocusMode && <StudioDock key="studio-dock" />}
+          </AnimatePresence>
+        </>
+      )}
 
       {/* Toast Notification Banner */}
       <ToastNotification

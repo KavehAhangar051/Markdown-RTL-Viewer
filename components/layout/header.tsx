@@ -11,6 +11,8 @@ import { LanguageToggle } from '@/components/layout/language-toggle';
 import { ThemeToggle } from '@/components/layout/theme-toggle';
 import { FocusToggle } from '@/components/layout/focus-toggle';
 import { ShowcaseToggle } from '@/components/layout/showcase-toggle';
+import { PWAInstallButton } from '@/components/ui/pwa-install-button';
+import { OfflineIndicator } from '@/components/ui/offline-indicator';
 import { useStudioUI } from '@/store/MarkdownContext';
 import { STUDIO_VT_NAMES } from '@/utils/viewTransitions';
 
@@ -37,7 +39,7 @@ function getHeaderGlassClass(isDark: boolean, isScrolled: boolean): string {
  * @returns {React.JSX.Element} The rendered Header component.
  */
 export const Header = React.memo(function Header(): React.JSX.Element {
-  const { theme } = useStudioUI();
+  const { theme, isShowcaseOpen } = useStudioUI();
   const [isScrolled, setIsScrolled] = useState(false);
   const isScrolledRef = useRef(false);
   const isDark = theme === 'dark';
@@ -88,10 +90,12 @@ export const Header = React.memo(function Header(): React.JSX.Element {
         <div className="px-3 sm:px-5 py-2 sm:py-2.5 flex items-center justify-between gap-3 sm:gap-4">
           <HeaderBrand />
 
-          {/* Controls: Focus, Theme & Language */}
+          {/* Controls: Offline Status, PWA Install, Showcase, Focus, Theme & Language */}
           <div id="header-actions-group" className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            <OfflineIndicator />
+            <PWAInstallButton />
             <ShowcaseToggle />
-            <FocusToggle />
+            {!isShowcaseOpen && <FocusToggle />}
             <ThemeToggle />
             <LanguageToggle />
           </div>

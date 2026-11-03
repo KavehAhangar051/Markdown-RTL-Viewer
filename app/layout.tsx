@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import '@fontsource/vazirmatn/400.css';
 import '@fontsource/vazirmatn/500.css';
 import '@fontsource/vazirmatn/600.css';
@@ -14,17 +14,31 @@ import { MotionProvider } from '@/components/providers/motion-provider';
 import { InitialAppLoader } from '@/components/ui/initial-app-loader';
 import { CustomCursor } from '@/components/custom-cursor';
 
+export const viewport: Viewport = {
+  themeColor: '#000000',
+  width: 'device-width',
+  initialScale: 1,
+};
+
 export const metadata: Metadata = {
   title: 'RTL Markdown Studio',
   description: 'Markdown editor and previewer with RTL support for Persian and Arabic text.',
+  manifest: '/manifest.webmanifest',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'RTL Studio',
+  },
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: '32x32' },
       { url: '/icon.svg', type: 'image/svg+xml' },
       { url: '/icon-32.png', sizes: '32x32', type: 'image/png' },
       { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
     ],
     apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
       { url: '/apple-icon.png', sizes: '180x180', type: 'image/png' },
     ],
   },

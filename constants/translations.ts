@@ -83,6 +83,17 @@ export const TRANSLATIONS: Record<Language, Translations> = {
       textApplied: 'متن در ویرایشگر درج شد',
       langSwitched: (lang: string) => `زبان به ${lang} تغییر کرد`,
     },
+    pwa: {
+      installButton: 'نصب برنامه',
+      installTooltip: 'نصب نسخه وب‌اپلیکیشن (PWA) برای استفاده آفلاین',
+      iosModalTitle: 'نصب برنامه در iOS',
+      iosModalSubtitle: 'برای نصب استودیو روی صفحه اصلی آیفون یا آیپد و استفاده کاملاً آفلاین:',
+      iosStep1: '۱. در نوار پایین مرورگر Safari روی دکمه اشتراک‌گذاری (Share) بزنید.',
+      iosStep2: '۲. گزینه «Add to Home Screen» را انتخاب کرده و تایید کنید.',
+      iosCloseButton: 'متوجه شدم',
+      offlineBadge: 'حالت آفلاین فعال',
+      offlineTooltip: 'اتصال اینترنت برقرار نیست؛ تمام امکانات ویرایشگر به‌صورت آفلاین در دسترس است.',
+    },
   },
   en: {
     header: {
@@ -160,6 +171,17 @@ export const TRANSLATIONS: Record<Language, Translations> = {
       noTextToApply: 'No text entered to insert',
       textApplied: 'Text inserted into editor',
       langSwitched: (lang: string) => `Language changed to ${lang}`,
+    },
+    pwa: {
+      installButton: 'Install App',
+      installTooltip: 'Install Progressive Web App (PWA) for offline access',
+      iosModalTitle: 'Install on iOS',
+      iosModalSubtitle: 'To install RTL Markdown Studio on your iPhone or iPad for offline use:',
+      iosStep1: '1. Tap the Share button in the Safari toolbar.',
+      iosStep2: '2. Scroll down and select "Add to Home Screen".',
+      iosCloseButton: 'Got it',
+      offlineBadge: 'Offline Mode',
+      offlineTooltip: 'You are offline. All editor and preview features continue to work locally.',
     },
   },
 };

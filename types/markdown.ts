@@ -38,6 +38,8 @@ export interface MarkdownContextType {
   isFocusMode: boolean;
   setIsFocusMode: (focus: boolean) => void;
   toggleFocusMode: () => void;
+  isShowcaseOpen: boolean;
+  setIsShowcaseOpen: (open: boolean) => void;
   isSyncScroll: boolean;
   setIsSyncScroll: (val: boolean | ((prev: boolean) => boolean)) => void;
   toggleSyncScroll: () => void;

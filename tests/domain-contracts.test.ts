@@ -43,6 +43,7 @@ import {
   resolveViewModeTransitionType,
   runStudioTransition,
 } from '../utils/viewTransitions';
+import manifest from '../app/manifest';
 
 const EMOJI_CODEPOINT_REGEX = /\p{Extended_Pictographic}/u;
 

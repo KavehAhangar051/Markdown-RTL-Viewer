@@ -82,4 +82,16 @@ export interface Translations {
     textApplied: string;
     langSwitched: (lang: string) => string;
   };
+  pwa: {
+    installButton: string;
+    installTooltip: string;
+    iosModalTitle: string;
+    iosModalSubtitle: string;
+    iosStep1: string;
+    iosStep2: string;
+    iosCloseButton: string;
+    offlineBadge: string;
+    offlineTooltip: string;
+  };
 }
+
