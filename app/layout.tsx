@@ -14,6 +14,11 @@ import { MotionProvider } from '@/components/providers/motion-provider';
 import { InitialAppLoader } from '@/components/ui/initial-app-loader';
 import { CustomCursor } from '@/components/custom-cursor';
 
+const rawBasePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+const basePath = rawBasePath
+  ? (rawBasePath.startsWith('/') ? rawBasePath : `/${rawBasePath}`).replace(/\/$/, '')
+  : '';
+
 export const viewport: Viewport = {
   themeColor: '#000000',
   width: 'device-width',
@@ -23,7 +28,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: 'RTL Markdown Studio',
   description: 'Markdown editor and previewer with RTL support for Persian and Arabic text.',
-  manifest: '/manifest.webmanifest',
+  manifest: `${basePath}/manifest.webmanifest`,
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
@@ -31,15 +36,15 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: '/favicon.ico', sizes: '32x32' },
-      { url: '/icon.svg', type: 'image/svg+xml' },
-      { url: '/icon-32.png', sizes: '32x32', type: 'image/png' },
-      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
-      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+      { url: `${basePath}/favicon.ico`, sizes: '32x32' },
+      { url: `${basePath}/icon.svg`, type: 'image/svg+xml' },
+      { url: `${basePath}/icon-32.png`, sizes: '32x32', type: 'image/png' },
+      { url: `${basePath}/icon-192.png`, sizes: '192x192', type: 'image/png' },
+      { url: `${basePath}/icon-512.png`, sizes: '512x512', type: 'image/png' },
     ],
     apple: [
-      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
-      { url: '/apple-icon.png', sizes: '180x180', type: 'image/png' },
+      { url: `${basePath}/apple-touch-icon.png`, sizes: '180x180', type: 'image/png' },
+      { url: `${basePath}/apple-icon.png`, sizes: '180x180', type: 'image/png' },
     ],
   },
   openGraph: {
@@ -85,6 +90,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <span id="pre-ascii-char">|</span>
               <script>
                 (function() {
+                  window.addEventListener('beforeinstallprompt', function(e) {
+                    e.preventDefault();
+                    window.__deferredPwaPrompt = e;
+                  });
                   var f = ['|', '/', '-', '\\\\'];
                   var i = 0;
                   var el = document.getElementById('pre-ascii-char');

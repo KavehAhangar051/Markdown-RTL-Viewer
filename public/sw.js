@@ -4,21 +4,36 @@
  * Implements Network-First for document navigations and Cache-First for static bundles, fonts, and icons.
  */
 
-const SHELL_CACHE_NAME = 'rtl-studio-shell-v2';
-const ASSET_CACHE_NAME = 'rtl-studio-assets-v2';
+const SHELL_CACHE_NAME = 'rtl-studio-shell-v3';
+const ASSET_CACHE_NAME = 'rtl-studio-assets-v3';
 
-const PRECACHE_URLS = [
-  '/',
-  '/manifest.webmanifest',
-  '/icon.svg',
-  '/icon-32.png',
-  '/icon-192.png',
-  '/icon-512.png',
-  '/icon-maskable-512.png',
-  '/apple-touch-icon.png',
-  '/apple-icon.png',
-  '/favicon.ico',
+const PRECACHE_ASSETS = [
+  '',
+  'manifest.webmanifest',
+  'icon.svg',
+  'icon-32.png',
+  'icon-192.png',
+  'icon-512.png',
+  'icon-maskable-512.png',
+  'apple-touch-icon.png',
+  'apple-icon.png',
+  'favicon.ico',
 ];
+
+/**
+ * Resolves a relative path against the Service Worker registration scope.
+ * Works on both root (`/`) and GitHub Pages subpath (`/Markdown-RTL-Viewer/`).
+ *
+ * @param {string} relativePath - Asset path relative to scope root.
+ * @returns {string} Pathname starting with `/`.
+ */
+function resolveScopeUrl(relativePath = '') {
+  const scopePathname = new URL(self.registration.scope).pathname;
+  const normalizedScope = scopePathname.endsWith('/')
+    ? scopePathname
+    : `${scopePathname}/`;
+  return `${normalizedScope}${relativePath.replace(/^\//, '')}`;
+}
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -26,8 +41,8 @@ self.addEventListener('install', (event) => {
       .open(SHELL_CACHE_NAME)
       .then((cache) =>
         Promise.allSettled(
-          PRECACHE_URLS.map((url) =>
-            cache.add(new Request(url, { cache: 'reload' }))
+          PRECACHE_ASSETS.map((asset) =>
+            cache.add(new Request(resolveScopeUrl(asset), { cache: 'reload' }))
           )
         )
       )
@@ -62,7 +77,7 @@ self.addEventListener('activate', (event) => {
 function isStaticAsset(url) {
   const path = url.pathname;
   return (
-    path.startsWith('/_next/static/') ||
+    path.includes('/_next/static/') ||
     path.endsWith('.js') ||
     path.endsWith('.css') ||
     path.endsWith('.woff2') ||
@@ -90,11 +105,13 @@ self.addEventListener('fetch', (event) => {
 
   // Ignore Next.js HMR / development websocket or internal endpoints
   if (
-    url.pathname.startsWith('/_next/webpack-hmr') ||
-    url.pathname.startsWith('/__nextjs')
+    url.pathname.includes('/_next/webpack-hmr') ||
+    url.pathname.includes('/__nextjs')
   ) {
     return;
   }
+
+  const rootUrl = resolveScopeUrl('');
 
   // 1. Navigation requests: Network-First with Offline App Shell Fallback
   if (request.mode === 'navigate') {
@@ -105,7 +122,7 @@ self.addEventListener('fetch', (event) => {
             const copy = networkResponse.clone();
             caches.open(SHELL_CACHE_NAME).then((cache) => {
               cache.put(request, copy);
-              cache.put('/', copy.clone());
+              cache.put(rootUrl, copy.clone());
             });
           }
           return networkResponse;
@@ -115,7 +132,7 @@ self.addEventListener('fetch', (event) => {
           if (cachedPage) {
             return cachedPage;
           }
-          const cachedRoot = await caches.match('/');
+          const cachedRoot = await caches.match(rootUrl);
           if (cachedRoot) {
             return cachedRoot;
           }
@@ -145,7 +162,7 @@ self.addEventListener('fetch', (event) => {
             }
             return networkResponse;
           })
-          .catch(() => caches.match('/'));
+          .catch(() => caches.match(rootUrl));
       })
     );
     return;

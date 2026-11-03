@@ -90,6 +90,11 @@ export interface Translations {
     iosStep1: string;
     iosStep2: string;
     iosCloseButton: string;
+    desktopModalTitle: string;
+    desktopModalSubtitle: string;
+    desktopStep1: string;
+    desktopStep2: string;
+    desktopIframeHint: string;
     offlineBadge: string;
     offlineTooltip: string;
   };

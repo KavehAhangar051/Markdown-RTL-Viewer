@@ -13,14 +13,20 @@ export const dynamic = 'force-static';
  * @returns {MetadataRoute.Manifest} Compliant PWA manifest metadata.
  */
 export default function manifest(): MetadataRoute.Manifest {
+  const rawBasePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+  const normalizedBasePath = rawBasePath
+    ? (rawBasePath.startsWith('/') ? rawBasePath : `/${rawBasePath}`).replace(/\/$/, '')
+    : '';
+  const rootPath = normalizedBasePath ? `${normalizedBasePath}/` : '/';
+
   return {
-    id: '/',
+    id: rootPath,
     name: 'RTL Markdown Studio',
     short_name: 'RTL Studio',
     description:
       'ویرایشگر و پیش‌نمایش مارک‌داون راست‌چین با پشتیبانی کامل آفلاین | Offline-ready RTL Markdown Editor & Previewer',
-    start_url: '/',
-    scope: '/',
+    start_url: rootPath,
+    scope: rootPath,
     display: 'standalone',
     orientation: 'any',
     dir: 'rtl',
@@ -30,19 +36,19 @@ export default function manifest(): MetadataRoute.Manifest {
     categories: ['productivity', 'developer tools', 'utilities'],
     icons: [
       {
-        src: '/icon-192.png',
+        src: `${normalizedBasePath}/icon-192.png`,
         sizes: '192x192',
         type: 'image/png',
         purpose: 'any',
       },
       {
-        src: '/icon-512.png',
+        src: `${normalizedBasePath}/icon-512.png`,
         sizes: '512x512',
         type: 'image/png',
         purpose: 'any',
       },
       {
-        src: '/icon-maskable-512.png',
+        src: `${normalizedBasePath}/icon-maskable-512.png`,
         sizes: '512x512',
         type: 'image/png',
         purpose: 'maskable',

@@ -17,6 +17,12 @@ interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
 }
 
+declare global {
+  interface Window {
+    __deferredPwaPrompt?: BeforeInstallPromptEvent | null;
+  }
+}
+
 export interface PWAInstallState {
   isInstallable: boolean;
   isInstalled: boolean;
@@ -34,10 +40,12 @@ async function warmLoadedPageAssets(): Promise<void> {
   }
 
   try {
-    const assetCache = await caches.open('rtl-studio-assets-v2');
-    const shellCache = await caches.open('rtl-studio-shell-v2');
+    const assetCache = await caches.open('rtl-studio-assets-v3');
+    const shellCache = await caches.open('rtl-studio-shell-v3');
 
-    await shellCache.add(new Request(window.location.pathname || '/', { cache: 'no-cache' })).catch(() => undefined);
+    await shellCache
+      .add(new Request(window.location.pathname || '/', { cache: 'no-cache' }))
+      .catch(() => undefined);
 
     const resourceUrls = new Set<string>();
 
@@ -50,7 +58,9 @@ async function warmLoadedPageAssets(): Promise<void> {
       });
 
     document
-      .querySelectorAll<HTMLLinkElement>('link[rel="stylesheet"][href], link[rel="preload"][href]')
+      .querySelectorAll<HTMLLinkElement>(
+        'link[rel="stylesheet"][href], link[rel="preload"][href]'
+      )
       .forEach((link) => {
         if (link.href && link.href.startsWith(window.location.origin)) {
           resourceUrls.add(link.href);
@@ -75,10 +85,15 @@ function subscribeStandalone(callback: () => void): () => void {
     return () => {};
   }
   const standaloneMedia = window.matchMedia('(display-mode: standalone)');
+  const overlayMedia = window.matchMedia(
+    '(display-mode: window-controls-overlay)'
+  );
   standaloneMedia.addEventListener('change', callback);
+  overlayMedia.addEventListener('change', callback);
   window.addEventListener('appinstalled', callback);
   return () => {
     standaloneMedia.removeEventListener('change', callback);
+    overlayMedia.removeEventListener('change', callback);
     window.removeEventListener('appinstalled', callback);
   };
 }
@@ -89,6 +104,7 @@ function getStandaloneSnapshot(): boolean {
   }
   return (
     window.matchMedia('(display-mode: standalone)').matches ||
+    window.matchMedia('(display-mode: window-controls-overlay)').matches ||
     (window.navigator as Navigator & { standalone?: boolean }).standalone ===
       true
   );
@@ -111,14 +127,51 @@ function getIOSSnapshot(): boolean {
   );
 }
 
+function subscribeInstallPrompt(callback: () => void): () => void {
+  if (typeof window === 'undefined') {
+    return () => {};
+  }
+
+  const handleBeforeInstallPrompt = (e: Event) => {
+    e.preventDefault();
+    window.__deferredPwaPrompt = e as BeforeInstallPromptEvent;
+    callback();
+  };
+
+  const handleAppInstalled = () => {
+    window.__deferredPwaPrompt = null;
+    callback();
+  };
+
+  window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+  window.addEventListener('appinstalled', handleAppInstalled);
+
+  return () => {
+    window.removeEventListener(
+      'beforeinstallprompt',
+      handleBeforeInstallPrompt
+    );
+    window.removeEventListener('appinstalled', handleAppInstalled);
+  };
+}
+
+function getInstallPromptSnapshot(): BeforeInstallPromptEvent | null {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+  return window.__deferredPwaPrompt ?? null;
+}
+
+function getServerNullSnapshot(): BeforeInstallPromptEvent | null {
+  return null;
+}
+
 /**
- * Hook that registers `/sw.js` and exposes PWA installation state and trigger.
+ * Hook that registers `sw.js` (respecting `NEXT_PUBLIC_BASE_PATH`) and exposes PWA installation state.
  *
  * @returns {PWAInstallState} Current PWA installability, standalone state, iOS detection, and install handler.
  */
 export function usePWAInstall(): PWAInstallState {
-  const [deferredPrompt, setDeferredPrompt] =
-    useState<BeforeInstallPromptEvent | null>(null);
   const [installedViaPrompt, setInstalledViaPrompt] = useState<boolean>(false);
 
   const isStandalone = useSyncExternalStore(
@@ -131,6 +184,11 @@ export function usePWAInstall(): PWAInstallState {
     getIOSSnapshot,
     getServerFalseSnapshot
   );
+  const deferredPrompt = useSyncExternalStore(
+    subscribeInstallPrompt,
+    getInstallPromptSnapshot,
+    getServerNullSnapshot
+  );
 
   const isInstalled = isStandalone || installedViaPrompt;
 
@@ -139,10 +197,20 @@ export function usePWAInstall(): PWAInstallState {
       return;
     }
 
-    // Register Offline Service Worker
+    // Register Offline Service Worker with basePath support
     if ('serviceWorker' in navigator) {
+      const rawBasePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+      const normalizedBase = rawBasePath
+        ? (rawBasePath.startsWith('/') ? rawBasePath : `/${rawBasePath}`).replace(
+            /\/$/,
+            ''
+          )
+        : '';
+      const swUrl = `${normalizedBase}/sw.js`;
+      const swScope = `${normalizedBase}/`;
+
       navigator.serviceWorker
-        .register('/sw.js', { scope: '/' })
+        .register(swUrl, { scope: swScope })
         .then(() => {
           void warmLoadedPageAssets();
         })
@@ -150,41 +218,25 @@ export function usePWAInstall(): PWAInstallState {
           // Ignore registration errors in unsupported environments
         });
     }
-
-    const handleBeforeInstallPrompt = (e: Event) => {
-      e.preventDefault();
-      setDeferredPrompt(e as BeforeInstallPromptEvent);
-    };
-
-    const handleAppInstalled = () => {
-      setInstalledViaPrompt(true);
-      setDeferredPrompt(null);
-    };
-
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-    window.addEventListener('appinstalled', handleAppInstalled);
-
-    return () => {
-      window.removeEventListener(
-        'beforeinstallprompt',
-        handleBeforeInstallPrompt
-      );
-      window.removeEventListener('appinstalled', handleAppInstalled);
-    };
   }, []);
 
   const install = useCallback(async (): Promise<
     'accepted' | 'dismissed' | 'unavailable'
   > => {
-    if (!deferredPrompt) {
+    const promptEvent =
+      deferredPrompt ??
+      (typeof window !== 'undefined' ? window.__deferredPwaPrompt : null);
+    if (!promptEvent) {
       return 'unavailable';
     }
 
-    await deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
+    await promptEvent.prompt();
+    const { outcome } = await promptEvent.userChoice;
     if (outcome === 'accepted') {
+      if (typeof window !== 'undefined') {
+        window.__deferredPwaPrompt = null;
+      }
       setInstalledViaPrompt(true);
-      setDeferredPrompt(null);
     }
     return outcome;
   }, [deferredPrompt]);
