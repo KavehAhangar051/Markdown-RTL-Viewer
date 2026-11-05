@@ -1,7 +1,7 @@
 /**
  * @file utils/lruCache.ts
  * @description Bounded Least-Recently-Used (LRU) in-memory cache with hit/miss telemetry.
- * Eliminates duplicated caching mechanics across markdownEngine and syntaxHighlighter (DRY / ADR-0012).
+ * Eliminates duplicated caching mechanics across markdownEngine and syntaxHighlighter.
  */
 
 /**

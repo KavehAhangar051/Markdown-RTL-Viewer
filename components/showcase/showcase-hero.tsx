@@ -28,45 +28,7 @@ export function ShowcaseHero({
 
   return (
     <section className="relative w-full pt-16 sm:pt-24 md:pt-28 pb-20 sm:pb-28 px-4 sm:px-6 flex flex-col items-center justify-center text-center overflow-hidden">
-      {/* Architectural Crosshair Corner Accents */}
-      <div className="pointer-events-none max-w-6xl w-full mx-auto relative">
-        <span
-          aria-hidden="true"
-          className={`hidden sm:block absolute -top-6 left-0 font-mono text-xs select-none ${
-            isDark ? 'text-zinc-700' : 'text-zinc-400'
-          }`}
-        >
-          +
-        </span>
-        <span
-          aria-hidden="true"
-          className={`hidden sm:block absolute -top-6 right-0 font-mono text-xs select-none ${
-            isDark ? 'text-zinc-700' : 'text-zinc-400'
-          }`}
-        >
-          +
-        </span>
-      </div>
-
       <div className="relative z-10 max-w-6xl w-full mx-auto">
-        {/* Zero-Pill Unboxed Architectural Kicker */}
-        <div
-          dir="ltr"
-          className={`mb-6 sm:mb-8 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-[11px] sm:text-xs font-mono tracking-widest uppercase ${
-            isDark ? 'text-zinc-400' : 'text-zinc-600'
-          }`}
-        >
-          <span className="text-emerald-500 font-semibold">RTL MARKDOWN STUDIO</span>
-          <span aria-hidden="true" className="opacity-40">
-            ·
-          </span>
-          <span className="tabular-nums">V2.3.2</span>
-          <span aria-hidden="true" className="opacity-40">
-            ·
-          </span>
-          <span>{isFa ? 'CLIENT-SIDE 60FPS ENGINE' : 'ZERO-BACKEND 60FPS ENGINE'}</span>
-        </div>
-
         {/* Cinematic Balanced Display Headline */}
         <h1
           className={`text-3xl sm:text-5xl md:text-6xl lg:text-[4.15rem] font-extrabold tracking-tight leading-[1.2] sm:leading-[1.15] [text-wrap:balance] ${
@@ -153,7 +115,7 @@ export function ShowcaseHero({
           </button>
         </div>
 
-        {/* 16:9 Architectural 3D Stage & Kinetic Bi-Directional Stream */}
+        {/* Clean 16:9 Architectural 3D Stage */}
         <div className="mt-14 sm:mt-16 max-w-5xl mx-auto">
           <div
             onClick={onLaunchEditor}
@@ -176,81 +138,11 @@ export function ShowcaseHero({
               alt="RTL Markdown Studio 3D Geometric Architecture"
               fill
               sizes="(max-width: 1024px) 100vw, 1024px"
-              className="object-cover opacity-85 group-hover:opacity-95 group-hover:scale-[1.03] transition-all duration-700 ease-out transform-gpu"
+              className="object-cover opacity-90 group-hover:opacity-100 group-hover:scale-[1.03] transition-all duration-700 ease-out transform-gpu"
               referrerPolicy="no-referrer"
               priority
             />
-
-            {/* Measured Contrast Scrim */}
-            <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/35 to-zinc-950/30" />
-
-            {/* Top Architectural Coordinate Bar (Unboxed Typography) */}
-            <div
-              dir="ltr"
-              className="absolute top-4 inset-x-5 sm:top-5 sm:inset-x-7 flex items-center justify-between text-[11px] font-mono text-zinc-300/90 border-b border-white/10 pb-3"
-            >
-              <div className="flex items-center gap-2">
-                <span className="text-emerald-400 font-semibold">STAGE 01</span>
-                <span aria-hidden="true" className="opacity-40">
-                  ·
-                </span>
-                <span>UNICODE UAX #9 BIDI ENGINE</span>
-              </div>
-              <div className="hidden sm:flex items-center gap-2 tabular-nums text-zinc-400">
-                <span>1920×1080</span>
-                <span aria-hidden="true" className="opacity-40">
-                  ·
-                </span>
-                <span className="text-cyan-400">60 FPS GPU</span>
-              </div>
-            </div>
-
-            {/* Kinetic Animated SVG Wave Overlay (Simulates Live Optical Signal) */}
-            <svg
-              className="absolute inset-x-0 bottom-14 w-full h-16 opacity-55 pointer-events-none"
-              viewBox="0 0 1200 80"
-              fill="none"
-              preserveAspectRatio="none"
-            >
-              <path
-                d="M0 40 Q 150 10, 300 40 T 600 40 T 900 40 T 1200 40"
-                stroke="url(#heroWaveGrad)"
-                strokeWidth="1.5"
-                strokeDasharray="8 6"
-              >
-                <animate
-                  attributeName="stroke-dashoffset"
-                  from="0"
-                  to="-112"
-                  dur="4s"
-                  repeatCount="indefinite"
-                />
-              </path>
-              <defs>
-                <linearGradient id="heroWaveGrad" x1="0" y1="0" x2="1200" y2="0" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stopColor="#10b981" stopOpacity="0.1" />
-                  <stop offset="50%" stopColor="#06b6d4" stopOpacity="0.9" />
-                  <stop offset="100%" stopColor="#6366f1" stopOpacity="0.1" />
-                </linearGradient>
-              </defs>
-            </svg>
-
-            {/* Bottom Live Bi-Directional Code & Persian Stream Bar */}
-            <div className="absolute bottom-4 inset-x-5 sm:bottom-5 sm:inset-x-7 flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-3 border-t border-white/10 text-xs">
-              <div className="flex items-center gap-2 text-zinc-200 font-medium">
-                <span>
-                  {isFa
-                    ? 'تفکیک همزمان متون راست‌چین فارسی، فرمول‌های KaTeX و بلوک‌های کد'
-                    : 'Simultaneous RTL Persian prose, KaTeX math, and LTR code isolation'}
-                </span>
-              </div>
-              <div
-                dir="ltr"
-                className="font-mono text-[11px] text-emerald-300/95 tracking-tight tabular-nums"
-              >
-                {'fn render_bidi(rtl: &str) -> Frame60fps'}
-              </div>
-            </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/60 via-transparent to-zinc-950/20" />
           </div>
         </div>
       </div>

@@ -20,36 +20,30 @@ interface ShowcaseAccordionProps {
 const SLICES = [
   {
     id: 'slice-0',
-    index: '01',
     titleFa: 'مهندسی عمیق دامنه',
-    titleEn: 'Deep Domain Seams',
-    descFa: 'توابع خالص بدون وابستگی به DOM و فریم‌ورک با استانداردهای معماری مارتین فاولر و کنت بک.',
-    descEn: 'Pure functions independent of DOM and UI frameworks, strictly following PoEAA design seams.',
+    titleEn: 'Modular Processing Core',
+    descFa: 'پردازش ماژولار و مستقل اسناد مارک‌داون با تفکیک دقیق منطق پارسر از لایه نمایش.',
+    descEn: 'Modular document processing cleanly separating markdown parsing logic from the presentation layer.',
     image: showcaseArchitectureImg,
     icon: Compass,
-    badge: 'PoEAA & Pragmatic',
   },
   {
     id: 'slice-1',
-    index: '02',
     titleFa: 'واکنش‌گرایی ۶۰ فریم بر ثانیه',
     titleEn: '60fps Responsive Pipeline',
     descFa: 'خط‌لوله پردازش اسناد حجیم با زمان‌بندی معوق تا پاسخ‌دهی تایپ در ادیتور همیشه بدون لکنت باقی بماند.',
     descEn: 'Deferred processing pipeline ensuring typing responsiveness remains at a locked 60 frames per second.',
     image: showcaseSpeedImg,
     icon: Gauge,
-    badge: 'ADR-0010 Deferred',
   },
   {
     id: 'slice-2',
-    index: '03',
     titleFa: 'سیستم موشن و تعامل لمسی',
     titleEn: 'Kinetic Motion & Physics',
     descFa: 'داک متحرک مک‌او‌اس با بزرگ‌نمایی پیوسته، انیمیشن‌های فیزیکی اسپرینگ و ترنزیشن‌های بومی کلاینت.',
     descEn: 'Fluid macOS magnification dock, spring physics curves, and GPU-accelerated View Transitions.',
     image: showcaseMotionImg,
     icon: Sparkles,
-    badge: 'Spring Physics',
   },
 ];
 
@@ -60,18 +54,6 @@ export function ShowcaseAccordion({ isDark, isFa }: ShowcaseAccordionProps): Rea
     <section className="relative w-full py-24 sm:py-32 px-4 sm:px-6 max-w-7xl mx-auto">
       {/* Editorial Title */}
       <div className="max-w-3xl mb-12 sm:mb-16">
-        <div
-          dir="ltr"
-          className={`mb-3 flex items-center gap-2 text-xs font-mono tracking-widest uppercase ${
-            isDark ? 'text-zinc-400' : 'text-zinc-600'
-          }`}
-        >
-          <span className="text-emerald-500 font-semibold">02</span>
-          <span aria-hidden="true" className="opacity-40">
-            ·
-          </span>
-          <span>ARCHITECTURAL PILLARS</span>
-        </div>
         <h2
           className={`text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight [text-wrap:balance] ${
             isDark ? 'text-zinc-100' : 'text-zinc-950'
@@ -101,7 +83,7 @@ export function ShowcaseAccordion({ isDark, isFa }: ShowcaseAccordionProps): Rea
               key={slice.id}
               onMouseEnter={() => setActiveSlice(index)}
               onClick={() => setActiveSlice(index)}
-              className={`group relative rounded-3xl overflow-hidden border p-6 sm:p-8 flex flex-col justify-between transition-all duration-700 ease-out cursor-pointer ${
+              className={`group relative rounded-3xl overflow-hidden border p-6 sm:p-8 flex flex-col justify-end transition-all duration-700 ease-out cursor-pointer ${
                 isActive ? 'md:flex-[3]' : 'md:flex-1'
               } ${
                 isDark
@@ -124,25 +106,11 @@ export function ShowcaseAccordion({ isDark, isFa }: ShowcaseAccordionProps): Rea
                 <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-zinc-950/15" />
               </div>
 
-              {/* Slice Header with Unboxed Editorial Index */}
-              <div className="relative z-10 flex items-center justify-between border-b border-white/10 pb-3">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 backdrop-blur-md">
-                  <Icon animate={isActive ? true : undefined} className="w-5 h-5" />
-                </div>
-                <div
-                  dir="ltr"
-                  className="flex items-center gap-2 text-[11px] font-mono tracking-wider uppercase text-zinc-200 tabular-nums"
-                >
-                  <span className="text-emerald-400 font-semibold">{slice.index}</span>
-                  <span aria-hidden="true" className="opacity-40">
-                    ·
-                  </span>
-                  <span>{slice.badge}</span>
-                </div>
-              </div>
-
               {/* Bottom Content with Smooth Reveal */}
               <div className="relative z-10 mt-auto pt-6">
+                <div className="mb-4 w-10 h-10 rounded-xl flex items-center justify-center bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 backdrop-blur-md">
+                  <Icon animate={isActive ? true : undefined} className="w-5 h-5" />
+                </div>
                 <h3 className="text-lg sm:text-2xl font-bold tracking-tight text-zinc-100">
                   {isFa ? slice.titleFa : slice.titleEn}
                 </h3>

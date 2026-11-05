@@ -57,22 +57,6 @@ export function ShowcaseCta({
             <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-zinc-950/35" />
           </div>
 
-          {/* Unboxed Architectural Index */}
-          <div
-            dir="ltr"
-            className="relative z-10 mb-5 flex items-center justify-center gap-2 text-xs font-mono tracking-widest uppercase text-zinc-300"
-          >
-            <span className="text-emerald-400 font-semibold">03</span>
-            <span aria-hidden="true" className="opacity-40">
-              ·
-            </span>
-            <span>DIRECT WORKSPACE ENTRY</span>
-            <span aria-hidden="true" className="opacity-40">
-              ·
-            </span>
-            <span>ZERO SETUP</span>
-          </div>
-
           {/* High-Contrast Editorial Headline */}
           <h2
             className={`relative z-10 max-w-3xl text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.15] text-zinc-100 [text-wrap:balance] ${
@@ -129,7 +113,7 @@ export function ShowcaseCta({
               >
                 RTL Markdown Studio
               </span>
-              <span className="text-xs font-mono text-emerald-500 tabular-nums">v2.3.2</span>
+              <span className="text-xs font-mono text-emerald-500 tabular-nums">v2.3.3</span>
             </div>
             <p className={`text-xs leading-relaxed ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
               {isFa
@@ -234,15 +218,14 @@ export function ShowcaseCta({
           </div>
         </div>
 
-        {/* Bottom Hairline Legal & Telemetry Strip */}
+        {/* Bottom Hairline Legal Strip */}
         <div
           dir="ltr"
-          className={`mt-10 pt-6 border-t flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] font-mono ${
+          className={`mt-10 pt-6 border-t flex items-center justify-between gap-3 text-[11px] font-mono ${
             isDark ? 'border-zinc-900 text-zinc-500' : 'border-zinc-200/80 text-zinc-500'
           }`}
         >
-          <div>RTL MARKDOWN STUDIO · MIT LICENSE · ZERO TELEMETRY</div>
-          <div className="tabular-nums">1920×1080 NATIVE · WEBVIEW2 GPU · 60 FPS</div>
+          <div>RTL MARKDOWN STUDIO · MIT LICENSE</div>
         </div>
       </div>
     </footer>

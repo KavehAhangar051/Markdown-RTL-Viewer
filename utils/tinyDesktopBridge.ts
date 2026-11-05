@@ -2,8 +2,8 @@
  * @file utils/tinyDesktopBridge.ts
  * @description Thin platform adapter and pure asset relativizers for the TinyJS native desktop app
  * (Windows WebView2, macOS WKWebView, Linux WebKitGTK).
- * Follows ADR-0005 (Deep Domain Seam) by isolating `window.tiny` RPC calls behind explicit
- * discriminated-union outcomes while keeping browser fallback paths 100% intact.
+ * Isolates `window.tiny` RPC calls behind explicit discriminated-union outcomes
+ * while keeping browser fallback paths 100% intact.
  */
 
 import '@/types/tiny';
