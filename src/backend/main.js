@@ -193,8 +193,16 @@ export async function init(app) {
         ],
       },
     ]);
+
+    if (app.system.isWindows()) {
+      await app.win.setChrome({
+        frame: false,
+        menu: false,
+        vibrancy: 'hud',
+      });
+    }
   } catch {
-    // Menu bar setup is best-effort across window managers
+    // Menu bar and chrome setup are best-effort across window managers
   }
 }
 

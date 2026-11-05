@@ -90,6 +90,9 @@ export interface TinyDialogBridge {
 
 export interface TinyWindowBridge {
   setTitle(title: string): Promise<void>;
+  minimize(): Promise<void>;
+  zoom(): Promise<void>;
+  close(): Promise<void>;
   onDrop(handler: (paths: readonly string[]) => void): () => void;
 }
 

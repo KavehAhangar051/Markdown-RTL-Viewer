@@ -14,7 +14,8 @@
   "fileExtensions": ["md", "markdown", "txt"],
   "openFolders": false,
   "chrome": {
-    "vibrancy": "hud"
+    "vibrancy": "hud",
+    "menu": false
   },
   "frontend": {
     "build": "npm run build:desktop-frontend",
@@ -26,8 +27,9 @@
     "icon": "assets/icon.png",
     "browserAccelerators": false,
     "chrome": {
-      "vibrancy": "hud",
-      "menu": true
+      "frame": false,
+      "menu": false,
+      "vibrancy": "hud"
     }
   },
   "macos": {

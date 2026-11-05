@@ -699,9 +699,45 @@ body.light,
 }
 
 @media (pointer: fine) {
-  html,
-  body,
-  body * {
+  html:not(.reduce-motion-low-end),
+  html:not(.reduce-motion-low-end) body,
+  html:not(.reduce-motion-low-end) body * {
     cursor: none !important;
   }
+}
+
+/* Automatic Low-End Device 60FPS Mode (Google Chrome & Web Browsers) */
+html.reduce-motion-low-end,
+html.reduce-motion-low-end body {
+  scroll-behavior: auto !important;
+}
+
+html.reduce-motion-low-end .glass-panel,
+html.reduce-motion-low-end .glass-card,
+html.reduce-motion-low-end [class*="backdrop-blur"] {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+html.reduce-motion-low-end .glass-panel {
+  background: #0c0c0f !important;
+}
+
+html.light.reduce-motion-low-end .glass-panel,
+html.reduce-motion-low-end .light .glass-panel {
+  background: #ffffff !important;
+}
+
+html.reduce-motion-low-end .animate-marquee,
+html.reduce-motion-low-end * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+html.reduce-motion-low-end ::view-transition-old(*),
+html.reduce-motion-low-end ::view-transition-new(*),
+html.reduce-motion-low-end ::view-transition-group(*) {
+  animation-duration: 0s !important;
+  animation-delay: 0s !important;
 }

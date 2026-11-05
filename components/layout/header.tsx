@@ -74,6 +74,7 @@ export const Header = React.memo(function Header(): React.JSX.Element {
     <div id="header-island-wrapper" className="w-full flex justify-center px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 pointer-events-none">
       <header
         id="main-app-header"
+        data-tiny-drag
         style={{ viewTransitionName: STUDIO_VT_NAMES.PERSISTENT_HEADER }}
         className={`pointer-events-auto relative w-full max-w-[1580px] rounded-2xl sm:rounded-full transition-[background-color,border-color,box-shadow] duration-300 backdrop-blur-xl ${headerGlassClass}`}
       >
@@ -91,7 +92,7 @@ export const Header = React.memo(function Header(): React.JSX.Element {
           <HeaderBrand />
 
           {/* Controls: Offline Status, PWA Install, Showcase, Focus, Theme & Language */}
-          <div id="header-actions-group" className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          <div id="header-actions-group" data-tiny-nodrag className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <OfflineIndicator />
             <PWAInstallButton />
             <ShowcaseToggle />

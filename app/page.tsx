@@ -10,6 +10,7 @@ import dynamic from 'next/dynamic';
 import { m, AnimatePresence } from 'motion/react';
 import { MarkdownProvider, useStudioUI } from '@/store/MarkdownContext';
 import { Header } from '@/components/layout/header';
+import { DesktopTitlebar } from '@/components/layout/desktop-titlebar';
 import { StudioDock } from '@/components/layout/studio-dock';
 import { FocusModeBar } from '@/components/layout/focus-mode-bar';
 import { EditorView } from '@/components/views/editor-view';
@@ -136,6 +137,9 @@ function MainAppContent() {
       className={`${scrollContainerClass} flex flex-col bg-noise relative transition-colors duration-300 ${themeContainerClass} ${isFa ? 'font-vazir' : 'font-sans'}`}
       dir={isFa ? 'rtl' : 'ltr'}
     >
+      {/* Custom Frameless Desktop Titlebar (Active only inside TinyJS Windows/Desktop shell) */}
+      <DesktopTitlebar />
+
       {/* Animated Header (Smoothly transitions in/out in Focus Mode without layout thrashing) */}
       <AnimatePresence initial={false}>
         {!isFocusMode && (

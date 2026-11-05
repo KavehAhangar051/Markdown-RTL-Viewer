@@ -270,3 +270,54 @@ export async function syncTinyWindowTitle(
     // Ignore title bar sync errors
   }
 }
+
+/**
+ * Minimizes the native TinyJS desktop window.
+ */
+export async function minimizeTinyWindow(): Promise<void> {
+  const tiny = getTinyBridge();
+
+  if (!tiny) {
+    return;
+  }
+
+  try {
+    await tiny.win.minimize();
+  } catch {
+    // Ignore window minimize errors
+  }
+}
+
+/**
+ * Toggles maximize / restore (zoom) on the native TinyJS desktop window.
+ */
+export async function toggleMaximizeTinyWindow(): Promise<void> {
+  const tiny = getTinyBridge();
+
+  if (!tiny) {
+    return;
+  }
+
+  try {
+    await tiny.win.zoom();
+  } catch {
+    // Ignore window zoom errors
+  }
+}
+
+/**
+ * Closes the native TinyJS desktop window.
+ */
+export async function closeTinyWindow(): Promise<void> {
+  const tiny = getTinyBridge();
+
+  if (!tiny) {
+    return;
+  }
+
+  try {
+    await tiny.win.close();
+  } catch {
+    // Ignore window close errors
+  }
+}

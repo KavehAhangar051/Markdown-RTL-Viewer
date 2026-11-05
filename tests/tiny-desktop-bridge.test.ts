@@ -16,7 +16,11 @@ import {
   saveMarkdownViaTinyDesktop,
   readMarkdownPathViaTinyDesktop,
   syncTinyWindowTitle,
+  minimizeTinyWindow,
+  toggleMaximizeTinyWindow,
+  closeTinyWindow,
 } from '../utils/tinyDesktopBridge';
+import { isLowEndDevice } from '../utils/deviceDetector';
 import type { TinyBridge } from '../types/tiny';
 
 test('extractFileNameFromPath handles Windows and POSIX paths accurately', () => {
@@ -55,8 +59,9 @@ test('relativizeStaticExportCss and relativizeWebpackPublicPath rewrite font and
   );
 });
 
-test('TinyJS bridge RPC adapters interact with mocked window.tiny on Windows', async () => {
+test('TinyJS bridge RPC adapters and frameless window controls interact with mocked window.tiny', async () => {
   const titles: string[] = [];
+  const winActions: string[] = [];
   const savedFiles: Array<{ path: string; content: string }> = [];
 
   const mockTiny: TinyBridge = {
@@ -67,6 +72,15 @@ test('TinyJS bridge RPC adapters interact with mocked window.tiny on Windows', a
     win: {
       setTitle: async (title: string) => {
         titles.push(title);
+      },
+      minimize: async () => {
+        winActions.push('minimize');
+      },
+      zoom: async () => {
+        winActions.push('zoom');
+      },
+      close: async () => {
+        winActions.push('close');
       },
       onDrop: () => () => {},
     },
@@ -111,12 +125,27 @@ test('TinyJS bridge RPC adapters interact with mocked window.tiny on Windows', a
     },
   };
 
-  const globalWithWindow = globalThis as unknown as { window?: { tiny?: TinyBridge } };
+  const globalWithWindow = globalThis as unknown as {
+    window?: {
+      tiny?: TinyBridge;
+      sessionStorage?: { getItem: (k: string) => string | null };
+      matchMedia?: (q: string) => { matches: boolean };
+    };
+    navigator?: { hardwareConcurrency?: number; deviceMemory?: number };
+  };
   const prevWindow = globalWithWindow.window;
-  globalWithWindow.window = { tiny: mockTiny };
+  const prevNavigator = globalWithWindow.navigator;
+
+  globalWithWindow.window = {
+    tiny: mockTiny,
+    sessionStorage: { getItem: () => null },
+    matchMedia: () => ({ matches: false }),
+  };
+  globalWithWindow.navigator = { hardwareConcurrency: 2, deviceMemory: 4 };
 
   try {
     assert.equal(isTinyDesktopRuntime(), true);
+    assert.equal(isLowEndDevice(), true);
 
     const openResult = await openMarkdownViaTinyDesktop();
     assert.equal(openResult.status, 'ok');
@@ -136,7 +165,13 @@ test('TinyJS bridge RPC adapters interact with mocked window.tiny on Windows', a
 
     await syncTinyWindowTitle('معماری سیستم', 'RTL Markdown Studio');
     assert.equal(titles[0], 'معماری سیستم — RTL Markdown Studio');
+
+    await minimizeTinyWindow();
+    await toggleMaximizeTinyWindow();
+    await closeTinyWindow();
+    assert.deepEqual(winActions, ['minimize', 'zoom', 'close']);
   } finally {
     globalWithWindow.window = prevWindow;
+    globalWithWindow.navigator = prevNavigator;
   }
 });

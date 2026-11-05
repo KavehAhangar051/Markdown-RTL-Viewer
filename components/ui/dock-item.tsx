@@ -128,8 +128,8 @@ export const DockItem = React.memo(function DockItem({
       id={id}
       type="button"
       style={{
-        width: size,
-        height: size,
+        width: reduceMotion ? baseItemSize : size,
+        height: reduceMotion ? baseItemSize : size,
       }}
       whileTap={reduceMotion ? undefined : { scale: 0.96 }}
       transition={SPRING_PRESS}
