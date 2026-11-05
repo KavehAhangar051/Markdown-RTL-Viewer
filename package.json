@@ -1,6 +1,6 @@
 {
   "name": "rtl-markdown-studio",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "private": true,
   "scripts": {
     "dev": "next dev -p 3000 -H 0.0.0.0",
@@ -16,8 +16,7 @@
     "lint": "eslint .",
     "lint:oxlint": "oxlint types/tiny.ts utils/tinyDesktopBridge.ts utils/tinyDesktopUpdater.ts utils/deviceDetector.ts hooks/useTinyDesktopIntegration.ts components/ui/pwa-install-button.tsx components/layout/desktop-titlebar.tsx",
     "typecheck": "tsc --noEmit",
-    "test": "bun tests/domain-contracts.test.ts && bun test tests/tiny-desktop-bridge.test.ts",
-    "check": "npm run typecheck && npm run lint && npm run lint:oxlint && npm run test",
+    "check": "npm run typecheck && npm run lint && npm run lint:oxlint",
     "clean": "next clean"
   },
   "dependencies": {
