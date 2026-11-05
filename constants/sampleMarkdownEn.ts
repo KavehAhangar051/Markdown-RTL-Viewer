@@ -171,5 +171,5 @@ $$
 
 Sample illustration banner with responsive styling:
 
-![Markdown Studio Banner](./images/markdown-studio-banner.svg)
+![Markdown Studio Banner](./images/markdown-studio-banner.jpg)
 `;

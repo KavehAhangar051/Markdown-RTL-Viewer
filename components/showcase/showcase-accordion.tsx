@@ -8,9 +8,9 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { Sparkles, Gauge, Compass } from '@/components/animate-ui/icons';
-import showcaseArchitectureImg from '@/public/images/showcase-architecture.svg';
-import showcaseSpeedImg from '@/public/images/showcase-speed.svg';
-import showcaseMotionImg from '@/public/images/showcase-motion.svg';
+import showcaseArchitectureImg from '@/src/assets/images/showcase_architecture_1793882928709.jpg';
+import showcaseSpeedImg from '@/src/assets/images/showcase_speed_1793882932360.jpg';
+import showcaseMotionImg from '@/src/assets/images/showcase_motion_1793882934091.jpg';
 
 interface ShowcaseAccordionProps {
   isDark: boolean;
@@ -90,8 +90,8 @@ export function ShowcaseAccordion({ isDark, isFa }: ShowcaseAccordionProps): Rea
                 isActive ? 'md:flex-[3]' : 'md:flex-1'
               } ${
                 isDark
-                  ? 'bg-zinc-950/90 border-zinc-800 hover:border-zinc-700'
-                  : 'bg-white border-zinc-200 hover:border-zinc-300 shadow-md'
+                  ? 'bg-zinc-950 border-zinc-800 hover:border-emerald-500/40'
+                  : 'bg-zinc-950 border-zinc-800 hover:border-emerald-500/50 shadow-xl'
               }`}
             >
               {/* Background Cover Image with Hover Physics */}
@@ -100,44 +100,34 @@ export function ShowcaseAccordion({ isDark, isFa }: ShowcaseAccordionProps): Rea
                   src={slice.image}
                   alt={slice.titleEn}
                   fill
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                  className={`object-cover contrast-125 mix-blend-luminosity transition-all duration-700 ${
-                    isActive ? 'scale-105 opacity-25' : 'scale-100 opacity-10 grayscale'
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className={`object-cover transition-all duration-700 ${
+                    isActive ? 'scale-105 opacity-80' : 'scale-100 opacity-45'
                   }`}
                   referrerPolicy="no-referrer"
                 />
-                <div
-                  className={`absolute inset-0 ${
-                    isDark
-                      ? 'bg-gradient-to-t from-zinc-950 via-zinc-950/80 to-transparent'
-                      : 'bg-gradient-to-t from-white via-white/85 to-transparent'
-                  }`}
-                />
+                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-zinc-950/15" />
               </div>
 
               {/* Slice Header with Badge */}
               <div className="relative z-10 flex items-center justify-between">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-emerald-500/10 border border-emerald-500/20 text-emerald-500">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 backdrop-blur-md">
                   <Icon animate={isActive ? true : undefined} className="w-5 h-5" />
                 </div>
-                <span className="text-[11px] font-mono tracking-wider uppercase px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <span className="text-[11px] font-mono tracking-wider uppercase px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 backdrop-blur-md">
                   {slice.badge}
                 </span>
               </div>
 
               {/* Bottom Content with Smooth Reveal */}
               <div className="relative z-10 mt-auto pt-6">
-                <h3
-                  className={`text-lg sm:text-2xl font-bold tracking-tight transition-colors ${
-                    isDark ? 'text-zinc-100' : 'text-zinc-900'
-                  }`}
-                >
+                <h3 className="text-lg sm:text-2xl font-bold tracking-tight text-zinc-100">
                   {isFa ? slice.titleFa : slice.titleEn}
                 </h3>
                 <p
-                  className={`mt-3 text-xs sm:text-sm leading-relaxed transition-all duration-500 ${
+                  className={`mt-3 text-xs sm:text-sm leading-relaxed transition-all duration-500 text-zinc-300 ${
                     isActive ? 'opacity-100 max-h-24' : 'opacity-0 md:max-h-0 overflow-hidden'
-                  } ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}
+                  }`}
                 >
                   {isFa ? slice.descFa : slice.descEn}
                 </p>

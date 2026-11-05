@@ -32,8 +32,10 @@ function relativizeCss(css) {
   return css.replace(/url\(\s*(['"]?)\/_next\/static\/media\//g, 'url($1../media/');
 }
 
-function relativizeWebpackJs(js) {
-  return js.replace(/\.p="\/_next\/"/g, '.p="./_next/"');
+function relativizeChunkJs(js) {
+  return js
+    .replace(/\.p="\/_next\/"/g, '.p="./_next/"')
+    .replace(/"\/_next\/static\/media\//g, '"./_next/static/media/');
 }
 
 function walkFiles(dir, predicate) {
@@ -87,12 +89,9 @@ for (const filePath of walkFiles(cssDir, (p) => p.endsWith('.css'))) {
 }
 
 const chunksDir = path.join(OUT_DIR, '_next', 'static', 'chunks');
-for (const filePath of walkFiles(
-  chunksDir,
-  (p) => path.basename(p).startsWith('webpack-') && p.endsWith('.js')
-)) {
+for (const filePath of walkFiles(chunksDir, (p) => p.endsWith('.js'))) {
   const original = fs.readFileSync(filePath, 'utf8');
-  const updated = relativizeWebpackJs(original);
+  const updated = relativizeChunkJs(original);
   if (updated !== original) {
     fs.writeFileSync(filePath, updated, 'utf8');
   }

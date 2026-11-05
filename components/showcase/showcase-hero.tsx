@@ -8,7 +8,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { ArrowLeft, ArrowRight, Play, FileCode } from '@/components/animate-ui/icons';
-import showcaseTypographyImg from '@/public/images/showcase-typography.svg';
+import showcaseTypographyImg from '@/src/assets/images/showcase_typography_1793882927470.jpg';
 
 interface ShowcaseHeroProps {
   isDark: boolean;
@@ -48,13 +48,13 @@ export function ShowcaseHero({
             <>
               استودیو پیشرفته پردازش متن
               <span className="relative inline-flex items-center align-middle mx-2.5 sm:mx-3.5 my-1">
-                <span className="relative w-16 sm:w-24 md:w-28 h-8 sm:h-11 md:h-12 rounded-full overflow-hidden border border-white/20 shadow-lg shadow-emerald-500/10">
+                <span className="relative w-20 sm:w-28 md:w-32 h-9 sm:h-12 md:h-14 rounded-full overflow-hidden border border-emerald-500/40 shadow-lg shadow-emerald-500/20">
                   <Image
                     src={showcaseTypographyImg}
-                    alt="Typography Art"
+                    alt="Bi-directional Typography Geometry"
                     fill
-                    sizes="(max-width: 768px) 100px, 120px"
-                    className="object-cover grayscale contrast-125 hover:grayscale-0 transition-all duration-700"
+                    sizes="(max-width: 768px) 120px, 160px"
+                    className="object-cover contrast-110 hover:scale-110 transition-transform duration-700"
                     referrerPolicy="no-referrer"
                     priority
                   />
@@ -66,13 +66,13 @@ export function ShowcaseHero({
             <>
               High Precision Markdown Studio
               <span className="relative inline-flex items-center align-middle mx-2.5 sm:mx-3.5 my-1">
-                <span className="relative w-16 sm:w-24 md:w-28 h-8 sm:h-11 md:h-12 rounded-full overflow-hidden border border-white/20 shadow-lg shadow-emerald-500/10">
+                <span className="relative w-20 sm:w-28 md:w-32 h-9 sm:h-12 md:h-14 rounded-full overflow-hidden border border-emerald-500/40 shadow-lg shadow-emerald-500/20">
                   <Image
                     src={showcaseTypographyImg}
-                    alt="Typography Art"
+                    alt="Bi-directional Typography Geometry"
                     fill
-                    sizes="(max-width: 768px) 100px, 120px"
-                    className="object-cover grayscale contrast-125 hover:grayscale-0 transition-all duration-700"
+                    sizes="(max-width: 768px) 120px, 160px"
+                    className="object-cover contrast-110 hover:scale-110 transition-transform duration-700"
                     referrerPolicy="no-referrer"
                     priority
                   />

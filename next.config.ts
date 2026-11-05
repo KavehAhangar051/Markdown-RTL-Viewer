@@ -34,6 +34,7 @@ export default function config(phase: string): NextConfig {
   // Static export support for GitHub Pages with unoptimized images
   images: {
     unoptimized: isExport,
+    dangerouslyAllowSVG: true,
     remotePatterns: [
       {
         protocol: 'https',

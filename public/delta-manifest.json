@@ -1,12 +1,12 @@
 {
-  "version": "2.3.0",
-  "publishedAt": "2026-11-05T12:30:58.770Z",
+  "version": "2.3.1",
+  "publishedAt": "2026-11-05T12:54:47.555Z",
   "baseUrl": "https://raw.githubusercontent.com/KavehAhangar051/Markdown-RTL-Viewer/main/public",
-  "releaseTag": "v2.3.0-windows",
+  "releaseTag": "v2.3.1-windows",
   "files": {
-    "_next/static/chunks/193-20170e40c3583f91.js": {
-      "sha256": "9ae61a047623c8336beec8e90ac16d5e6936c9d3b1bfe56292a775e5c30bc1f9",
-      "size": 586060
+    "_next/static/chunks/193-2770c6edd82a05db.js": {
+      "sha256": "200fdb2f12042d3d5ab88b2be5b30c77684c490490e4bb4b6927f9f747c96a4b",
+      "size": 586093
     },
     "_next/static/chunks/319-7f2b9bb733bcda0a.js": {
       "sha256": "a021f3a38fbba6117877a926f3aa3bfd6f95964e0911f991a783ebdcca574244",
@@ -52,9 +52,9 @@
       "sha256": "8648938a8433a0b3c19cbf57bb7f55c38465bf007279fdbf929bede5def5ce56",
       "size": 8757
     },
-    "_next/static/chunks/app/page-8ad78674f4af499a.js": {
-      "sha256": "db1efc8b0daa4fd004668fe5d55ec4308f9976548775a63ab1c98915521bcc3c",
-      "size": 210134
+    "_next/static/chunks/app/page-853cabd7dbc95225.js": {
+      "sha256": "970a9d7436ee3691bccff037b90f3838fb3e0f4b755021ddeff8c7b4f94b511e",
+      "size": 213530
     },
     "_next/static/chunks/app/showcase/page-c7437ccac03c9d51.js": {
       "sha256": "f8287b06598d3ca3d6422dd554c2c2bdbdd012041fc691c3b83aa1f8db1ec24f",
@@ -68,8 +68,8 @@
       "sha256": "3b5f503adfa594bbb5f5b388dd978ee0e543a4e31aec6c9f27ff95a64898cce1",
       "size": 219032
     },
-    "_next/static/chunks/main-9da9b6b515c8e69f.js": {
-      "sha256": "53803a0663e1255860248c3a177282ca65065983ec3bc4811c5041a455041947",
+    "_next/static/chunks/main-7da1058949f5e78b.js": {
+      "sha256": "ef0c4b3efdf98c0f024f725ffb1c392b8e487ba0f913087a997a193f48e11817",
       "size": 128891
     },
     "_next/static/chunks/main-app-c27c12c3499fc83e.js": {
@@ -92,30 +92,30 @@
       "sha256": "3e3f2ab01260ac7438c08ddaddfb3b4d1178643782b12bf1c017698e8c9757df",
       "size": 3521
     },
-    "_next/static/css/1ec6318408ef392a.css": {
-      "sha256": "bef7a3e1dd1ea971a2027a24d57eac192c878ffa07973add65ec427bcc76bf7f",
-      "size": 128648
+    "_next/static/css/44f71f03e6fa8c61.css": {
+      "sha256": "5a44051ced422516a90de18a953213ba7f32cf6780ddbce6fc3b52281dbf4435",
+      "size": 131884
     },
     "_next/static/css/d97fa9d7935a7532.css": {
       "sha256": "f70011ef369dd0b88a1f32aca6a6ea2d0686860bd5222bacf6e4420e9344641a",
       "size": 34529
     },
     "index.html": {
-      "sha256": "2869aad8096ca5b3f693964fa7c4cb40ac7e3d5694a51be49dd2fc3ddedd0758",
-      "size": 56667
+      "sha256": "9b697439a874362b7e4e2c5b01bc7dab7cbab6eae98edfdd159e9722aff7571a",
+      "size": 57259
     }
   },
   "patches": {
     "_next/static/chunks/193.js": {
       "slot": "_next/static/chunks/193.js",
       "baseRelPath": "_next/static/chunks/193-20170e40c3583f91.js",
-      "targetRelPath": "_next/static/chunks/193-20170e40c3583f91.js",
+      "targetRelPath": "_next/static/chunks/193-2770c6edd82a05db.js",
       "baseSha256": "9ae61a047623c8336beec8e90ac16d5e6936c9d3b1bfe56292a775e5c30bc1f9",
-      "targetSha256": "9ae61a047623c8336beec8e90ac16d5e6936c9d3b1bfe56292a775e5c30bc1f9",
+      "targetSha256": "200fdb2f12042d3d5ab88b2be5b30c77684c490490e4bb4b6927f9f747c96a4b",
       "patchFile": "delta-patches/_next__static__chunks__193.js.patch.json",
       "fullFile": "delta-patches/_next__static__chunks__193.js.full.txt",
-      "patchSize": 330,
-      "fullSize": 586060
+      "patchSize": 542400,
+      "fullSize": 586093
     },
     "_next/static/chunks/319.js": {
       "slot": "_next/static/chunks/319.js",
@@ -240,14 +240,14 @@
     },
     "_next/static/chunks/app/page.js": {
       "slot": "_next/static/chunks/app/page.js",
-      "baseRelPath": "_next/static/chunks/app/page-33492bf8bf3ef926.js",
-      "targetRelPath": "_next/static/chunks/app/page-8ad78674f4af499a.js",
-      "baseSha256": "627bdee9315435def91fb6e45dd024d5ab7901e9167fbb4ff103d8b0f349a8d4",
-      "targetSha256": "db1efc8b0daa4fd004668fe5d55ec4308f9976548775a63ab1c98915521bcc3c",
+      "baseRelPath": "_next/static/chunks/app/page-8ad78674f4af499a.js",
+      "targetRelPath": "_next/static/chunks/app/page-853cabd7dbc95225.js",
+      "baseSha256": "db1efc8b0daa4fd004668fe5d55ec4308f9976548775a63ab1c98915521bcc3c",
+      "targetSha256": "970a9d7436ee3691bccff037b90f3838fb3e0f4b755021ddeff8c7b4f94b511e",
       "patchFile": "delta-patches/_next__static__chunks__app__page.js.patch.json",
       "fullFile": "delta-patches/_next__static__chunks__app__page.js.full.txt",
-      "patchSize": 162653,
-      "fullSize": 210134
+      "patchSize": 171402,
+      "fullSize": 213530
     },
     "_next/static/chunks/app/showcase/page.js": {
       "slot": "_next/static/chunks/app/showcase/page.js",
@@ -285,12 +285,12 @@
     "_next/static/chunks/main.js": {
       "slot": "_next/static/chunks/main.js",
       "baseRelPath": "_next/static/chunks/main-9da9b6b515c8e69f.js",
-      "targetRelPath": "_next/static/chunks/main-9da9b6b515c8e69f.js",
+      "targetRelPath": "_next/static/chunks/main-7da1058949f5e78b.js",
       "baseSha256": "53803a0663e1255860248c3a177282ca65065983ec3bc4811c5041a455041947",
-      "targetSha256": "53803a0663e1255860248c3a177282ca65065983ec3bc4811c5041a455041947",
+      "targetSha256": "ef0c4b3efdf98c0f024f725ffb1c392b8e487ba0f913087a997a193f48e11817",
       "patchFile": "delta-patches/_next__static__chunks__main.js.patch.json",
       "fullFile": "delta-patches/_next__static__chunks__main.js.full.txt",
-      "patchSize": 333,
+      "patchSize": 346,
       "fullSize": 128891
     },
     "_next/static/chunks/main-app.js": {
@@ -348,16 +348,16 @@
       "patchSize": 342,
       "fullSize": 3521
     },
-    "_next/static/css/1ec6318408ef392a.css": {
-      "slot": "_next/static/css/1ec6318408ef392a.css",
-      "baseRelPath": "_next/static/css/1ec6318408ef392a.css",
-      "targetRelPath": "_next/static/css/1ec6318408ef392a.css",
-      "baseSha256": "bef7a3e1dd1ea971a2027a24d57eac192c878ffa07973add65ec427bcc76bf7f",
-      "targetSha256": "bef7a3e1dd1ea971a2027a24d57eac192c878ffa07973add65ec427bcc76bf7f",
-      "patchFile": "delta-patches/_next__static__css__1ec6318408ef392a.css.patch.json",
-      "fullFile": "delta-patches/_next__static__css__1ec6318408ef392a.css.full.txt",
+    "_next/static/css/44f71f03e6fa8c61.css": {
+      "slot": "_next/static/css/44f71f03e6fa8c61.css",
+      "baseRelPath": "_next/static/css/44f71f03e6fa8c61.css",
+      "targetRelPath": "_next/static/css/44f71f03e6fa8c61.css",
+      "baseSha256": "5a44051ced422516a90de18a953213ba7f32cf6780ddbce6fc3b52281dbf4435",
+      "targetSha256": "5a44051ced422516a90de18a953213ba7f32cf6780ddbce6fc3b52281dbf4435",
+      "patchFile": "delta-patches/_next__static__css__44f71f03e6fa8c61.css.patch.json",
+      "fullFile": "delta-patches/_next__static__css__44f71f03e6fa8c61.css.full.txt",
       "patchSize": 329,
-      "fullSize": 128648
+      "fullSize": 131884
     },
     "_next/static/css/d97fa9d7935a7532.css": {
       "slot": "_next/static/css/d97fa9d7935a7532.css",
@@ -374,12 +374,12 @@
       "slot": "index.html",
       "baseRelPath": "index.html",
       "targetRelPath": "index.html",
-      "baseSha256": "d7fde6bab5721fd08986a60c05dd3397705a782ef48974a72c584e01952cb0d2",
-      "targetSha256": "2869aad8096ca5b3f693964fa7c4cb40ac7e3d5694a51be49dd2fc3ddedd0758",
+      "baseSha256": "2869aad8096ca5b3f693964fa7c4cb40ac7e3d5694a51be49dd2fc3ddedd0758",
+      "targetSha256": "9b697439a874362b7e4e2c5b01bc7dab7cbab6eae98edfdd159e9722aff7571a",
       "patchFile": "delta-patches/index.html.patch.json",
       "fullFile": "delta-patches/index.html.full.txt",
-      "patchSize": 19046,
-      "fullSize": 56667
+      "patchSize": 31338,
+      "fullSize": 57259
     }
   }
 }
