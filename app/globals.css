@@ -706,48 +706,35 @@ body.light,
   }
 }
 
-/* Windows Native DirectComposition & Low-End 60FPS GPU Mode (keeps 100% of animations active) */
+/* Low-End Device 60FPS Mode (only active on genuinely constrained <=2 core / software GPU devices) */
 html.reduce-motion-low-end .glass-panel,
-html.reduce-motion-low-end .glass-card,
-html.reduce-motion-low-end [class*="backdrop-blur"],
-html.tiny-desktop-gpu .glass-panel,
-html.tiny-desktop-gpu .glass-card,
-html.tiny-desktop-gpu [class*="backdrop-blur"] {
+html.reduce-motion-low-end .glass-card {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
-  transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
 }
 
-html.reduce-motion-low-end .glass-panel,
-html.tiny-desktop-gpu .glass-panel {
+html.reduce-motion-low-end .glass-panel {
   background: rgba(12, 12, 15, 0.96) !important;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.55) !important;
 }
 
-html.reduce-motion-low-end .glass-card,
-html.tiny-desktop-gpu .glass-card {
+html.reduce-motion-low-end .glass-card {
   background: rgba(20, 20, 24, 0.96) !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
 }
 
 html.light.reduce-motion-low-end .glass-panel,
-html.reduce-motion-low-end .light .glass-panel,
-html.light.tiny-desktop-gpu .glass-panel,
-html.tiny-desktop-gpu .light .glass-panel {
+html.reduce-motion-low-end .light .glass-panel {
   background: rgba(255, 255, 255, 0.97) !important;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06) !important;
 }
 
 html.light.reduce-motion-low-end .glass-card,
-html.reduce-motion-low-end .light .glass-card,
-html.light.tiny-desktop-gpu .glass-card,
-html.tiny-desktop-gpu .light .glass-card {
+html.reduce-motion-low-end .light .glass-card {
   background: rgba(255, 255, 255, 0.98) !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04) !important;
 }
 
-html.reduce-motion-low-end .bg-noise,
-html.tiny-desktop-gpu .bg-noise {
+html.reduce-motion-low-end .bg-noise {
   background-image: none !important;
 }

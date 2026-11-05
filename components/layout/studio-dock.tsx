@@ -46,11 +46,10 @@ export function StudioDock(): React.JSX.Element {
           items={dockItems}
           panelHeight={58}
           baseItemSize={42}
-          magnification={60}
-          distance={140}
+          magnification={62}
+          distance={150}
         />
       </div>
     </m.div>
   );
 }
-

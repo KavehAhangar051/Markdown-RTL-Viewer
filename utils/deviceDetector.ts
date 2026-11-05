@@ -1,11 +1,9 @@
 /**
  * @file utils/deviceDetector.ts
  * @description Device capability and frame-pacing detection utility for Google Chrome and web browsers.
- * Identifies low-end hardware (CPU cores, RAM, Data Saver, weak integrated/software GPU, or <45 FPS frame pacing)
- * to automatically enable Reduced Motion and maintain ~60 FPS rendering.
+ * Identifies genuinely constrained hardware (<= 2 CPU cores, <= 2GB RAM, Data Saver, or software WebGL rasterizer)
+ * without false-positives on dual-GPU desktops or initial hydration frames.
  */
-
-const LOW_END_SESSION_KEY = 'rtl-studio-low-end-device';
 
 interface NavigatorExtended extends Navigator {
   readonly deviceMemory?: number;
@@ -19,11 +17,11 @@ let cachedGpuLowEnd: boolean | null = null;
 let runtimeFpsLowEnd = false;
 
 /**
- * Inspects the WebGL unmasked renderer string once to detect software rasterizers
- * (SwiftShader, llvmpipe, Basic Render Driver) or entry-level integrated GPUs that struggle
- * with heavy multi-pass `backdrop-filter: blur()` at 60 FPS.
+ * Inspects the WebGL unmasked renderer string once (using `high-performance` preference so dual-GPU
+ * desktops report their primary GPU) to detect software rasterizers (`SwiftShader`, `llvmpipe`,
+ * `Basic Render Driver`).
  *
- * @returns {boolean} True when a constrained or software GPU renderer is detected.
+ * @returns {boolean} True when a software or severely constrained GPU renderer is detected.
  */
 function isConstrainedGpuRenderer(): boolean {
   if (cachedGpuLowEnd !== null) {
@@ -38,7 +36,7 @@ function isConstrainedGpuRenderer(): boolean {
     const canvas = document.createElement('canvas');
 
     const gl =
-      canvas.getContext('webgl', { powerPreference: 'low-power' }) ||
+      canvas.getContext('webgl', { powerPreference: 'high-performance' }) ||
       canvas.getContext('experimental-webgl');
 
     if (!gl || !('getParameter' in gl)) {
@@ -59,15 +57,8 @@ function isConstrainedGpuRenderer(): boolean {
       lower.includes('swiftshader') ||
       lower.includes('llvmpipe') ||
       lower.includes('basic render driver') ||
-      lower.includes('software') ||
-      lower.includes('intel(r) hd graphics') ||
-      lower.includes('intel(r) uhd graphics 60') ||
-      lower.includes('intel(r) uhd graphics 61') ||
-      lower.includes('intel(r) uhd graphics 62') ||
       lower.includes('mali-4') ||
-      lower.includes('adreno (tm) 3') ||
-      lower.includes('adreno (tm) 4') ||
-      lower.includes('adreno (tm) 5');
+      lower.includes('adreno (tm) 3');
 
     cachedGpuLowEnd = isWeakRenderer;
 
@@ -80,11 +71,10 @@ function isConstrainedGpuRenderer(): boolean {
 }
 
 /**
- * Checks if the current client environment has low processing, memory, or GPU capabilities.
- * Detects devices with <= 4 CPU threads, <= 4GB RAM, Chrome Data Saver, weak/software GPUs,
- * runtime FPS drops, or OS reduced-motion preferences.
+ * Checks if the current client environment has genuinely low processing, memory, or GPU capabilities.
+ * Avoids false-positives on modern 4+ core / dual-GPU systems.
  *
- * @returns {boolean} True if the client is running on a low-end or resource-constrained device.
+ * @returns {boolean} True if the client is running on a genuinely resource-constrained device.
  */
 export function isLowEndDevice(): boolean {
   if (typeof window === 'undefined') {
@@ -95,26 +85,14 @@ export function isLowEndDevice(): boolean {
     return true;
   }
 
-  try {
-    if (window.sessionStorage.getItem(LOW_END_SESSION_KEY) === '1') {
-      runtimeFpsLowEnd = true;
-
-      return true;
-    }
-  } catch {
-    // Ignore storage access errors in restricted contexts
-  }
-
-  // Check prefers-reduced-motion accessibility flag
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     return true;
   }
 
-  // Check hardware concurrency (<= 4 cores indicates entry-level or constrained hardware)
   if (
     typeof navigator !== 'undefined' &&
     navigator.hardwareConcurrency &&
-    navigator.hardwareConcurrency <= 4
+    navigator.hardwareConcurrency <= 2
   ) {
     return true;
   }
@@ -122,7 +100,7 @@ export function isLowEndDevice(): boolean {
   // SAFETY: Navigator in modern Chromium browsers optionally provides deviceMemory and connection
   const nav = navigator as NavigatorExtended;
 
-  if (nav.deviceMemory !== undefined && nav.deviceMemory <= 4) {
+  if (nav.deviceMemory !== undefined && nav.deviceMemory <= 2) {
     return true;
   }
 
@@ -138,11 +116,11 @@ export function isLowEndDevice(): boolean {
 }
 
 /**
- * Monitors real-time frame pacing over a short sample window and triggers `onLowEndDetected`
- * if the browser's frame rate drops below ~45 FPS (average frame delta > 22.5ms), persisting
- * the result in `sessionStorage` so subsequent renders stay locked near 60 FPS.
+ * Waits until initial page hydration and entrance animations settle (2500ms after load),
+ * then monitors frame pacing over 60 frames and triggers `onLowEndDetected` only if
+ * sustained frame rate drops below ~30 FPS (>50% of frames taking >34ms).
  *
- * @param {() => void} onLowEndDetected - Callback invoked when sustained frame drops are detected.
+ * @param {() => void} onLowEndDetected - Callback invoked when sustained severe frame drops are detected.
  * @returns {() => void} Cleanup function to cancel monitoring.
  */
 export function monitorFramePacingForLowEnd(onLowEndDetected: () => void): () => void {
@@ -151,47 +129,45 @@ export function monitorFramePacingForLowEnd(onLowEndDetected: () => void): () =>
   }
 
   let rafId: number | null = null;
-  let lastTime = performance.now();
   let sampleCount = 0;
   let slowFrameCount = 0;
-  const TARGET_SAMPLES = 45;
+  const TARGET_SAMPLES = 60;
 
-  const tick = (now: number) => {
-    const delta = now - lastTime;
-    lastTime = now;
+  const startSampling = () => {
+    let lastTime = performance.now();
 
-    // Ignore tab-switch spikes (> 250ms)
-    if (delta > 4 && delta < 250) {
-      sampleCount += 1;
+    const tick = (now: number) => {
+      const delta = now - lastTime;
+      lastTime = now;
 
-      if (delta > 24) {
-        slowFrameCount += 1;
+      if (delta > 4 && delta < 200) {
+        sampleCount += 1;
+
+        if (delta > 34) {
+          slowFrameCount += 1;
+        }
       }
-    }
 
-    if (sampleCount >= TARGET_SAMPLES) {
-      // If more than 35% of sampled frames took > 24ms (< 41 FPS), enable low-end reduced motion
-      if (slowFrameCount / sampleCount >= 0.35) {
-        runtimeFpsLowEnd = true;
-
-        try {
-          window.sessionStorage.setItem(LOW_END_SESSION_KEY, '1');
-        } catch {
-          // Ignore storage write errors
+      if (sampleCount >= TARGET_SAMPLES) {
+        if (slowFrameCount / sampleCount >= 0.5) {
+          runtimeFpsLowEnd = true;
+          onLowEndDetected();
         }
 
-        onLowEndDetected();
+        return;
       }
 
-      return;
-    }
+      rafId = window.requestAnimationFrame(tick);
+    };
 
     rafId = window.requestAnimationFrame(tick);
   };
 
-  rafId = window.requestAnimationFrame(tick);
+  const delayTimer = window.setTimeout(startSampling, 2500);
 
   return () => {
+    window.clearTimeout(delayTimer);
+
     if (rafId !== null) {
       window.cancelAnimationFrame(rafId);
     }
@@ -199,9 +175,7 @@ export function monitorFramePacingForLowEnd(onLowEndDetected: () => void): () =>
 }
 
 /**
- * Checks if the current client environment matches a high-capability desktop or laptop profile.
- * Evaluates viewport dimension (>= 1024px), fine mouse/trackpad pointer capabilities,
- * and ensures the device is not a low-end / reduced-motion system.
+ * Checks if the current client environment matches a desktop or laptop profile.
  *
  * @returns {boolean} True if the client is running on a capable desktop or laptop device; false otherwise.
  */

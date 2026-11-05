@@ -16,10 +16,8 @@ import {
   type SpringOptions,
 } from 'motion/react';
 import { useStudioUI } from '@/store/MarkdownContext';
-import { isLowEndDevice } from '@/utils/deviceDetector';
 import { DockLabel, DockIcon, DockLabelProps, DockIconProps } from '@/components/ui/dock-label';
 import { SPRING_LAYOUT, SPRING_PRESS } from '@/lib/ease';
-import { STUDIO_VT_NAMES, StudioViewTransition } from '@/utils/viewTransitions';
 
 export { DockLabel, DockIcon };
 
@@ -57,8 +55,8 @@ function getDockItemStateClass(isActive: boolean, isDark: boolean): string {
 }
 
 /**
- * DockItem component with dynamic spring scaling, accessible keyboard activation, and hover tracking.
- * Memoized with React.memo to eliminate redundant re-render cycles during typing or scrolling.
+ * DockItem component with authentic macOS fluid spring sizing, accessible keyboard activation,
+ * smooth sliding active indicator (`layoutId="dock-active-indicator"`), and hover tooltip tracking.
  *
  * @param {DockItemProps} props - Component properties for dock item.
  * @returns {React.JSX.Element} Interactive dock item element.
@@ -70,45 +68,26 @@ export const DockItem = React.memo(function DockItem({
   id,
   label,
   ariaLabel,
-  isActive,
+  isActive = false,
   mouseX,
   spring,
   distance,
   magnification,
   baseItemSize,
 }: DockItemProps): React.JSX.Element {
-  const ref = useRef<HTMLButtonElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const isHovered = useMotionValue(0);
   const reduceMotion = useReducedMotion();
   const { theme } = useStudioUI();
   const isDark = theme === 'dark';
 
-  // Cached center X to eliminate layout thrashing (getBoundingClientRect) on high-frequency mouse movements
-  const cachedCenterXRef = useRef<number | null>(null);
-
-  React.useEffect(() => {
-    const handleRecalculate = () => {
-      cachedCenterXRef.current = null;
-    };
-
-    window.addEventListener('resize', handleRecalculate, { passive: true });
-
-    return () => {
-      window.removeEventListener('resize', handleRecalculate);
-    };
-  }, []);
-
   const mouseDistance = useTransform(mouseX, (val) => {
-    if (val === Infinity) return Infinity;
+    const rect = ref.current?.getBoundingClientRect() ?? {
+      x: 0,
+      width: baseItemSize,
+    };
 
-    if (cachedCenterXRef.current === null && ref.current) {
-      const rect = ref.current.getBoundingClientRect();
-      cachedCenterXRef.current = rect.x + rect.width / 2;
-    }
-
-    const centerX = cachedCenterXRef.current ?? 0;
-
-    return val - centerX;
+    return val - rect.x - rect.width / 2;
   });
 
   const targetSize = useTransform(
@@ -118,31 +97,39 @@ export const DockItem = React.memo(function DockItem({
   );
 
   const size = useSpring(targetSize, spring);
-  const gpuScale = useTransform(size, (s) => s / baseItemSize);
-  const useGpuScaleOnly = !reduceMotion && isLowEndDevice();
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onClick?.();
+    }
+  };
 
   const computedAriaLabel = ariaLabel || label || id || 'Dock item';
   const stateClass = getDockItemStateClass(Boolean(isActive), isDark);
-  const focusOffsetClass = isDark ? 'focus-visible:ring-offset-zinc-950' : 'focus-visible:ring-offset-white';
+  const focusOffsetClass = isDark
+    ? 'focus-visible:ring-offset-zinc-950'
+    : 'focus-visible:ring-offset-white';
 
   return (
-    <m.button
+    <m.div
       ref={ref}
       id={id}
-      type="button"
       style={{
-        width: reduceMotion || useGpuScaleOnly ? baseItemSize : size,
-        height: reduceMotion || useGpuScaleOnly ? baseItemSize : size,
-        scale: useGpuScaleOnly ? gpuScale : undefined,
+        width: size,
+        height: size,
       }}
-      whileTap={reduceMotion ? undefined : { scale: 0.96 }}
+      whileTap={reduceMotion ? undefined : { scale: 0.92 }}
       transition={SPRING_PRESS}
       onHoverStart={() => isHovered.set(1)}
       onHoverEnd={() => isHovered.set(0)}
       onFocus={() => isHovered.set(1)}
       onBlur={() => isHovered.set(0)}
       onClick={onClick}
-      className={`relative inline-flex items-center justify-center rounded-2xl border cursor-pointer transition-colors shadow-lg touch-manipulation transform-gpu will-change-transform min-w-[38px] min-h-[38px] sm:min-w-[44px] sm:min-h-[44px] focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 ${focusOffsetClass} ${stateClass} ${className}`}
+      onKeyDown={handleKeyDown}
+      className={`relative inline-flex items-center justify-center rounded-2xl border cursor-pointer transition-colors shadow-lg touch-manipulation min-w-[42px] min-h-[42px] focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 ${focusOffsetClass} ${stateClass} ${className}`}
+      tabIndex={0}
+      role="button"
       aria-label={computedAriaLabel}
       aria-pressed={isActive}
     >
@@ -157,23 +144,15 @@ export const DockItem = React.memo(function DockItem({
         return cloneElement(element, { isHovered });
       })}
       {isActive && (
-        <StudioViewTransition
-          name={STUDIO_VT_NAMES.DOCK_INDICATOR}
-          share="vt-tab-indicator"
-          default="none"
-        >
-          <m.span
-            aria-hidden="true"
-            layoutId="dock-active-indicator"
-            transition={SPRING_LAYOUT}
-            className="absolute bottom-1 w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.7)]"
-          />
-        </StudioViewTransition>
+        <m.span
+          aria-hidden="true"
+          layoutId="dock-active-indicator"
+          transition={SPRING_LAYOUT}
+          className="absolute bottom-1 w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#10b981]"
+        />
       )}
-    </m.button>
+    </m.div>
   );
 });
 
 DockItem.displayName = 'DockItem';
-
-

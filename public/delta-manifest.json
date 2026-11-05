@@ -1,8 +1,8 @@
 {
-  "version": "2.2.1",
-  "publishedAt": "2026-11-05T09:33:29.884Z",
+  "version": "2.2.2",
+  "publishedAt": "2026-11-05T10:29:46.714Z",
   "baseUrl": "https://kavehahangar051.github.io/Markdown-RTL-Viewer",
-  "releaseTag": "v2.2.1-windows",
+  "releaseTag": "v2.2.2-windows",
   "files": {
     "404/index.html": {
       "sha256": "b8d5110980fcb212f7f9f7ba7bec374f75feb51672fd0b261a68d0fb0d08ad3f",
