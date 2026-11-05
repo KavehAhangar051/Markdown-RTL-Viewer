@@ -10,6 +10,8 @@ import Image from 'next/image';
 import { AlignRight, ShieldCheck, Activity, Terminal } from '@/components/animate-ui/icons';
 import showcaseEditorialImg from '@/src/assets/images/showcase_editorial_1793882927612.jpg';
 import markdownStudioBannerImg from '@/src/assets/images/markdown_studio_banner_1793882933695.jpg';
+import showcasePrivacyVaultImg from '@/src/assets/images/showcase_privacy_vault_1793885752501.jpg';
+import showcaseSyntaxPrismImg from '@/src/assets/images/showcase_syntax_prism_1793885754672.jpg';
 
 interface ShowcaseBentoProps {
   isDark: boolean;
@@ -18,11 +20,23 @@ interface ShowcaseBentoProps {
 
 export function ShowcaseBento({ isDark, isFa }: ShowcaseBentoProps): React.JSX.Element {
   return (
-    <section className="relative w-full py-24 sm:py-32 md:py-40 px-4 sm:px-6 max-w-7xl mx-auto">
+    <section className="relative w-full py-24 sm:py-32 px-4 sm:px-6 max-w-7xl mx-auto">
       {/* Section Header */}
       <div className="max-w-3xl mb-12 sm:mb-16">
+        <div
+          dir="ltr"
+          className={`mb-3 flex items-center gap-2 text-xs font-mono tracking-widest uppercase ${
+            isDark ? 'text-zinc-400' : 'text-zinc-600'
+          }`}
+        >
+          <span className="text-emerald-500 font-semibold">01</span>
+          <span aria-hidden="true" className="opacity-40">
+            ·
+          </span>
+          <span>ARCHITECTURAL BENTO MATRIX</span>
+        </div>
         <h2
-          className={`text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight ${
+          className={`text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight [text-wrap:balance] ${
             isDark ? 'text-zinc-100' : 'text-zinc-950'
           } ${isFa ? 'font-vazir' : 'font-sans'}`}
         >
@@ -41,8 +55,8 @@ export function ShowcaseBento({ isDark, isFa }: ShowcaseBentoProps): React.JSX.E
         </p>
       </div>
 
-      {/* Gapless Bento Grid: 4 columns, dense packing, exactly 8 interlocking cells */}
-      <div className="grid grid-cols-1 md:grid-cols-4 grid-flow-dense gap-4 sm:gap-6 auto-rows-[240px] sm:auto-rows-[270px]">
+      {/* Gapless Bento Grid: 4 columns, dense packing, 8 interlocking cells */}
+      <div className="grid grid-cols-1 md:grid-cols-4 grid-flow-dense gap-4 sm:gap-6 auto-rows-[265px] sm:auto-rows-[285px]">
         {/* Card 1: 2 cols x 2 rows (4 cells) - RTL/LTR Hybrid Core */}
         <div
           className={`group relative md:col-span-2 md:row-span-2 rounded-3xl overflow-hidden border p-6 sm:p-8 flex flex-col justify-between transition-colors duration-500 shadow-xl ${
@@ -51,36 +65,60 @@ export function ShowcaseBento({ isDark, isFa }: ShowcaseBentoProps): React.JSX.E
               : 'bg-zinc-950 border-zinc-800 hover:border-emerald-500/50 shadow-zinc-300/60'
           }`}
         >
-          {/* Background Image with Hover Physics */}
+          {/* Background 16:9 3D Editorial Artwork */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
             <Image
               src={showcaseEditorialImg}
               alt="Editorial Architecture"
               fill
               sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-cover opacity-75 group-hover:opacity-90 group-hover:scale-105 transition-all duration-700 ease-out"
+              className="object-cover opacity-80 group-hover:opacity-95 group-hover:scale-105 transition-all duration-700 ease-out transform-gpu"
               referrerPolicy="no-referrer"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-zinc-950/15" />
+            <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/65 to-zinc-950/20" />
           </div>
 
-          <div className="relative z-10 flex items-center justify-between">
-            <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-emerald-500/10 border border-emerald-500/20 text-emerald-500">
-              <AlignRight className="w-6 h-6" />
+          {/* Unboxed Metadata Header */}
+          <div className="relative z-10 flex items-center justify-between border-b border-white/10 pb-3.5">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-emerald-500/15 border border-emerald-500/30 text-emerald-400">
+              <AlignRight className="w-5 h-5" />
             </div>
-            <span className="text-[11px] font-mono tracking-wider uppercase px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-              ADR-0001
-            </span>
+            <div
+              dir="ltr"
+              className="flex items-center gap-2 text-[11px] font-mono tracking-wider uppercase text-zinc-300"
+            >
+              <span className="text-emerald-400 font-semibold">01</span>
+              <span aria-hidden="true" className="opacity-40">
+                ·
+              </span>
+              <span>ADR-0001</span>
+              <span aria-hidden="true" className="opacity-40">
+                ·
+              </span>
+              <span>BIDI CORE</span>
+            </div>
           </div>
 
+          {/* Kinetic Live Bi-Directional Alignment Preview Strip */}
           <div className="relative z-10 mt-auto pt-8">
+            <div
+              dir="ltr"
+              className="mb-4 px-3.5 py-2 rounded-xl bg-black/55 border border-white/10 backdrop-blur-md flex items-center justify-between text-[11px] font-mono text-zinc-300"
+            >
+              <span className="text-emerald-400">LTR: const node = parse(ast);</span>
+              <span className="text-zinc-500">⟷</span>
+              <span className="font-vazir text-cyan-300" dir="rtl">
+                راست‌چین هوشمند (۶۰fps)
+              </span>
+            </div>
+
             <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-zinc-100">
               {isFa ? 'جداسازی هوشمند متون راست‌چین از بلوک‌های کد' : 'Intelligent RTL & LTR Isolation'}
             </h3>
-            <p className="mt-3 text-xs sm:text-sm leading-relaxed text-zinc-300">
+            <p className="mt-2.5 text-xs sm:text-sm leading-relaxed text-zinc-300">
               {isFa
-                ? 'متون فارسی با خوانایی حداکثری و فونت‌های دانا و وزیرمتن رندر می‌شوند، در حالی که کدهای سیستمی، کاراکترهای اسکی و جداول چندستونی در ساختار چپ‌چین با Kode Mono محافظت می‌شوند.'
-                : 'Persian and Arabic prose flow in native right-to-left alignment, while system code blocks, ASCII delimiters, and GFM tables remain anchored in pristine LTR monospace.'}
+                ? 'متون فارسی با خوانایی حداکثری و فونت وزیرمتن رندر می‌شوند، در حالی که کدهای سیستمی، پرانتزهای دوتایی و جداول در ساختار چپ‌چین با Kode Mono محافظت می‌شوند.'
+                : 'Persian and Arabic prose flow in native right-to-left alignment, while system code blocks, paired parentheses, and GFM tables remain anchored in pristine LTR monospace.'}
             </p>
           </div>
         </div>
@@ -99,26 +137,37 @@ export function ShowcaseBento({ isDark, isFa }: ShowcaseBentoProps): React.JSX.E
               alt="KaTeX Polyhedral Geometry"
               fill
               sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-cover opacity-65 group-hover:opacity-85 group-hover:scale-105 transition-all duration-700 ease-out"
+              className="object-cover opacity-75 group-hover:opacity-90 group-hover:scale-105 transition-all duration-700 ease-out transform-gpu"
               referrerPolicy="no-referrer"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/65 to-zinc-950/20" />
           </div>
 
-          <div className="relative z-10 flex items-center justify-between">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-indigo-500/15 border border-indigo-500/30 text-indigo-400">
-              <Activity className="w-5 h-5" />
+          <div className="relative z-10 flex items-center justify-between border-b border-white/10 pb-3">
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-indigo-500/15 border border-indigo-500/30 text-indigo-400">
+              <Activity className="w-4 h-4" />
             </div>
-            <span className="text-[11px] font-mono tracking-wider uppercase px-2.5 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30">
-              KaTeX + Math
-            </span>
+            <div
+              dir="ltr"
+              className="flex items-center gap-2 text-[11px] font-mono tracking-wider uppercase text-zinc-300"
+            >
+              <span className="text-indigo-400 font-semibold">02</span>
+              <span aria-hidden="true" className="opacity-40">
+                ·
+              </span>
+              <span>KATEX ENGINE</span>
+              <span aria-hidden="true" className="opacity-40">
+                ·
+              </span>
+              <span className="text-cyan-300">∫ e⁻ˣ² dx = √π</span>
+            </div>
           </div>
 
           <div className="relative z-10 mt-auto">
             <h3 className="text-lg sm:text-xl font-bold tracking-tight text-zinc-100">
               {isFa ? 'فرمول‌های علمی و نمادهای ریاضی کاتک' : 'KaTeX Scientific Formulae'}
             </h3>
-            <p className="mt-2 text-xs leading-relaxed text-zinc-300">
+            <p className="mt-1.5 text-xs leading-relaxed text-zinc-300">
               {isFa
                 ? 'رندر درون‌متنی و بلاک نمادهای یونانی و معادلات دیفرانسیل با تفکیک کامل جهت متن فارسی.'
                 : 'Inline and block mathematical notation rendered with zero latency and flawless RTL isolation.'}
@@ -126,36 +175,54 @@ export function ShowcaseBento({ isDark, isFa }: ShowcaseBentoProps): React.JSX.E
           </div>
         </div>
 
-        {/* Card 3: 1 col x 1 row (1 cell) - Zero Backend Privacy */}
+        {/* Card 3: 1 col x 1 row (1 cell, 1:1 Aspect Ratio) - Zero Backend Privacy */}
         <div
           className={`group relative md:col-span-1 md:row-span-1 rounded-3xl overflow-hidden border p-6 flex flex-col justify-between transition-colors duration-500 shadow-lg ${
             isDark
-              ? 'bg-zinc-950/80 border-zinc-800/80 hover:border-zinc-700'
-              : 'bg-white border-zinc-200/90 hover:border-zinc-300 shadow-zinc-200/50'
+              ? 'bg-zinc-950 border-zinc-800/80 hover:border-amber-500/40'
+              : 'bg-zinc-950 border-zinc-800 hover:border-amber-500/50 shadow-zinc-300/60'
           }`}
         >
-          <div className="relative z-10 flex items-center justify-between">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-amber-500/10 border border-amber-500/20 text-amber-400">
-              <ShieldCheck className="w-5 h-5" />
+          {/* 1:1 Bespoke 3D Containment Vault Image */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <Image
+              src={showcasePrivacyVaultImg}
+              alt="100% In-Memory Local Privacy Vault"
+              fill
+              sizes="(max-width: 768px) 100vw, 25vw"
+              className="object-cover opacity-80 group-hover:opacity-95 group-hover:scale-105 transition-all duration-700 ease-out transform-gpu"
+              referrerPolicy="no-referrer"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-zinc-950/15" />
+          </div>
+
+          <div className="relative z-10 flex items-center justify-between border-b border-white/10 pb-2.5">
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-amber-500/15 border border-amber-500/30 text-amber-400">
+              <ShieldCheck className="w-4 h-4" />
             </div>
-            <span className="text-[10px] font-mono tracking-wider uppercase px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">
-              ADR-0008
-            </span>
+            <div
+              dir="ltr"
+              className="flex items-center gap-1.5 text-[10px] font-mono tracking-wider uppercase text-zinc-300 tabular-nums"
+            >
+              <span className="text-amber-400 font-semibold">03</span>
+              <span aria-hidden="true" className="opacity-40">
+                ·
+              </span>
+              <span>0 B OUTBOUND</span>
+            </div>
           </div>
 
           <div className="relative z-10 mt-auto">
-            <h3
-              className={`text-base font-bold tracking-tight ${
-                isDark ? 'text-zinc-100' : 'text-zinc-900'
-              }`}
+            <div
+              dir="ltr"
+              className="mb-2 text-[10px] font-mono text-emerald-300/90 tracking-tight tabular-nums"
             >
+              RAM SANDBOX · ADR-0008
+            </div>
+            <h3 className="text-base sm:text-lg font-bold tracking-tight text-zinc-100">
               {isFa ? 'حریم خصوصی محلی' : '100% In-Memory'}
             </h3>
-            <p
-              className={`mt-1.5 text-xs leading-normal ${
-                isDark ? 'text-zinc-400' : 'text-zinc-600'
-              }`}
-            >
+            <p className="mt-1 text-xs leading-normal text-zinc-300">
               {isFa
                 ? 'تمام محاسبات در مرورگر کلاینت انجام می‌شود. صفر بایت ارسال به سرور.'
                 : 'Pure local execution in browser RAM. Zero telemetry or server calls.'}
@@ -163,36 +230,54 @@ export function ShowcaseBento({ isDark, isFa }: ShowcaseBentoProps): React.JSX.E
           </div>
         </div>
 
-        {/* Card 4: 1 col x 1 row (1 cell) - C-Family Syntax Enhancer */}
+        {/* Card 4: 1 col x 1 row (1 cell, 1:1 Aspect Ratio) - C-Family Syntax Enhancer */}
         <div
           className={`group relative md:col-span-1 md:row-span-1 rounded-3xl overflow-hidden border p-6 flex flex-col justify-between transition-colors duration-500 shadow-lg ${
             isDark
-              ? 'bg-zinc-950/80 border-zinc-800/80 hover:border-zinc-700'
-              : 'bg-white border-zinc-200/90 hover:border-zinc-300 shadow-zinc-200/50'
+              ? 'bg-zinc-950 border-zinc-800/80 hover:border-cyan-500/40'
+              : 'bg-zinc-950 border-zinc-800 hover:border-cyan-500/50 shadow-zinc-300/60'
           }`}
         >
-          <div className="relative z-10 flex items-center justify-between">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
-              <Terminal className="w-5 h-5" />
+          {/* 1:1 Bespoke 3D Crystal Syntax Prism Image */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <Image
+              src={showcaseSyntaxPrismImg}
+              alt="Semantic Syntax Highlighting Prism"
+              fill
+              sizes="(max-width: 768px) 100vw, 25vw"
+              className="object-cover opacity-80 group-hover:opacity-95 group-hover:scale-105 transition-all duration-700 ease-out transform-gpu"
+              referrerPolicy="no-referrer"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-zinc-950/15" />
+          </div>
+
+          <div className="relative z-10 flex items-center justify-between border-b border-white/10 pb-2.5">
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-cyan-500/15 border border-cyan-500/30 text-cyan-400">
+              <Terminal className="w-4 h-4" />
             </div>
-            <span className="text-[10px] font-mono tracking-wider uppercase px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
-              C / Rust / TS
-            </span>
+            <div
+              dir="ltr"
+              className="flex items-center gap-1.5 text-[10px] font-mono tracking-wider uppercase text-zinc-300"
+            >
+              <span className="text-cyan-400 font-semibold">04</span>
+              <span aria-hidden="true" className="opacity-40">
+                ·
+              </span>
+              <span>C / RUST / TS</span>
+            </div>
           </div>
 
           <div className="relative z-10 mt-auto">
-            <h3
-              className={`text-base font-bold tracking-tight ${
-                isDark ? 'text-zinc-100' : 'text-zinc-900'
-              }`}
+            <div
+              dir="ltr"
+              className="mb-2 text-[10px] font-mono text-cyan-300/95 tracking-tight truncate"
             >
+              {'PacketNode_t *ptr -> AST'}
+            </div>
+            <h3 className="text-base sm:text-lg font-bold tracking-tight text-zinc-100">
               {isFa ? 'هایلایت معنایی' : 'Syntax Engine'}
             </h3>
-            <p
-              className={`mt-1.5 text-xs leading-normal ${
-                isDark ? 'text-zinc-400' : 'text-zinc-600'
-              }`}
-            >
+            <p className="mt-1 text-xs leading-normal text-zinc-300">
               {isFa
                 ? 'تفکیک دقیق پوینترها، انواع سیستمی و متون فارسی در کامنت‌ها.'
                 : 'Semantic token separation for pointers, constants, and mixed comments.'}

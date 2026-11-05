@@ -1,8 +1,8 @@
 {
-  "version": "2.3.1",
-  "publishedAt": "2026-11-05T12:54:47.555Z",
+  "version": "2.3.2",
+  "publishedAt": "2026-11-05T13:41:50.736Z",
   "baseUrl": "https://raw.githubusercontent.com/KavehAhangar051/Markdown-RTL-Viewer/main/public",
-  "releaseTag": "v2.3.1-windows",
+  "releaseTag": "v2.3.2-windows",
   "files": {
     "_next/static/chunks/193-2770c6edd82a05db.js": {
       "sha256": "200fdb2f12042d3d5ab88b2be5b30c77684c490490e4bb4b6927f9f747c96a4b",
@@ -52,9 +52,9 @@
       "sha256": "8648938a8433a0b3c19cbf57bb7f55c38465bf007279fdbf929bede5def5ce56",
       "size": 8757
     },
-    "_next/static/chunks/app/page-853cabd7dbc95225.js": {
-      "sha256": "970a9d7436ee3691bccff037b90f3838fb3e0f4b755021ddeff8c7b4f94b511e",
-      "size": 213530
+    "_next/static/chunks/app/page-0e306e50acd3d50c.js": {
+      "sha256": "845d5145012486686fcd7a7a5f8c288c45ef6cee16a9ba8003522415ac959325",
+      "size": 228337
     },
     "_next/static/chunks/app/showcase/page-c7437ccac03c9d51.js": {
       "sha256": "f8287b06598d3ca3d6422dd554c2c2bdbdd012041fc691c3b83aa1f8db1ec24f",
@@ -92,17 +92,17 @@
       "sha256": "3e3f2ab01260ac7438c08ddaddfb3b4d1178643782b12bf1c017698e8c9757df",
       "size": 3521
     },
-    "_next/static/css/44f71f03e6fa8c61.css": {
-      "sha256": "5a44051ced422516a90de18a953213ba7f32cf6780ddbce6fc3b52281dbf4435",
-      "size": 131884
-    },
     "_next/static/css/d97fa9d7935a7532.css": {
       "sha256": "f70011ef369dd0b88a1f32aca6a6ea2d0686860bd5222bacf6e4420e9344641a",
       "size": 34529
     },
+    "_next/static/css/ffabc310c24bdf85.css": {
+      "sha256": "4a1d28157bdff226e2ea04fa21d353d5e1285444c185ac6fa4ccf90f88fef607",
+      "size": 137888
+    },
     "index.html": {
-      "sha256": "9b697439a874362b7e4e2c5b01bc7dab7cbab6eae98edfdd159e9722aff7571a",
-      "size": 57259
+      "sha256": "6823f9c494674437754cff9fe153b93024aab88650294f57c14fbc160807871f",
+      "size": 68089
     }
   },
   "patches": {
@@ -240,14 +240,14 @@
     },
     "_next/static/chunks/app/page.js": {
       "slot": "_next/static/chunks/app/page.js",
-      "baseRelPath": "_next/static/chunks/app/page-8ad78674f4af499a.js",
-      "targetRelPath": "_next/static/chunks/app/page-853cabd7dbc95225.js",
-      "baseSha256": "db1efc8b0daa4fd004668fe5d55ec4308f9976548775a63ab1c98915521bcc3c",
-      "targetSha256": "970a9d7436ee3691bccff037b90f3838fb3e0f4b755021ddeff8c7b4f94b511e",
+      "baseRelPath": "_next/static/chunks/app/page-853cabd7dbc95225.js",
+      "targetRelPath": "_next/static/chunks/app/page-0e306e50acd3d50c.js",
+      "baseSha256": "970a9d7436ee3691bccff037b90f3838fb3e0f4b755021ddeff8c7b4f94b511e",
+      "targetSha256": "845d5145012486686fcd7a7a5f8c288c45ef6cee16a9ba8003522415ac959325",
       "patchFile": "delta-patches/_next__static__chunks__app__page.js.patch.json",
       "fullFile": "delta-patches/_next__static__chunks__app__page.js.full.txt",
-      "patchSize": 171402,
-      "fullSize": 213530
+      "patchSize": 114894,
+      "fullSize": 228337
     },
     "_next/static/chunks/app/showcase/page.js": {
       "slot": "_next/static/chunks/app/showcase/page.js",
@@ -348,17 +348,6 @@
       "patchSize": 342,
       "fullSize": 3521
     },
-    "_next/static/css/44f71f03e6fa8c61.css": {
-      "slot": "_next/static/css/44f71f03e6fa8c61.css",
-      "baseRelPath": "_next/static/css/44f71f03e6fa8c61.css",
-      "targetRelPath": "_next/static/css/44f71f03e6fa8c61.css",
-      "baseSha256": "5a44051ced422516a90de18a953213ba7f32cf6780ddbce6fc3b52281dbf4435",
-      "targetSha256": "5a44051ced422516a90de18a953213ba7f32cf6780ddbce6fc3b52281dbf4435",
-      "patchFile": "delta-patches/_next__static__css__44f71f03e6fa8c61.css.patch.json",
-      "fullFile": "delta-patches/_next__static__css__44f71f03e6fa8c61.css.full.txt",
-      "patchSize": 329,
-      "fullSize": 131884
-    },
     "_next/static/css/d97fa9d7935a7532.css": {
       "slot": "_next/static/css/d97fa9d7935a7532.css",
       "baseRelPath": "_next/static/css/d97fa9d7935a7532.css",
@@ -370,16 +359,27 @@
       "patchSize": 329,
       "fullSize": 34529
     },
+    "_next/static/css/ffabc310c24bdf85.css": {
+      "slot": "_next/static/css/ffabc310c24bdf85.css",
+      "baseRelPath": "_next/static/css/ffabc310c24bdf85.css",
+      "targetRelPath": "_next/static/css/ffabc310c24bdf85.css",
+      "baseSha256": "4a1d28157bdff226e2ea04fa21d353d5e1285444c185ac6fa4ccf90f88fef607",
+      "targetSha256": "4a1d28157bdff226e2ea04fa21d353d5e1285444c185ac6fa4ccf90f88fef607",
+      "patchFile": "delta-patches/_next__static__css__ffabc310c24bdf85.css.patch.json",
+      "fullFile": "delta-patches/_next__static__css__ffabc310c24bdf85.css.full.txt",
+      "patchSize": 329,
+      "fullSize": 137888
+    },
     "index.html": {
       "slot": "index.html",
       "baseRelPath": "index.html",
       "targetRelPath": "index.html",
-      "baseSha256": "2869aad8096ca5b3f693964fa7c4cb40ac7e3d5694a51be49dd2fc3ddedd0758",
-      "targetSha256": "9b697439a874362b7e4e2c5b01bc7dab7cbab6eae98edfdd159e9722aff7571a",
+      "baseSha256": "9b697439a874362b7e4e2c5b01bc7dab7cbab6eae98edfdd159e9722aff7571a",
+      "targetSha256": "6823f9c494674437754cff9fe153b93024aab88650294f57c14fbc160807871f",
       "patchFile": "delta-patches/index.html.patch.json",
       "fullFile": "delta-patches/index.html.full.txt",
-      "patchSize": 31338,
-      "fullSize": 57259
+      "patchSize": 47258,
+      "fullSize": 68089
     }
   }
 }

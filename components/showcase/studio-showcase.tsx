@@ -38,35 +38,63 @@ export function StudioShowcase({ onClose }: StudioShowcaseProps): React.JSX.Elem
   return (
     <main
       id="studio-showcase-flow"
-      className={`overflow-x-hidden w-full max-w-full transition-colors duration-300 ${
-        isDark ? 'bg-black text-zinc-100' : 'bg-slate-100/70 text-zinc-900'
+      className={`relative overflow-x-hidden w-full max-w-full transition-colors duration-300 selection:bg-emerald-500/25 ${
+        isDark ? 'bg-[#060608] text-zinc-100' : 'bg-[#f8fafc] text-zinc-900'
       } ${isFa ? 'font-vazir' : 'font-sans'}`}
       dir={isFa ? 'rtl' : 'ltr'}
     >
-      {/* Attention: Cinematic Center Hero */}
-      <ShowcaseHero
-        isDark={isDark}
-        isFa={isFa}
-        onLaunchEditor={handleLaunchEditor}
-        onLoadSample={handleLoadSample}
-      />
+      {/* Architectural Blueprint Coordinate Grid & Radial Mask */}
+      <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+        <div
+          className={`absolute inset-0 ${
+            isDark ? 'opacity-[0.055]' : 'opacity-[0.045]'
+          }`}
+          style={{
+            backgroundImage: isDark
+              ? 'linear-gradient(to right, #ffffff 1px, transparent 1px), linear-gradient(to bottom, #ffffff 1px, transparent 1px)'
+              : 'linear-gradient(to right, #09090b 1px, transparent 1px), linear-gradient(to bottom, #09090b 1px, transparent 1px)',
+            backgroundSize: '64px 64px',
+            maskImage:
+              'radial-gradient(ellipse 85% 75% at 50% 35%, #000 35%, transparent 100%)',
+          }}
+        />
+        {/* Subtle Top Architectural Horizon Beam */}
+        <div
+          className="absolute -top-36 left-1/2 -translate-x-1/2 w-[1100px] h-[420px] rounded-full blur-[150px] opacity-25"
+          style={{
+            background: isDark
+              ? 'radial-gradient(circle, rgba(16,185,129,0.28) 0%, rgba(6,182,212,0.14) 45%, transparent 75%)'
+              : 'radial-gradient(circle, rgba(16,185,129,0.18) 0%, rgba(99,102,241,0.10) 45%, transparent 75%)',
+          }}
+        />
+      </div>
 
-      {/* Infinite Scrolling Capability Marquee */}
-      <ShowcaseMarquee isDark={isDark} isFa={isFa} />
+      <div className="relative z-10">
+        {/* Attention: Cinematic Center Hero with 16:9 Live 3D Studio Stage */}
+        <ShowcaseHero
+          isDark={isDark}
+          isFa={isFa}
+          onLaunchEditor={handleLaunchEditor}
+          onLoadSample={handleLoadSample}
+        />
 
-      {/* Interest: Gapless 4-Column Bento Grid */}
-      <ShowcaseBento isDark={isDark} isFa={isFa} />
+        {/* Infinite Scrolling Capability Marquee */}
+        <ShowcaseMarquee isDark={isDark} isFa={isFa} />
 
-      {/* Desire: Interactive Horizontal Accordion */}
-      <ShowcaseAccordion isDark={isDark} isFa={isFa} />
+        {/* Interest: Gapless 4-Column Bento Grid with 1:1 & 16:9 3D Assets */}
+        <ShowcaseBento isDark={isDark} isFa={isFa} />
 
-      {/* Action: Massive CTA and Footer */}
-      <ShowcaseCta
-        isDark={isDark}
-        isFa={isFa}
-        onLaunchEditor={handleLaunchEditor}
-        onLoadSample={handleLoadSample}
-      />
+        {/* Desire: Interactive Horizontal Accordion */}
+        <ShowcaseAccordion isDark={isDark} isFa={isFa} />
+
+        {/* Action: 16:9 3D Conversion Portal & Structured Engineering Footer */}
+        <ShowcaseCta
+          isDark={isDark}
+          isFa={isFa}
+          onLaunchEditor={handleLaunchEditor}
+          onLoadSample={handleLoadSample}
+        />
+      </div>
     </main>
   );
 }
