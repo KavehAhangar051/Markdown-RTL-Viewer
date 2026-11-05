@@ -17,7 +17,7 @@ const OUT_DIR = path.resolve(process.cwd(), 'out');
 function relativizeHtml(html) {
   return html
     .replace(
-      /(href|src)="\/(_next\/|favicon\.ico|icon|apple-|manifest\.webmanifest)/g,
+      /(href|src)="\/(_next\/|images\/|favicon\.ico|icon|apple-|manifest\.webmanifest)/g,
       '$1="./$2'
     )
     .replace(/"\/_next\/static\//g, '"./_next/static/')

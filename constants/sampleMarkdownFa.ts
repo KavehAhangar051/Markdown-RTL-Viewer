@@ -200,5 +200,5 @@ $$
 
 تصویر نمونه با حاشیه و فریم بهینه‌شده:
 
-![نمای استودیو مارک‌داون](https://picsum.photos/seed/markdown-studio/900/260)
+![نمای استودیو مارک‌داون](./images/markdown-studio-banner.svg)
 `;

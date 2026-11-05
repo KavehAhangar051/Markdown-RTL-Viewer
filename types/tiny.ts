@@ -113,19 +113,50 @@ export interface TinyDeltaFileHash {
   readonly size: number;
 }
 
+/**
+ * Compact character/statement-level diff edit operation:
+ * `[offsetInOldText, deleteCharCount, insertedText]`
+ */
+export type TinyCharDiffOp = readonly [number, number, string];
+
+export interface TinySlotPatchMeta {
+  readonly slot: string;
+  readonly baseRelPath: string;
+  readonly targetRelPath: string;
+  readonly baseSha256: string;
+  readonly targetSha256: string;
+  readonly patchFile: string;
+  readonly fullFile: string;
+  readonly patchSize: number;
+  readonly fullSize: number;
+}
+
+export interface TinySlotPatchDocument {
+  readonly slot: string;
+  readonly baseRelPath: string;
+  readonly targetRelPath: string;
+  readonly baseSha256: string;
+  readonly targetSha256: string;
+  readonly ops: readonly TinyCharDiffOp[];
+}
+
 export interface TinyDeltaManifest {
   readonly version: string;
   readonly publishedAt: string;
   readonly baseUrl: string;
   readonly releaseTag?: string;
   readonly files: Readonly<Record<string, TinyDeltaFileHash>>;
+  readonly patches?: Readonly<Record<string, TinySlotPatchMeta>>;
 }
+
+export type TinyPatchedFilesMap = Record<string, string>;
 
 export interface TinyDeltaStateResponse {
   readonly ok: boolean;
   readonly currentVersion: string;
+  readonly exeVersion?: string;
   readonly manifest: TinyDeltaManifest | null;
-  readonly patchedFiles?: Readonly<Record<string, string>>;
+  readonly patchedFiles?: Readonly<TinyPatchedFilesMap>;
 }
 
 export interface TinyDeltaPatchFilePayload {
@@ -172,5 +203,6 @@ export interface TinyBridge {
 declare global {
   interface Window {
     tiny?: TinyBridge;
+    __TINY_BOOTED_DELTA_VERSION__?: string;
   }
 }

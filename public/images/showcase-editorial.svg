@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="1000" height="1000">
+  <defs>
+    <linearGradient id="edBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#09090b"/>
+      <stop offset="60%" stop-color="#18181b"/>
+      <stop offset="100%" stop-color="#022c22"/>
+    </linearGradient>
+    <radialGradient id="edGlow" cx="70%" cy="30%" r="55%">
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#09090b" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1000" height="1000" fill="url(#edBg)"/>
+  <circle cx="700" cy="300" r="500" fill="url(#edGlow)"/>
+  <g stroke="#3f3f46" stroke-width="1.5" opacity="0.35">
+    <rect x="80" y="80" width="840" height="840" rx="32" fill="none"/>
+    <line x1="80" y1="280" x2="920" y2="280"/>
+    <line x1="80" y1="560" x2="920" y2="560"/>
+    <line x1="500" y1="80" x2="500" y2="920"/>
+  </g>
+  <g fill="none" stroke="#10b981" stroke-width="3" opacity="0.5">
+    <path d="M 160 440 Q 340 300 500 440 T 840 440"/>
+    <path d="M 160 720 Q 340 580 500 720 T 840 720" stroke="#6366f1"/>
+  </g>
+  <circle cx="500" cy="440" r="10" fill="#34d399"/>
+  <circle cx="500" cy="720" r="10" fill="#818cf8"/>
+</svg>

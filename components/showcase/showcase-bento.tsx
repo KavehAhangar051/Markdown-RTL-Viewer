@@ -8,6 +8,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { AlignRight, ShieldCheck, Activity, Terminal } from '@/components/animate-ui/icons';
+import showcaseEditorialImg from '@/public/images/showcase-editorial.svg';
 
 interface ShowcaseBentoProps {
   isDark: boolean;
@@ -52,7 +53,7 @@ export function ShowcaseBento({ isDark, isFa }: ShowcaseBentoProps): React.JSX.E
           {/* Background Image with Hover Physics */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
             <Image
-              src="https://picsum.photos/seed/editorial/1000/1000"
+              src={showcaseEditorialImg}
               alt="Editorial Architecture"
               fill
               sizes="(max-width: 768px) 100vw, 50vw"

@@ -177,27 +177,74 @@ export const api = {
   },
 
   /**
-   * Reads the locally applied differential (delta) update state from disk so the app
-   * knows its current patched version and file hashes without re-downloading unchanged files.
+   * Reads the locally applied differential (delta) update state and patched file contents from disk
+   * so the desktop app boots and executes the patched code without re-downloading unchanged files.
    */
   getDeltaState: async (_params, app) => {
     const info = await app.info();
+    const exeVersion = String(info.version || '2.3.0');
     const cacheDir = getDeltaCacheDir();
     const manifestPath = `${cacheDir}/delta-manifest.json`;
 
     try {
       const bytes = await tjs.readFile(manifestPath);
       const manifest = JSON.parse(textDecoder.decode(bytes));
+      const cachedVersion = String(manifest.version || exeVersion);
+
+      const parseParts = (v) =>
+        String(v ?? '')
+          .replace(/^v/i, '')
+          .split('-')[0]
+          .split('.')
+          .map((n) => Number.parseInt(n, 10) || 0);
+
+      const cParts = parseParts(cachedVersion);
+      const eParts = parseParts(exeVersion);
+      let isCacheNewer = false;
+
+      for (let i = 0; i < 3; i++) {
+        if ((cParts[i] || 0) > (eParts[i] || 0)) {
+          isCacheNewer = true;
+          break;
+        }
+        if ((cParts[i] || 0) < (eParts[i] || 0)) {
+          break;
+        }
+      }
+
+      if (!isCacheNewer) {
+        return {
+          ok: true,
+          currentVersion: exeVersion,
+          exeVersion,
+          manifest: null,
+        };
+      }
+
+      const patchedFiles = {};
+      const fileKeys = Object.keys(manifest.files || {});
+
+      for (const relPath of fileKeys) {
+        try {
+          const fileBytes = await tjs.readFile(`${cacheDir}/files/${relPath}`);
+          patchedFiles[relPath] = textDecoder.decode(fileBytes);
+        } catch {
+          // Only files that were patched exist in delta-cache/files/
+        }
+      }
 
       return {
         ok: true,
-        currentVersion: String(manifest.version || info.version),
+        currentVersion: cachedVersion,
+        exeVersion,
         manifest,
+        patchedFiles,
       };
     } catch {
       return {
         ok: true,
-        currentVersion: String(info.version || '2.2.0'),
+        currentVersion: exeVersion,
+        exeVersion,
         manifest: null,
       };
     }

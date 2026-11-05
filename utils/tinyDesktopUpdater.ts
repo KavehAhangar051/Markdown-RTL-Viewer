@@ -1,14 +1,16 @@
 /**
  * @file utils/tinyDesktopUpdater.ts
- * @description Differential (Delta) Self-Updater for the TinyJS Windows Desktop App.
- * Compares content-addressed SHA-256 file hashes between the local installation and the
- * latest GitHub release/Pages manifest so only modified chunks (typically a few KB) are
- * downloaded and applied, saving >90% of user bandwidth.
+ * @description Character & Statement-Level Differential (Delta) Self-Updater for the TinyJS
+ * Windows Desktop App. Downloads ONLY modified lines, statements, and characters
+ * (`delta-patches/*.patch.json`), splices them onto the local files on disk, and immediately
+ * hot-boots the updated bundle inside the active WebView2 window.
  */
 
 import {
   TinyDeltaManifest,
   TinyDeltaPatchFilePayload,
+  TinyPatchedFilesMap,
+  TinySlotPatchDocument,
 } from '@/types/tiny';
 import {
   getTinyBridge,
@@ -16,11 +18,23 @@ import {
   relativizeStaticExportHtml,
   relativizeWebpackPublicPath,
 } from '@/utils/tinyDesktopBridge';
+import {
+  applyCharDiffOps,
+  bootTinyDesktopPatchedBundle,
+  computeTextSha256,
+  normalizeDeltaSlotKey,
+  readLocalAssetText,
+} from '@/utils/tinyDeltaPatcher';
 
 export interface TinyDeltaFileEntry {
   readonly relPath: string;
+  readonly slot: string;
+  readonly localBaseRelPath: string;
   readonly sha256: string;
   readonly size: number;
+  readonly patchFile?: string;
+  readonly fullFile?: string;
+  readonly patchSize: number;
 }
 
 export interface TinyDeltaUpdatePlan {
@@ -36,14 +50,17 @@ export interface TinyDeltaUpdatePlan {
 }
 
 const REMOTE_MANIFEST_URLS: readonly string[] = [
-  'https://kavehahangar051.github.io/Markdown-RTL-Viewer/delta-manifest.json',
   'https://raw.githubusercontent.com/KavehAhangar051/Markdown-RTL-Viewer/main/public/delta-manifest.json',
+  'https://kavehahangar051.github.io/Markdown-RTL-Viewer/delta-manifest.json',
 ];
+
+const DEFAULT_RAW_BASE_URL =
+  'https://raw.githubusercontent.com/KavehAhangar051/Markdown-RTL-Viewer/main/public';
 
 const LOCAL_DELTA_STORAGE_KEY = 'rtl-studio-delta-manifest-v1';
 
 /**
- * Compares two semantic version strings (e.g., `'2.3.0'` vs `'2.2.0'`).
+ * Compares two semantic version strings (e.g., `'2.3.0'` vs `'2.2.3'`).
  *
  * @param {string} versionA - Candidate version string.
  * @param {string} versionB - Baseline version string.
@@ -79,7 +96,7 @@ export function compareSemver(versionA: string, versionB: string): number {
 }
 
 /**
- * Formats byte counts into a compact human-readable label (e.g., `'42.4 KB'`).
+ * Formats byte counts into a compact human-readable label (e.g., `'1.4 KB'`).
  *
  * @param {number} bytes - Number of bytes.
  * @returns {string} Formatted byte size label.
@@ -103,10 +120,10 @@ export function formatDeltaBytes(bytes: number): string {
 }
 
 /**
- * Pure function that computes the exact differential update plan between the locally
- * installed manifest and a remote GitHub manifest, queuing only files whose SHA-256 hash changed.
+ * Pure function that computes the character/statement-level differential update plan between
+ * the locally installed manifest and the remote GitHub manifest.
  *
- * @param {TinyDeltaManifest | null} localManifest - Currently installed manifest (or null if only version is known).
+ * @param {TinyDeltaManifest | null} localManifest - Currently installed manifest.
  * @param {TinyDeltaManifest} remoteManifest - Latest remote manifest from GitHub.
  * @param {string} fallbackLocalVersion - Version string used when localManifest is null.
  * @returns {TinyDeltaUpdatePlan} Computed differential update plan.
@@ -114,14 +131,25 @@ export function formatDeltaBytes(bytes: number): string {
 export function computeDeltaUpdatePlan(
   localManifest: TinyDeltaManifest | null,
   remoteManifest: TinyDeltaManifest,
-  fallbackLocalVersion = '2.2.0'
+  fallbackLocalVersion = '2.3.0'
 ): TinyDeltaUpdatePlan {
   const currentVersion = localManifest?.version || fallbackLocalVersion;
   const latestVersion = remoteManifest.version;
   const isNewer = compareSemver(latestVersion, currentVersion) > 0;
 
   const localFiles = localManifest?.files ?? {};
+  const localSlotMap = new Map<string, { relPath: string; sha256: string; size: number }>();
+
+  for (const [localRel, localMeta] of Object.entries(localFiles)) {
+    localSlotMap.set(normalizeDeltaSlotKey(localRel), {
+      relPath: localRel,
+      sha256: localMeta.sha256,
+      size: localMeta.size,
+    });
+  }
+
   const remoteEntries = Object.entries(remoteManifest.files ?? {});
+  const remotePatches = remoteManifest.patches ?? {};
 
   const changedFiles: TinyDeltaFileEntry[] = [];
   let unchangedCount = 0;
@@ -130,17 +158,33 @@ export function computeDeltaUpdatePlan(
 
   for (const [relPath, meta] of remoteEntries) {
     totalFullBytes += meta.size;
-    const localEntry = localFiles[relPath];
+    const slot = normalizeDeltaSlotKey(relPath);
+
+    const localEntry = localFiles[relPath]
+      ? { relPath, ...localFiles[relPath] }
+      : localSlotMap.get(slot);
 
     if (localEntry && localEntry.sha256 === meta.sha256) {
       unchangedCount += 1;
     } else {
+      const slotPatch = remotePatches[slot];
+
+      const effectivePatchSize = slotPatch
+        ? Math.min(slotPatch.patchSize, meta.size)
+        : meta.size;
+
       changedFiles.push({
         relPath,
+        slot,
+        localBaseRelPath: localEntry?.relPath || slotPatch?.baseRelPath || relPath,
         sha256: meta.sha256,
         size: meta.size,
+        patchFile: slotPatch?.patchFile,
+        fullFile: slotPatch?.fullFile,
+        patchSize: effectivePatchSize,
       });
-      totalDeltaBytes += meta.size;
+
+      totalDeltaBytes += effectivePatchSize;
     }
   }
 
@@ -148,7 +192,7 @@ export function computeDeltaUpdatePlan(
     available: isNewer && changedFiles.length > 0,
     currentVersion,
     latestVersion,
-    baseUrl: remoteManifest.baseUrl || 'https://kavehahangar051.github.io/Markdown-RTL-Viewer',
+    baseUrl: remoteManifest.baseUrl || DEFAULT_RAW_BASE_URL,
     changedFiles,
     unchangedCount,
     totalDeltaBytes,
@@ -158,14 +202,15 @@ export function computeDeltaUpdatePlan(
 }
 
 /**
- * Loads the local delta manifest from the native TinyJS backend, localStorage cache, or bundled `./delta-manifest.json`.
+ * Loads the local delta manifest from the native TinyJS backend (and hot-boots any cached
+ * delta update on cold start), falling back to localStorage or bundled `./delta-manifest.json`.
  */
 async function loadLocalDeltaManifest(): Promise<{
   manifest: TinyDeltaManifest | null;
   version: string;
 }> {
   const tiny = getTinyBridge();
-  let version = '2.2.0';
+  let version = '2.3.0';
 
   if (tiny) {
     try {
@@ -175,12 +220,34 @@ async function loadLocalDeltaManifest(): Promise<{
         version = state.currentVersion || version;
 
         if (state.manifest) {
+          if (
+            state.patchedFiles &&
+            Object.keys(state.patchedFiles).length > 0 &&
+            typeof window !== 'undefined' &&
+            window.__TINY_BOOTED_DELTA_VERSION__ !== state.manifest.version
+          ) {
+            await bootTinyDesktopPatchedBundle(state.manifest, state.patchedFiles);
+          }
+
           return { manifest: state.manifest, version };
         }
       }
     } catch {
       // Fallback to localStorage or bundled delta-manifest.json
     }
+  }
+
+  try {
+    const res = await fetch('./delta-manifest.json', { cache: 'no-store' });
+
+    if (res.ok) {
+      // SAFETY: Bundled delta-manifest.json is generated by scripts/generate-delta-manifest.mjs with TinyDeltaManifest schema
+      const bundled = (await res.json()) as TinyDeltaManifest;
+
+      return { manifest: bundled, version: bundled.version || version };
+    }
+  } catch {
+    // Ignore when running in dev server without ./delta-manifest.json
   }
 
   if (typeof window !== 'undefined') {
@@ -200,24 +267,11 @@ async function loadLocalDeltaManifest(): Promise<{
     }
   }
 
-  try {
-    const res = await fetch('./delta-manifest.json', { cache: 'no-store' });
-
-    if (res.ok) {
-      // SAFETY: Bundled delta-manifest.json is generated by scripts/generate-delta-manifest.mjs with TinyDeltaManifest schema
-      const bundled = (await res.json()) as TinyDeltaManifest;
-
-      return { manifest: bundled, version: bundled.version || version };
-    }
-  } catch {
-    // Ignore when running in dev server without ./delta-manifest.json
-  }
-
   return { manifest: null, version };
 }
 
 /**
- * Checks GitHub for a newer release manifest and computes the differential (delta) download plan.
+ * Checks GitHub for a newer release manifest and computes the character-level differential download plan.
  *
  * @returns {Promise<TinyDeltaUpdatePlan | null>} Delta update plan or null if offline/unavailable.
  */
@@ -253,12 +307,13 @@ export async function checkTinyDesktopDeltaUpdate(): Promise<TinyDeltaUpdatePlan
 }
 
 /**
- * Downloads ONLY the changed files in the delta plan, relativizes paths for `file://` WebView2,
- * and persists the differential patch via the native TinyJS backend.
+ * Downloads ONLY the character/statement-level diff patches (`*.patch.json`), reconstructs
+ * the modified files from local disk assets, saves them to the native TinyJS delta cache,
+ * and immediately hot-boots the updated application code inside the active window.
  *
  * @param {TinyDeltaUpdatePlan} plan - Computed differential update plan.
  * @param {(completed: number, total: number) => void} [onProgress] - Progress callback.
- * @returns {Promise<boolean>} True when the delta update succeeded.
+ * @returns {Promise<boolean>} True when the delta update succeeded and booted.
  */
 export async function executeTinyDesktopDeltaUpdate(
   plan: TinyDeltaUpdatePlan,
@@ -275,31 +330,81 @@ export async function executeTinyDesktopDeltaUpdate(
   let completed = 0;
 
   try {
+    const priorState = await tiny.api.call('getDeltaState');
+
+    const mergedPatchedFiles: TinyPatchedFilesMap = {
+      ...priorState.patchedFiles,
+    };
+
+    const cleanBase = plan.baseUrl.replace(/\/+$/, '');
+
     for (const fileEntry of plan.changedFiles) {
-      const cleanBase = plan.baseUrl.replace(/\/+$/, '');
       const cleanRel = fileEntry.relPath.replace(/^\/+/, '');
-      const fileUrl = `${cleanBase}/${cleanRel}?v=${encodeURIComponent(plan.latestVersion)}`;
+      let reconstructedText: string | null = null;
 
-      const response = await fetch(fileUrl, { cache: 'no-store' });
+      // 1. Primary path: Download ONLY character/statement-level diff hunks (.patch.json)
+      if (fileEntry.patchFile) {
+        try {
+          const patchUrl = `${cleanBase}/${fileEntry.patchFile}?v=${encodeURIComponent(
+            plan.latestVersion
+          )}`;
 
-      if (!response.ok) {
-        return false;
+          const patchRes = await fetch(patchUrl, { cache: 'no-store' });
+
+          if (patchRes.ok) {
+            // SAFETY: Validated below for Array.isArray(patchDoc.ops) before applying character ops
+            const patchDoc = (await patchRes.json()) as TinySlotPatchDocument;
+
+            if (patchDoc && Array.isArray(patchDoc.ops)) {
+              const localBase =
+                (await readLocalAssetText(fileEntry.localBaseRelPath, mergedPatchedFiles)) ??
+                (await readLocalAssetText(patchDoc.baseRelPath, mergedPatchedFiles));
+
+              if (localBase !== null) {
+                const candidate = applyCharDiffOps(localBase, patchDoc.ops);
+                const candidateSha = await computeTextSha256(candidate);
+
+                if (candidateSha === fileEntry.sha256) {
+                  reconstructedText = candidate;
+                }
+              }
+            }
+          }
+        } catch {
+          // Fallback to full slot reconstruction below if jumping across incompatible older base versions
+        }
       }
 
-      let textContent = await response.text();
+      // 2. Fallback path for multi-version jumps where local base hash predates the patch baseline
+      if (reconstructedText === null) {
+        const fallbackRel = fileEntry.fullFile || cleanRel;
+
+        const fallbackUrl = `${cleanBase}/${fallbackRel}?v=${encodeURIComponent(
+          plan.latestVersion
+        )}`;
+
+        const fullRes = await fetch(fallbackUrl, { cache: 'no-store' });
+
+        if (!fullRes.ok) {
+          return false;
+        }
+
+        reconstructedText = await fullRes.text();
+      }
 
       if (cleanRel.endsWith('.html')) {
-        textContent = relativizeStaticExportHtml(textContent);
+        reconstructedText = relativizeStaticExportHtml(reconstructedText);
       } else if (cleanRel.endsWith('.css')) {
-        textContent = relativizeStaticExportCss(textContent);
+        reconstructedText = relativizeStaticExportCss(reconstructedText);
       } else if (cleanRel.includes('webpack-') && cleanRel.endsWith('.js')) {
-        textContent = relativizeWebpackPublicPath(textContent);
+        reconstructedText = relativizeWebpackPublicPath(reconstructedText);
       }
 
       downloadedPayloads.push({
         relPath: cleanRel,
-        content: textContent,
+        content: reconstructedText,
       });
+      mergedPatchedFiles[cleanRel] = reconstructedText;
 
       completed += 1;
       onProgress?.(completed, total);
@@ -309,6 +414,10 @@ export async function executeTinyDesktopDeltaUpdate(
       manifest: plan.remoteManifest,
       files: downloadedPayloads,
     });
+
+    if (!applyRes.ok) {
+      return false;
+    }
 
     if (typeof window !== 'undefined') {
       try {
@@ -321,7 +430,9 @@ export async function executeTinyDesktopDeltaUpdate(
       }
     }
 
-    return Boolean(applyRes.ok);
+    await bootTinyDesktopPatchedBundle(plan.remoteManifest, mergedPatchedFiles);
+
+    return true;
   } catch {
     return false;
   }

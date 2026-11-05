@@ -171,5 +171,5 @@ $$
 
 Sample illustration banner with responsive styling:
 
-![Markdown Studio Banner](https://picsum.photos/seed/markdown-studio/900/260)
+![Markdown Studio Banner](./images/markdown-studio-banner.svg)
 `;

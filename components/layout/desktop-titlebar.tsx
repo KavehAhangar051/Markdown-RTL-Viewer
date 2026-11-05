@@ -250,8 +250,8 @@ export function DesktopTitlebar(): React.JSX.Element | null {
             onClick={() => void handleApplyDeltaUpdate()}
             title={
               isFa
-                ? `دریافت فقط فایل‌های تغییریافته (${updatePlan.changedFiles.length} فایل — ${formatDeltaBytes(updatePlan.totalDeltaBytes)})`
-                : `Download only modified files (${updatePlan.changedFiles.length} files — ${formatDeltaBytes(updatePlan.totalDeltaBytes)})`
+                ? `دریافت فقط خطوط و کاراکترهای تغییریافته (${formatDeltaBytes(updatePlan.totalDeltaBytes)})`
+                : `Download only modified lines & characters (${formatDeltaBytes(updatePlan.totalDeltaBytes)})`
             }
             className="ml-1 px-2.5 py-0.5 rounded-md flex items-center gap-1.5 font-medium bg-emerald-500/20 border border-emerald-500/50 text-emerald-300 hover:bg-emerald-500/30 transition-colors cursor-pointer"
           >

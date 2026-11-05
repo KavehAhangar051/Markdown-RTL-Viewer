@@ -8,6 +8,9 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { Sparkles, Gauge, Compass } from '@/components/animate-ui/icons';
+import showcaseArchitectureImg from '@/public/images/showcase-architecture.svg';
+import showcaseSpeedImg from '@/public/images/showcase-speed.svg';
+import showcaseMotionImg from '@/public/images/showcase-motion.svg';
 
 interface ShowcaseAccordionProps {
   isDark: boolean;
@@ -21,7 +24,7 @@ const SLICES = [
     titleEn: 'Deep Domain Seams',
     descFa: 'توابع خالص بدون وابستگی به DOM و فریم‌ورک با استانداردهای آزمون‌پذیری مارتین فاولر و کنت بک.',
     descEn: 'Pure functions independent of DOM and UI frameworks, strictly following PoEAA design seams.',
-    image: 'https://picsum.photos/seed/architecture/800/800',
+    image: showcaseArchitectureImg,
     icon: Compass,
     badge: 'PoEAA & Pragmatic',
   },
@@ -31,7 +34,7 @@ const SLICES = [
     titleEn: '60fps Responsive Pipeline',
     descFa: 'خط‌لوله پردازش اسناد حجیم با خط معوق تا پاسخ‌دهی تایپ در ادیتور همیشه بدون لکنت باقی بماند.',
     descEn: 'Deferred processing pipeline ensuring typing responsiveness remains at a locked 60 frames per second.',
-    image: 'https://picsum.photos/seed/speed/800/800',
+    image: showcaseSpeedImg,
     icon: Gauge,
     badge: 'ADR-0010 Deferred',
   },
@@ -41,7 +44,7 @@ const SLICES = [
     titleEn: 'Kinetic Motion & Physics',
     descFa: 'داک متحرک مک‌او‌اس با بزرگ‌نمایی پیوسته، انیمیشن‌های فیزیکی اسپرینگ و ترنزیشن‌های بومی کلاینت.',
     descEn: 'Fluid macOS magnification dock, spring physics curves, and GPU-accelerated View Transitions.',
-    image: 'https://picsum.photos/seed/abstract/800/800',
+    image: showcaseMotionImg,
     icon: Sparkles,
     badge: 'Spring Physics',
   },

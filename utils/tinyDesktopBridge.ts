@@ -78,7 +78,7 @@ export function relativizeStaticExportHtml(html: string): string {
 
   return html
     .replace(
-      /(href|src)="\/(_next\/|favicon\.ico|icon|apple-|manifest\.webmanifest)/g,
+      /(href|src)="\/(_next\/|images\/|favicon\.ico|icon|apple-|manifest\.webmanifest)/g,
       '$1="./$2'
     )
     .replace(/"\/_next\/static\//g, '"./_next/static/')

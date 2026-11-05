@@ -8,6 +8,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { ArrowLeft, ArrowRight, Play, FileCode } from '@/components/animate-ui/icons';
+import showcaseTypographyImg from '@/public/images/showcase-typography.svg';
 
 interface ShowcaseHeroProps {
   isDark: boolean;
@@ -49,7 +50,7 @@ export function ShowcaseHero({
               <span className="relative inline-flex items-center align-middle mx-2.5 sm:mx-3.5 my-1">
                 <span className="relative w-16 sm:w-24 md:w-28 h-8 sm:h-11 md:h-12 rounded-full overflow-hidden border border-white/20 shadow-lg shadow-emerald-500/10">
                   <Image
-                    src="https://picsum.photos/seed/typography/400/200"
+                    src={showcaseTypographyImg}
                     alt="Typography Art"
                     fill
                     sizes="(max-width: 768px) 100px, 120px"
@@ -67,7 +68,7 @@ export function ShowcaseHero({
               <span className="relative inline-flex items-center align-middle mx-2.5 sm:mx-3.5 my-1">
                 <span className="relative w-16 sm:w-24 md:w-28 h-8 sm:h-11 md:h-12 rounded-full overflow-hidden border border-white/20 shadow-lg shadow-emerald-500/10">
                   <Image
-                    src="https://picsum.photos/seed/typography/400/200"
+                    src={showcaseTypographyImg}
                     alt="Typography Art"
                     fill
                     sizes="(max-width: 768px) 100px, 120px"
