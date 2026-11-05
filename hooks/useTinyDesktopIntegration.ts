@@ -112,6 +112,8 @@ export function useTinyDesktopIntegration(): void {
       return;
     }
 
+    document.documentElement.classList.add('tiny-desktop-gpu');
+
     const loadQueuedFiles = async () => {
       const files = await drainTinyOpenedFiles();
 

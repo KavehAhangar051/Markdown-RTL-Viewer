@@ -10,9 +10,10 @@ import { useCursorListeners } from './use-cursor-listeners';
 /**
  * Hook to manage the active state, hover interaction tags, and dynamic coordinates of the cursor.
  *
+ * @param {boolean} enabled - Whether the custom cursor is active. When false, native OS cursor remains visible.
  * @returns {object} Cursor visibility, interaction flags, and coordinates.
  */
-export function useCursorState() {
+export function useCursorState(enabled = true) {
   const [isVisible, setIsVisible] = useState(false);
   const [isClickable, setIsClickable] = useState(false);
   const [isHoveringText, setIsHoveringText] = useState(false);
@@ -22,6 +23,7 @@ export function useCursorState() {
   const mouseY = useMotionValue(0);
 
   useCursorListeners({
+    enabled,
     mouseX,
     mouseY,
     setIsVisible,

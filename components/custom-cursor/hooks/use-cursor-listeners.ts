@@ -13,6 +13,7 @@ import {
 } from './utils/cursor-detection';
 
 interface CursorListenersProps {
+  enabled: boolean;
   mouseX: MotionValue<number>;
   mouseY: MotionValue<number>;
   setIsVisible: (visible: boolean) => void;
@@ -24,10 +25,12 @@ interface CursorListenersProps {
 /**
  * Hook to attach optimized global DOM listeners for kinematic cursor coordinates and interaction state.
  * Uses requestAnimationFrame batching and state memoization to avoid superfluous React re-renders.
+ * Never hides the native OS cursor when `enabled` is false.
  *
  * @param {CursorListenersProps} props - Target motion coordinates and state dispatchers.
  */
 export function useCursorListeners({
+  enabled,
   mouseX,
   mouseY,
   setIsVisible,
@@ -44,7 +47,15 @@ export function useCursorListeners({
   const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    if (isTouchDevice()) return;
+    if (!enabled || isTouchDevice()) {
+      if (typeof document !== 'undefined') {
+        document.documentElement.style.cursor = '';
+        document.body.style.cursor = '';
+        document.documentElement.classList.remove('custom-cursor-active');
+      }
+
+      return;
+    }
 
     let moveRafId: number | null = null;
     let latestX = 0;
@@ -60,6 +71,7 @@ export function useCursorListeners({
       if (!isVisibleRef.current) {
         isVisibleRef.current = true;
         setIsVisible(true);
+        document.documentElement.classList.add('custom-cursor-active');
       }
 
       latestX = e.clientX;
@@ -73,6 +85,7 @@ export function useCursorListeners({
     const onMouseLeave = () => {
       isVisibleRef.current = false;
       setIsVisible(false);
+      document.documentElement.classList.remove('custom-cursor-active');
 
       if (isMouseDownRef.current) {
         isMouseDownRef.current = false;
@@ -83,6 +96,7 @@ export function useCursorListeners({
     const onMouseEnter = () => {
       isVisibleRef.current = true;
       setIsVisible(true);
+      document.documentElement.classList.add('custom-cursor-active');
     };
 
     const onMouseDownEvent = () => {
@@ -107,6 +121,7 @@ export function useCursorListeners({
 
       isVisibleRef.current = false;
       setIsVisible(false);
+      document.documentElement.classList.remove('custom-cursor-active');
     };
 
     window.addEventListener('mousemove', onMouseMove, { passive: true });
@@ -179,12 +194,6 @@ export function useCursorListeners({
     document.addEventListener('mouseover', handleMouseOver, { passive: true });
     window.addEventListener('scroll', onScroll, { passive: true });
 
-    if (typeof document !== 'undefined') {
-      document.documentElement.style.cursor = 'none';
-      document.body.style.cursor = 'none';
-      document.documentElement.classList.add('custom-cursor-active');
-    }
-
     return () => {
       window.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseleave', onMouseLeave);
@@ -210,6 +219,6 @@ export function useCursorListeners({
         document.documentElement.classList.remove('custom-cursor-active');
       }
     };
-  }, [mouseX, mouseY, setIsVisible, setIsMouseDown, setIsClickable, setIsHoveringText]);
+  }, [enabled, mouseX, mouseY, setIsVisible, setIsMouseDown, setIsClickable, setIsHoveringText]);
 }
 

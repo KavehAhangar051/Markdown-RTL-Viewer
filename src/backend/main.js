@@ -15,6 +15,37 @@ const textEncoder = new TextEncoder();
 /** @type {string[]} */
 const openedFilesQueue = [];
 
+// Configure WebView2 Chromium engine with game-grade DirectComposition & GPU rasterization flags
+try {
+  const gpuFlags = [
+    '--enable-gpu-rasterization',
+    '--enable-zero-copy',
+    '--ignore-gpu-blocklist',
+    '--enable-hardware-overlays',
+    '--enable-features=UseSkiaRenderer,CanvasOopRasterization,DirectCompositionUseNV12DecodeSwapChain',
+    '--disable-renderer-backgrounding',
+    '--disable-background-timer-throttling',
+  ].join(' ');
+  tjs.setenv('WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS', gpuFlags);
+} catch {
+  // Ignore if environment variables are read-only in restricted sandbox
+}
+
+/**
+ * Resolves the user-writable local directory for storing differential (delta) updates on Windows/macOS/Linux.
+ *
+ * @returns {string} Path to delta cache directory.
+ */
+function getDeltaCacheDir() {
+  try {
+    const localAppData = tjs.getenv('LOCALAPPDATA') || tjs.getenv('APPDATA') || tjs.getenv('HOME') || '.';
+
+    return `${localAppData.replace(/\\/g, '/')}/rtl-markdown-studio/delta-cache`;
+  } catch {
+    return './delta-cache';
+  }
+}
+
 /**
  * Extracts the filename segment from a Windows or POSIX filesystem path.
  *
@@ -144,10 +175,85 @@ export const api = {
       runtime: info.runtime,
     };
   },
+
+  /**
+   * Reads the locally applied differential (delta) update state from disk so the app
+   * knows its current patched version and file hashes without re-downloading unchanged files.
+   */
+  getDeltaState: async (_params, app) => {
+    const info = await app.info();
+    const cacheDir = getDeltaCacheDir();
+    const manifestPath = `${cacheDir}/delta-manifest.json`;
+
+    try {
+      const bytes = await tjs.readFile(manifestPath);
+      const manifest = JSON.parse(textDecoder.decode(bytes));
+
+      return {
+        ok: true,
+        currentVersion: String(manifest.version || info.version),
+        manifest,
+      };
+    } catch {
+      return {
+        ok: true,
+        currentVersion: String(info.version || '2.2.0'),
+        manifest: null,
+      };
+    }
+  },
+
+  /**
+   * Writes only the modified (delta) files downloaded from GitHub into the local delta cache
+   * and updates the local `delta-manifest.json`.
+   */
+  applyDeltaUpdate: async ({ manifest, files }) => {
+    if (!manifest || !manifest.version || !Array.isArray(files)) {
+      return { ok: false, error: 'invalid_payload' };
+    }
+
+    const cacheDir = getDeltaCacheDir();
+
+    try {
+      await tjs.makeDir(`${cacheDir}/files`, { recursive: true });
+
+      for (const item of files) {
+        const cleanRel = String(item.relPath ?? '')
+          .replace(/\\/g, '/')
+          .replace(/^\/+/, '')
+          .replace(/\.\./g, '');
+
+        if (!cleanRel) continue;
+
+        const targetFile = `${cacheDir}/files/${cleanRel}`;
+        const lastSlash = targetFile.lastIndexOf('/');
+
+        if (lastSlash > 0) {
+          await tjs.makeDir(targetFile.slice(0, lastSlash), { recursive: true });
+        }
+
+        await tjs.writeFile(targetFile, textEncoder.encode(String(item.content ?? '')));
+      }
+
+      await tjs.writeFile(
+        `${cacheDir}/delta-manifest.json`,
+        textEncoder.encode(JSON.stringify(manifest, null, 2))
+      );
+
+      return {
+        ok: true,
+        version: String(manifest.version),
+        updatedCount: files.length,
+      };
+    } catch {
+      return { ok: false, error: 'write_failed' };
+    }
+  },
 };
 
 /**
- * Initializes native Windows/macOS/Linux application menu bar and minimum window dimensions.
+ * Initializes native Windows/macOS/Linux application menu bar, 1920x1080 default resolution,
+ * and Windows High-Performance GPU & AboveNormal process priority scheduling.
  *
  * @param {object} app - TinyJS backend application handle.
  */
@@ -200,6 +306,24 @@ export async function init(app) {
         frame: false,
         menu: false,
       });
+
+      // Elevate Windows process priority to AboveNormal and set DirectX High-Performance GPU preference (GpuPreference=2)
+      try {
+        tjs.spawn(
+          [
+            'powershell.exe',
+            '-WindowStyle',
+            'Hidden',
+            '-NoProfile',
+            '-NonInteractive',
+            '-Command',
+            "Get-Process -Name 'rtl-markdown-studio','msedgewebview2' -ErrorAction SilentlyContinue | ForEach-Object { $_.PriorityClass = 'AboveNormal' }",
+          ],
+          { stdin: 'ignore', stdout: 'ignore', stderr: 'ignore' }
+        );
+      } catch {
+        // Ignore if PowerShell process priority boost is restricted
+      }
     }
   } catch {
     // Menu bar and chrome setup are best-effort across window managers

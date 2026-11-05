@@ -175,3 +175,48 @@ test('TinyJS bridge RPC adapters and frameless window controls interact with moc
     globalWithWindow.navigator = prevNavigator;
   }
 });
+
+test('computeDeltaUpdatePlan queues only modified SHA-256 files and skips unchanged chunks', async () => {
+  const {
+    compareSemver,
+    formatDeltaBytes,
+    computeDeltaUpdatePlan,
+  } = await import('../utils/tinyDesktopUpdater');
+
+  assert.equal(compareSemver('2.3.0', '2.2.0'), 1);
+  assert.equal(compareSemver('2.2.0', '2.2.0'), 0);
+  assert.equal(compareSemver('2.1.0', '2.2.0'), -1);
+  assert.equal(formatDeltaBytes(43520), '43 KB');
+
+  const localManifest = {
+    version: '2.2.0',
+    publishedAt: '2026-11-05T00:00:00Z',
+    baseUrl: 'https://kavehahangar051.github.io/Markdown-RTL-Viewer',
+    files: {
+      'index.html': { sha256: 'aaa111', size: 22000 },
+      '_next/static/media/vazirmatn.woff2': { sha256: 'font999', size: 180000 },
+      '_next/static/chunks/vendor.js': { sha256: 'vend888', size: 420000 },
+      '_next/static/chunks/app.js': { sha256: 'oldapp1', size: 32000 },
+    },
+  };
+
+  const remoteManifest = {
+    version: '2.3.0',
+    publishedAt: '2026-11-05T01:00:00Z',
+    baseUrl: 'https://kavehahangar051.github.io/Markdown-RTL-Viewer',
+    files: {
+      'index.html': { sha256: 'bbb222', size: 22500 },
+      '_next/static/media/vazirmatn.woff2': { sha256: 'font999', size: 180000 },
+      '_next/static/chunks/vendor.js': { sha256: 'vend888', size: 420000 },
+      '_next/static/chunks/app.js': { sha256: 'newapp2', size: 33500 },
+    },
+  };
+
+  const plan = computeDeltaUpdatePlan(localManifest, remoteManifest);
+  assert.equal(plan.available, true);
+  assert.equal(plan.unchangedCount, 2);
+  assert.equal(plan.changedFiles.length, 2);
+  assert.equal(plan.totalDeltaBytes, 56000);
+  assert.equal(plan.totalFullBytes, 656000);
+});
+

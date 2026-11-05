@@ -130,3 +130,4 @@ jobs:
             dist/rtl-markdown-studio.exe
             dist/launcher.exe
             dist/README-WINDOWS.txt
+            out/delta-manifest.json

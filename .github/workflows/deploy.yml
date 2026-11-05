@@ -68,8 +68,10 @@ jobs:
           NEXT_EXPORT: 'true'
           NEXT_PUBLIC_BASE_PATH: ${{ steps.pages.outputs.base_path }}
 
-      - name: Ensure .nojekyll in export directory
-        run: touch ./out/.nojekyll
+      - name: Ensure .nojekyll and delta-manifest.json in export directory
+        run: |
+          touch ./out/.nojekyll
+          node scripts/generate-delta-manifest.mjs
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

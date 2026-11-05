@@ -101,3 +101,6 @@ for (const filePath of walkFiles(
 console.log(
   `==> [TinyJS] Relativized ${htmlFiles.length} HTML files, CSS font URLs, and Webpack runtime for file:// WebView2 packaging.`
 );
+
+await import('./generate-delta-manifest.mjs');
+

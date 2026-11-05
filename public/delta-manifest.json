@@ -1,0 +1,692 @@
+{
+  "version": "2.2.0",
+  "publishedAt": "2026-11-05T09:13:13.944Z",
+  "baseUrl": "https://kavehahangar051.github.io/Markdown-RTL-Viewer",
+  "releaseTag": "v2.2.0-windows",
+  "files": {
+    "404/index.html": {
+      "sha256": "b8d5110980fcb212f7f9f7ba7bec374f75feb51672fd0b261a68d0fb0d08ad3f",
+      "size": 14698
+    },
+    "404.html": {
+      "sha256": "b8d5110980fcb212f7f9f7ba7bec374f75feb51672fd0b261a68d0fb0d08ad3f",
+      "size": 14698
+    },
+    "_next/static/chunks/197-3fc33184a95a577d.js": {
+      "sha256": "316deb90f1abd7b951c9b67034d44d05ba233d9d9935070a09020f78b348ec17",
+      "size": 10303
+    },
+    "_next/static/chunks/374-b71f0241923f0554.js": {
+      "sha256": "f8cbb415bb0a7ef552071cd5d17f929004d49a27943aa628f574f8c8a500c703",
+      "size": 20202
+    },
+    "_next/static/chunks/386-be9c7be7fb7fe149.js": {
+      "sha256": "1bf42f3a81fe717062b9aaf2d3b8459885d5e3139012fd792395d5cda373f61a",
+      "size": 169525
+    },
+    "_next/static/chunks/448.ec2b3a1765d3d42c.js": {
+      "sha256": "44b6147c25270afc3c29b96d83ecf2004714b31ef4af516629020d877ad8d18e",
+      "size": 5091
+    },
+    "_next/static/chunks/478-2efede5a85c320c6.js": {
+      "sha256": "53b39fde51bd66a50ff608c411f3cc01404bc411555be5394bb110c2535e16f3",
+      "size": 176162
+    },
+    "_next/static/chunks/5-9cf9466fb6c139d3.js": {
+      "sha256": "539d2b8835ecb02bdfd98b7fffef39424d5c0feecc5a632d64efa43843ecc386",
+      "size": 582342
+    },
+    "_next/static/chunks/628fdacb-9ab6d4c111b486ff.js": {
+      "sha256": "fe044f1cc75972c215d31d5629465e2b3c4fa045440536e25bd40f0b07e7930a",
+      "size": 263811
+    },
+    "_next/static/chunks/856.8ce035ef8adf35f3.js": {
+      "sha256": "e5a23acb04082684e7cfab5f15d0bb705e8d1d95fad66e06edf1f17fc92d97e7",
+      "size": 4209
+    },
+    "_next/static/chunks/app/_not-found/page-c7437ccac03c9d51.js": {
+      "sha256": "f8287b06598d3ca3d6422dd554c2c2bdbdd012041fc691c3b83aa1f8db1ec24f",
+      "size": 141
+    },
+    "_next/static/chunks/app/layout-44e61c899e31cfd9.js": {
+      "sha256": "0dc957aa321208a20e90e7ffe8c8c79b3703ff5260854a9d605c9d96f4c660d6",
+      "size": 9154
+    },
+    "_next/static/chunks/app/manifest.webmanifest/route-c7437ccac03c9d51.js": {
+      "sha256": "f8287b06598d3ca3d6422dd554c2c2bdbdd012041fc691c3b83aa1f8db1ec24f",
+      "size": 141
+    },
+    "_next/static/chunks/app/not-found-2d8f88b6d55cce5a.js": {
+      "sha256": "8648938a8433a0b3c19cbf57bb7f55c38465bf007279fdbf929bede5def5ce56",
+      "size": 8757
+    },
+    "_next/static/chunks/app/page-33492bf8bf3ef926.js": {
+      "sha256": "627bdee9315435def91fb6e45dd024d5ab7901e9167fbb4ff103d8b0f349a8d4",
+      "size": 198680
+    },
+    "_next/static/chunks/app/showcase/page-c7437ccac03c9d51.js": {
+      "sha256": "f8287b06598d3ca3d6422dd554c2c2bdbdd012041fc691c3b83aa1f8db1ec24f",
+      "size": 141
+    },
+    "_next/static/chunks/f5e865f6-93bc1805104debc2.js": {
+      "sha256": "0f047e871f6c7dfec3cfde2823b93073c04ec5f3c30be79518bd0b096d0c99ef",
+      "size": 213049
+    },
+    "_next/static/chunks/framework-d35e00d02d0ab11f.js": {
+      "sha256": "3b5f503adfa594bbb5f5b388dd978ee0e543a4e31aec6c9f27ff95a64898cce1",
+      "size": 219032
+    },
+    "_next/static/chunks/main-9da9b6b515c8e69f.js": {
+      "sha256": "53803a0663e1255860248c3a177282ca65065983ec3bc4811c5041a455041947",
+      "size": 128891
+    },
+    "_next/static/chunks/main-app-c27c12c3499fc83e.js": {
+      "sha256": "741e77683171b37d96cc0c5d12cb43db9b2929c22b9cbca373ce5b0d0fac362a",
+      "size": 569
+    },
+    "_next/static/chunks/pages/_app-5addca2b3b969fde.js": {
+      "sha256": "0f515cd32db120862d73af9e40debe41db48c0ba552a0267e727158ec2daa535",
+      "size": 239
+    },
+    "_next/static/chunks/pages/_error-022e4ac7bbb9914f.js": {
+      "sha256": "827b25a5b5e84588b794ff058d721a8f56a379ef664329afd590300954957e40",
+      "size": 221
+    },
+    "_next/static/chunks/polyfills-42372ed130431b0a.js": {
+      "sha256": "0973c1d64c88adc8e3c950410cb58b288f72118d5965b78049438deb8f2f9683",
+      "size": 112594
+    },
+    "_next/static/chunks/webpack-95c9d34329bc06ad.js": {
+      "sha256": "3e3f2ab01260ac7438c08ddaddfb3b4d1178643782b12bf1c017698e8c9757df",
+      "size": 3521
+    },
+    "_next/static/css/29e6c28788d94caa.css": {
+      "sha256": "dace6d85da725eddf1e00576bfc35a88ae77b523e9b685b45112d1d732bba29b",
+      "size": 116435
+    },
+    "_next/static/css/d97fa9d7935a7532.css": {
+      "sha256": "f70011ef369dd0b88a1f32aca6a6ea2d0686860bd5222bacf6e4420e9344641a",
+      "size": 34529
+    },
+    "_next/static/media/KaTeX_AMS-Regular.1608a09b.woff": {
+      "sha256": "30da91e84c893f875e252689faebdc590b2871145e8adc7f9a9d4dbd8ce0b251",
+      "size": 33516
+    },
+    "_next/static/media/KaTeX_AMS-Regular.4aafdb68.ttf": {
+      "sha256": "68534840bcfdd2bffb6f0e8deb48684dd01e7f04ea2813267577afb906de1d13",
+      "size": 63632
+    },
+    "_next/static/media/KaTeX_AMS-Regular.a79f1c31.woff2": {
+      "sha256": "0cdd387c9590a1a9f9794560022dbb59654a7d86f187aa0c81495ad42d3a7308",
+      "size": 28076
+    },
+    "_next/static/media/KaTeX_Caligraphic-Bold.b6770918.woff": {
+      "sha256": "1ae6bd7475590e97e7f145a89e09ccde322f7a6bc0b91607b1c8b8ee28290fed",
+      "size": 7716
+    },
+    "_next/static/media/KaTeX_Caligraphic-Bold.cce5b8ec.ttf": {
+      "sha256": "07d8e303ce4fc12b4bb54f1004170dd190a1f3db45d400fe68060df3e0897268",
+      "size": 12368
+    },
+    "_next/static/media/KaTeX_Caligraphic-Bold.ec17d132.woff2": {
+      "sha256": "de7701e42cf1f4cf0b766c03fb27977207eee2f4fd5d76fa82188406da43ea4c",
+      "size": 6912
+    },
+    "_next/static/media/KaTeX_Caligraphic-Regular.07ef19e7.ttf": {
+      "sha256": "ed0b74372feefcbb9c0666b2e210da37b7e49fa7fbbf3eeb11db5f693dacfbb7",
+      "size": 12344
+    },
+    "_next/static/media/KaTeX_Caligraphic-Regular.55fac258.woff2": {
+      "sha256": "5d53e70ad607c2352162dec9e0923fb54ecdafaccbf604cd8dcf7d00facb989b",
+      "size": 6908
+    },
+    "_next/static/media/KaTeX_Caligraphic-Regular.dad44a7f.woff": {
+      "sha256": "3398dd02302557a793f2863f88e02d96ce10df2abffa07c8e9fa90775116e65c",
+      "size": 7656
+    },
+    "_next/static/media/KaTeX_Fraktur-Bold.9f256b85.woff": {
+      "sha256": "9be7ceb88004ab8ad124082246fbfcca4091e36385d4ec6ed1df67375dad50fb",
+      "size": 13296
+    },
+    "_next/static/media/KaTeX_Fraktur-Bold.b18f59e1.ttf": {
+      "sha256": "9163df9c7122432e6495b4229fa9071cf9ae86a758ae5efc4924ec2e1a6dbce1",
+      "size": 19584
+    },
+    "_next/static/media/KaTeX_Fraktur-Bold.d42a5579.woff2": {
+      "sha256": "74444efd593c005e3f4573b44524704c0af0a937fe911cca9e94068d0d140d3f",
+      "size": 11348
+    },
+    "_next/static/media/KaTeX_Fraktur-Regular.7c187121.woff": {
+      "sha256": "5e28753be717dac97f559f49bc10be9cf3c124ddcabda6659d11cb68febc6463",
+      "size": 13208
+    },
+    "_next/static/media/KaTeX_Fraktur-Regular.d3c882a6.woff2": {
+      "sha256": "51814d270d06ff0255dba0799994fa4d8c84d11f09951d47595f4abb1f3602dc",
+      "size": 11316
+    },
+    "_next/static/media/KaTeX_Fraktur-Regular.ed38e79f.ttf": {
+      "sha256": "1e6f9579e90e2cac37f8f60a597c436e075c114385652b7cbeb0dec0421291b3",
+      "size": 19572
+    },
+    "_next/static/media/KaTeX_Main-Bold.b74a1a8b.ttf": {
+      "sha256": "138ac28d1663b3037e9c5f52371fa5c63d8324f4a38d22cd573e6ea3a3fd0cf8",
+      "size": 51336
+    },
+    "_next/static/media/KaTeX_Main-Bold.c3fb5ac2.woff2": {
+      "sha256": "0f60d1b897938ec918c8ce073092411baf9438f6739465693ff18b0f9d20b021",
+      "size": 25324
+    },
+    "_next/static/media/KaTeX_Main-Bold.d181c465.woff": {
+      "sha256": "c76c5d696297d51b9cb1639c7da4334f0e7dec81b42b11213b5e25ef671bb822",
+      "size": 29912
+    },
+    "_next/static/media/KaTeX_Main-BoldItalic.6f2bb1df.woff2": {
+      "sha256": "99cd42a3c072d918f2f44984a807cf7aa16e13545fd0875fc07c6c65f99e715b",
+      "size": 16780
+    },
+    "_next/static/media/KaTeX_Main-BoldItalic.70d8b0a5.ttf": {
+      "sha256": "70ee1f64a20f2048c21940ef46d0144fd215baa953ca69afd1e31e98544f708f",
+      "size": 32968
+    },
+    "_next/static/media/KaTeX_Main-BoldItalic.e3f82f9d.woff": {
+      "sha256": "a6f7ec0d846ac7ad975adb8959c37ed49b94acbc4ae436db9ce9e20287e4a64c",
+      "size": 19412
+    },
+    "_next/static/media/KaTeX_Main-Italic.47373d1e.ttf": {
+      "sha256": "0d85ae7cc30f23790a7f1a58c4a112fdca8aae769b6ba11429af1d98b1b6cb3a",
+      "size": 33580
+    },
+    "_next/static/media/KaTeX_Main-Italic.8916142b.woff2": {
+      "sha256": "97479ca6cce906abc961ecac96faa5f9ca2e61b8e7670d475826bcdee9a7c267",
+      "size": 16988
+    },
+    "_next/static/media/KaTeX_Main-Italic.9024d815.woff": {
+      "sha256": "f1d6ef86f3b11a528bd5185199bd2443ecb2b0dead96d88674b5a2c12be24bdf",
+      "size": 19676
+    },
+    "_next/static/media/KaTeX_Main-Regular.0462f03b.woff2": {
+      "sha256": "c2342cd8b869e01752a9321dc17213fc40d4d04c79688c1d43f2cf316abd7866",
+      "size": 26272
+    },
+    "_next/static/media/KaTeX_Main-Regular.7f51fe03.woff": {
+      "sha256": "c6368d87e8a1a3a5d337623d83d8dc4b868f242a9ad476237d6f8d1e0f168cdc",
+      "size": 30772
+    },
+    "_next/static/media/KaTeX_Main-Regular.b7f8fe9b.ttf": {
+      "sha256": "d0332f52868370fd83ae7fa46470f90c8f2eab2fcf12bc4f88080b340c95a830",
+      "size": 53580
+    },
+    "_next/static/media/KaTeX_Math-BoldItalic.572d331f.woff2": {
+      "sha256": "dc47344dbb6cb5b655c8460d561f4df5f501b90c804ad3c6cec65fe322351ab1",
+      "size": 16400
+    },
+    "_next/static/media/KaTeX_Math-BoldItalic.a879cf83.ttf": {
+      "sha256": "f9377ab0271cda59af24bcffbd46a4d0c8a3572ffafdbb38de2ad5ea7b0d5ee5",
+      "size": 31196
+    },
+    "_next/static/media/KaTeX_Math-BoldItalic.f1035d8d.woff": {
+      "sha256": "850c0af5c2238497febaf5e461d880bf458c341f42f4f330f1b1ab5698b1998e",
+      "size": 18668
+    },
+    "_next/static/media/KaTeX_Math-Italic.5295ba48.woff": {
+      "sha256": "8a8d244581371912b8f3f5a23e2437cb2a59cd9bcaebb0346e722c05737a2571",
+      "size": 18748
+    },
+    "_next/static/media/KaTeX_Math-Italic.939bc644.ttf": {
+      "sha256": "08ce98e51b04d58945a301e639e02b6998af29fdfd61a7b8afdd07bbfc479d4a",
+      "size": 31308
+    },
+    "_next/static/media/KaTeX_Math-Italic.f28c23ac.woff2": {
+      "sha256": "7af58c5ec8f132a2ddde9027c6d7814decce4d3b822a11192a42a20e2e973264",
+      "size": 16440
+    },
+    "_next/static/media/KaTeX_SansSerif-Bold.8c5b5494.woff2": {
+      "sha256": "e99ae51144bf1232efcc1bfe5add36262c6866b0faab24fa75740e1b98577a62",
+      "size": 12216
+    },
+    "_next/static/media/KaTeX_SansSerif-Bold.94e1e8dc.ttf": {
+      "sha256": "1ece03f79f95277d57dc7f6b435a74e1379b0d46104a8530286b60ff49369ea0",
+      "size": 24504
+    },
+    "_next/static/media/KaTeX_SansSerif-Bold.bf59d231.woff": {
+      "sha256": "ece03cfd83e22c212cdef66feb8442d25a083beb988db3f1883f3f9738d750ba",
+      "size": 14408
+    },
+    "_next/static/media/KaTeX_SansSerif-Italic.3b1e59b3.woff2": {
+      "sha256": "00b26ac825e2095056396e0553b8ac26d3f8ad158c3826e28b4c45b385c4714a",
+      "size": 12028
+    },
+    "_next/static/media/KaTeX_SansSerif-Italic.7c9bc82b.woff": {
+      "sha256": "91ee67500cc0129aa0ace3ac5c61ff1692102f0f31d02b69347fba35dcb75bf2",
+      "size": 14112
+    },
+    "_next/static/media/KaTeX_SansSerif-Italic.b4c20c84.ttf": {
+      "sha256": "3931dd81faed86ba021bb2bbdc36f5bed9a38d6b4f4077aca59b265aa1b02083",
+      "size": 22364
+    },
+    "_next/static/media/KaTeX_SansSerif-Regular.74048478.woff": {
+      "sha256": "11e4dc8a6471ff6d6ee561d53d10fde8f7489e798257ff449c5d37c197435605",
+      "size": 12316
+    },
+    "_next/static/media/KaTeX_SansSerif-Regular.ba21ed5f.woff2": {
+      "sha256": "68e8c73ef42afd3ccec58bf0fba302cce448938e7fc020a5e31f8a952eee1342",
+      "size": 10344
+    },
+    "_next/static/media/KaTeX_SansSerif-Regular.d4d7ba48.ttf": {
+      "sha256": "f36ea897e19f4a2e571d1e900e4e3710e438deb05a842486045ba0a3e616a4ad",
+      "size": 19436
+    },
+    "_next/static/media/KaTeX_Script-Regular.03e9641d.woff2": {
+      "sha256": "036d4e95149b69ff9bcc0cd55771efeb25ffa3947293e69acd78d5ac328c684b",
+      "size": 9644
+    },
+    "_next/static/media/KaTeX_Script-Regular.07505710.woff": {
+      "sha256": "d96cdf2b3bdd4d64a8fd5f74a4c467f123a8a73931cd435889f08ffaf9bf947a",
+      "size": 10588
+    },
+    "_next/static/media/KaTeX_Script-Regular.fe9cbbe1.ttf": {
+      "sha256": "1c67f068fea8bb09bf099c088b1cf64bd27516a6e07f4684344873564bb66a67",
+      "size": 16648
+    },
+    "_next/static/media/KaTeX_Size1-Regular.e1e279cb.woff": {
+      "sha256": "c943cc986384f59e86bea5fd7dc50a9c4dfe567a7c05eb40d6790720dead97c9",
+      "size": 6496
+    },
+    "_next/static/media/KaTeX_Size1-Regular.eae34984.woff2": {
+      "sha256": "6b47c40166b6dbe21a5dfca7718413f2147fd2399be1ba605d8ad39cedf25dfe",
+      "size": 5468
+    },
+    "_next/static/media/KaTeX_Size1-Regular.fabc004a.ttf": {
+      "sha256": "95b6d2f1a50173bfedb8c63e1d1c99b10427d0a4df4201cb44513b226951a22b",
+      "size": 12228
+    },
+    "_next/static/media/KaTeX_Size2-Regular.57727022.woff": {
+      "sha256": "2014c523c3210bcc166648c4d4cc57f05b747df07a24277bf71c51e67dc79e3d",
+      "size": 6188
+    },
+    "_next/static/media/KaTeX_Size2-Regular.5916a24f.woff2": {
+      "sha256": "d04c54219f9eaec6d4d4fd42dfb28785975a4794d6b2fc71e566b9cd6db842dd",
+      "size": 5208
+    },
+    "_next/static/media/KaTeX_Size2-Regular.d6b476ec.ttf": {
+      "sha256": "a6b2099fb555c60e3a0db3a08842ebf1d732c6eb4e4bf44913613bed4fc4e39b",
+      "size": 11508
+    },
+    "_next/static/media/KaTeX_Size3-Regular.9acaf01c.woff": {
+      "sha256": "6ab6b62e9b62dae2c00dd90f791bd10950be0ecc3490d7d6045f51c2e8fe0949",
+      "size": 4420
+    },
+    "_next/static/media/KaTeX_Size3-Regular.a144ef58.ttf": {
+      "sha256": "500e04d54f0d51666332c9d2089aa803be22aa878eca539e59fa53c6e522b082",
+      "size": 7588
+    },
+    "_next/static/media/KaTeX_Size3-Regular.b4230e7e.woff2": {
+      "sha256": "73d591271b1604960cb10bb90fee021670af7297017e0e98480b332d11f51995",
+      "size": 3624
+    },
+    "_next/static/media/KaTeX_Size4-Regular.10d95fd3.woff2": {
+      "sha256": "a4af7d414440a1c1790825cfb700cf9cf43b0f2c4b04f0ebc523011ad9853ec0",
+      "size": 4928
+    },
+    "_next/static/media/KaTeX_Size4-Regular.7a996c9d.woff": {
+      "sha256": "99f9c6750b489c9462bf04900bd3f939df9b829339daaaaa99ef5495cdddea58",
+      "size": 5980
+    },
+    "_next/static/media/KaTeX_Size4-Regular.fbccdabe.ttf": {
+      "sha256": "c647367d1dd4e162468717d020e1fc0f1dc5c26ebfdffbe55261713bf88c5877",
+      "size": 10364
+    },
+    "_next/static/media/KaTeX_Typewriter-Regular.6258592b.woff": {
+      "sha256": "e14fed02b1aba7ce9f5afd5844b5d0321b22351febc720e0de8b8723527609f7",
+      "size": 16028
+    },
+    "_next/static/media/KaTeX_Typewriter-Regular.a8709e36.woff2": {
+      "sha256": "71d517d67827787cfabdf186914cc3358eda539e37931941f2b2fd4a21f68c0b",
+      "size": 13568
+    },
+    "_next/static/media/KaTeX_Typewriter-Regular.d97aaf4a.ttf": {
+      "sha256": "f01f3e87d9c6a61c0c081ceb577abd864eb00a612f7ac1620dd6915fad2ef5aa",
+      "size": 27556
+    },
+    "_next/static/media/azuresqldatabase-original.ad2e00b5.svg": {
+      "sha256": "934ea232bcbb6f948610bed844cbc13190d7123819107469fe54c6f8507af1d1",
+      "size": 3435
+    },
+    "_next/static/media/bash-original.7d2fe8d4.svg": {
+      "sha256": "8e9b1f859331c8d11571e77b1371c5d7ac7e380abfcd2f31160ed81dc37de403",
+      "size": 1800
+    },
+    "_next/static/media/c-original.96e660ce.svg": {
+      "sha256": "8cce48da91084256f15653e02bfd7046ccb34489d030cb1aa34dee766daad6b7",
+      "size": 241
+    },
+    "_next/static/media/cmake-original.cab84a58.svg": {
+      "sha256": "c3a8a666d1ceaa0ab92e8d267c3e03e56a62a73c84a6722c92b23e79886f99b4",
+      "size": 290
+    },
+    "_next/static/media/cplusplus-original.9dc12437.svg": {
+      "sha256": "7ff8253551235e3a6b002a7c2bd6e3190d85113a64fcb40f2254473caeb025d4",
+      "size": 1143
+    },
+    "_next/static/media/csharp-original.cfbf7487.svg": {
+      "sha256": "7093478d0888e22a224b6fa832da6c9ffd14c433de8bd14aab0c1cb50925f3ee",
+      "size": 851
+    },
+    "_next/static/media/css3-original.fe70a3d1.svg": {
+      "sha256": "36b7d94b657d571d3f94042acbf6a4c86a5301a222f83f4b4583ad2acf6e297d",
+      "size": 778
+    },
+    "_next/static/media/dart-original.805f7126.svg": {
+      "sha256": "8dec3d6f6d92d5c8db294baf7ea89cbad5c3dd0f7fde5ca972ffc6cebf9b2d40",
+      "size": 710
+    },
+    "_next/static/media/docker-original.84c50bc9.svg": {
+      "sha256": "3fd830ea69431ed7a0b8d068cd5b34ad3f00a1a78195d50f13ff56713f2462e1",
+      "size": 4452
+    },
+    "_next/static/media/git-original.7c2baeca.svg": {
+      "sha256": "717a57ea97bf7e86de721dab3e68afac66332a10676d5c9abce4ae6a5a9c9983",
+      "size": 778
+    },
+    "_next/static/media/go-original-wordmark.7e171364.svg": {
+      "sha256": "d0400ee3d76ee43fa45e84a3b38b5710a9674969eb71af9d5bb59ed7916a3225",
+      "size": 1866
+    },
+    "_next/static/media/graphql-plain.b1d2dfd9.svg": {
+      "sha256": "1fafe03a1f77be5a1c25c20db6e52f292ed8ae5a9b2536f807ee2a3d2e78d3d3",
+      "size": 1550
+    },
+    "_next/static/media/html5-original.a2198806.svg": {
+      "sha256": "34826e5b3315daadf4fa15f723a3c1d5ba4a89277bfd94e22ac4d7d3d54338c5",
+      "size": 607
+    },
+    "_next/static/media/java-original.0462fa80.svg": {
+      "sha256": "7582e518a9c02425f97155e5a3bd39d1a3a7d421b78caf9c8df7443dad3edc5d",
+      "size": 1540
+    },
+    "_next/static/media/javascript-original.d68f4594.svg": {
+      "sha256": "0656ff65fc8eeacda5c78d7f9ffe91ec1eb919db64f56e0b7dcd460af4bbd36c",
+      "size": 1144
+    },
+    "_next/static/media/json-original.19451d5e.svg": {
+      "sha256": "f36df74e684c6142c837c192f99f3d1c399d3dd523ec74ef579b831f5b970867",
+      "size": 1301
+    },
+    "_next/static/media/kode-mono-latin-400-normal.1915347e.woff": {
+      "sha256": "b875176bee51d352e3168c77e4b6650ad43b11be2b09c39fe479e7db21a6e658",
+      "size": 14080
+    },
+    "_next/static/media/kode-mono-latin-400-normal.58e942b2.woff2": {
+      "sha256": "f513a63ed9f9fe694a2f6de7e508cefeed39361232abca16b4fb0790669d94c7",
+      "size": 10436
+    },
+    "_next/static/media/kode-mono-latin-600-normal.256f4243.woff2": {
+      "sha256": "0125bdb9a9807a65e0032a13374b079f088a71422192d502e2caf13efb31d810",
+      "size": 10672
+    },
+    "_next/static/media/kode-mono-latin-600-normal.30ca3c2c.woff": {
+      "sha256": "9fe92e06e51a6a5558dbb00b76b34f288fdae1396a96e11a4fb93876ba7dcc42",
+      "size": 14360
+    },
+    "_next/static/media/kode-mono-latin-700-normal.4d124549.woff": {
+      "sha256": "85891aefcbd56cad9831b3a26976405f947092469f053d9062a1f94e27153e3c",
+      "size": 14236
+    },
+    "_next/static/media/kode-mono-latin-700-normal.c902d580.woff2": {
+      "sha256": "132ae93017fc4c6782cc3d7326f42e47f9737f4503cf994e5c77985bf5e2b3e5",
+      "size": 10468
+    },
+    "_next/static/media/kode-mono-latin-ext-400-normal.69594111.woff2": {
+      "sha256": "6aafe4e7790927727346ff43a2607cd2ec8f64806d8e5d7b8aee652e449cb257",
+      "size": 5116
+    },
+    "_next/static/media/kode-mono-latin-ext-400-normal.e4e0cd1b.woff": {
+      "sha256": "88a755b1c8a8e4274d785ba4e71dff51f6fe640ccd2c53bb940bd989ae69bce2",
+      "size": 6972
+    },
+    "_next/static/media/kode-mono-latin-ext-600-normal.5345e82e.woff2": {
+      "sha256": "172ffe77038943bd510d24b8f1189383afb5c01936189a5ec8d01f565a6c5eaf",
+      "size": 5228
+    },
+    "_next/static/media/kode-mono-latin-ext-600-normal.ca197e10.woff": {
+      "sha256": "f657903f1537d263fd5747f89bfc5367553a86f54aa540f97e8e1ed2f4fff4c4",
+      "size": 7040
+    },
+    "_next/static/media/kode-mono-latin-ext-700-normal.78065303.woff": {
+      "sha256": "a38eb036f6700726c4c6062eae1e6f38a831dade20c41719ef604cc2ce0eb9da",
+      "size": 6992
+    },
+    "_next/static/media/kode-mono-latin-ext-700-normal.fc383ed3.woff2": {
+      "sha256": "95d7b8f71dca94577ac07d527759cfef5877282605470abc537f2cc1cbba988f",
+      "size": 5112
+    },
+    "_next/static/media/kotlin-original.08c26ba6.svg": {
+      "sha256": "5053c2e1288582d1ac2cfc1e807eabb7f6059b1aa2f7d04e5cf00063682a2cbe",
+      "size": 502
+    },
+    "_next/static/media/markdown-original.15b32f9a.svg": {
+      "sha256": "9d0c0aeff8d36500dd4023a50bf9bfd7152541402eab1ae8fcd7b86cdcb91853",
+      "size": 1244
+    },
+    "_next/static/media/mysql-original.73de130e.svg": {
+      "sha256": "f73fa5d6b9da33fbf540ff96f5360c24b6d29d883ecfe6fcaecf89a8d3456067",
+      "size": 2765
+    },
+    "_next/static/media/php-original.ee3f31a7.svg": {
+      "sha256": "f22619a19c99a123e4678d71826f65f223721a739631dff46de39827c9ee0633",
+      "size": 4624
+    },
+    "_next/static/media/postgresql-original.990339a4.svg": {
+      "sha256": "f220a436258ed014c512ba4f9c0de6b9e5c2c4b55331a0a29f8c7a1a12c36443",
+      "size": 9178
+    },
+    "_next/static/media/powershell-original.6828ab97.svg": {
+      "sha256": "f72bc9843ff04005045b659f1ce960d03ddf7707fe02cb5d3dee373914a6d750",
+      "size": 1809
+    },
+    "_next/static/media/python-original.c148852b.svg": {
+      "sha256": "71493b4a732f0532b3a03a7a95da3ee11a65766367c8303b901ffbe7bf91a3a2",
+      "size": 2300
+    },
+    "_next/static/media/react-original.4f7e5458.svg": {
+      "sha256": "5825b649c8c04dec13ecf01d0182401bd0ec71789d2fa06224866d882cd1515f",
+      "size": 2387
+    },
+    "_next/static/media/ruby-original.a17d7f36.svg": {
+      "sha256": "74ead50b8f0f31e1b34618088bc0b0e16c04f1d4539039ef9358717d8505a63c",
+      "size": 8328
+    },
+    "_next/static/media/rust-original.c9c24d6f.svg": {
+      "sha256": "16c6c6a98e990944fc5e1cc64cc8fc7b8be3a662ec4ee7951b7995d2e52f5e12",
+      "size": 5897
+    },
+    "_next/static/media/sass-original.41589329.svg": {
+      "sha256": "c5cfd1072695faba7d5c23ee4c4e373dad16463cb55980e8118002d445bd764e",
+      "size": 5469
+    },
+    "_next/static/media/sqlite-original.349badda.svg": {
+      "sha256": "2b91c30887d3602479ba845cc012ef6ae577fba71eb96705a05b12e35d2c5e7e",
+      "size": 2422
+    },
+    "_next/static/media/swift-original.9607f2d0.svg": {
+      "sha256": "46b6e4abd3ab12c589b8e276295f9439e2869bc4788d918efbc6e76147e8a06e",
+      "size": 1294
+    },
+    "_next/static/media/typescript-original.1916ba8e.svg": {
+      "sha256": "c9191199f4049920c2fc19035b8a6664f37f4689fcd9e8434e786097e78863f0",
+      "size": 943
+    },
+    "_next/static/media/vazirmatn-arabic-400-normal.f37c0063.woff2": {
+      "sha256": "e31830d3a52e0259b176326385d82bc469581a9898046300de46e5c00f6b7064",
+      "size": 21088
+    },
+    "_next/static/media/vazirmatn-arabic-400-normal.ffe2eb46.woff": {
+      "sha256": "e46907c6be3f55854c0b154b9502b5bf0d686063d1154bc2dcc27a9322ebf73e",
+      "size": 27304
+    },
+    "_next/static/media/vazirmatn-arabic-500-normal.60758556.woff2": {
+      "sha256": "d3bc3b18900b56552fe1e02f899a22a4fc34203f6fb65218d482afaa6deb46a0",
+      "size": 21792
+    },
+    "_next/static/media/vazirmatn-arabic-500-normal.a20a6e04.woff": {
+      "sha256": "19683c8f3edd6e70ccb2a42d4fc7e63a04a061bd607f70065319ef0b12b8553a",
+      "size": 28012
+    },
+    "_next/static/media/vazirmatn-arabic-600-normal.3f8f96ad.woff": {
+      "sha256": "deb40bb396720d9f2824532699a385b4ebce69ab88621e7e31703e1e0fc50e5c",
+      "size": 27888
+    },
+    "_next/static/media/vazirmatn-arabic-600-normal.cbafd650.woff2": {
+      "sha256": "98a9ca6ced63728b3b407877eda9896ccc9d88e3fc19a469e4e590cc40499605",
+      "size": 21792
+    },
+    "_next/static/media/vazirmatn-arabic-700-normal.774fc7c6.woff2": {
+      "sha256": "aa79f9419fa0f5efcf301158b7405d188c4d434c86c32efad1e8669752feb344",
+      "size": 21728
+    },
+    "_next/static/media/vazirmatn-arabic-700-normal.e4067361.woff": {
+      "sha256": "6d54a13cdc3e0889cc12392a23dd742fb580a80fc5d45e7e9c99d7436941f227",
+      "size": 27888
+    },
+    "_next/static/media/vazirmatn-latin-400-normal.344759ea.woff2": {
+      "sha256": "a650d62e37f036d53367b383e7c723c2efd426baf74ee8ccb95b634974955f49",
+      "size": 16068
+    },
+    "_next/static/media/vazirmatn-latin-400-normal.561ee610.woff": {
+      "sha256": "50e819601b41fd8e798327d917144d13d9aa5c39d0b0b79e5fab60b52da5c0fa",
+      "size": 20776
+    },
+    "_next/static/media/vazirmatn-latin-500-normal.79af545d.woff2": {
+      "sha256": "2068010db5eca825c06ed04c20eb6f675f4903aa12a74815040b19934c93c1cf",
+      "size": 16356
+    },
+    "_next/static/media/vazirmatn-latin-500-normal.b24ff1cd.woff": {
+      "sha256": "b916385690e17476939902d711c806b6b9d779f99a8255f669ee9463352b84d5",
+      "size": 20904
+    },
+    "_next/static/media/vazirmatn-latin-600-normal.164d1b98.woff2": {
+      "sha256": "502567cbd09bcf7037b66e84ab84eb792d6cd95f3f351dfcade4c63ef678c300",
+      "size": 16328
+    },
+    "_next/static/media/vazirmatn-latin-600-normal.f10455e0.woff": {
+      "sha256": "f00f9af564081d26c72e5780bcf97e8eb1acf760b5c32454027406d806e5ad55",
+      "size": 20908
+    },
+    "_next/static/media/vazirmatn-latin-700-normal.05267f27.woff2": {
+      "sha256": "a1d13d1cf4cd1ec6af4623ccdacff9cc7beedd6d9cbc4944b56faf59da95478b",
+      "size": 16420
+    },
+    "_next/static/media/vazirmatn-latin-700-normal.ab7962a9.woff": {
+      "sha256": "c3ba22b0d9a9b52482b8517dee5a1efd4a20f5662ee46af3794d45f39106eac5",
+      "size": 20936
+    },
+    "_next/static/media/vazirmatn-latin-ext-400-normal.09ac364e.woff2": {
+      "sha256": "0508a23846a715788740fbe389d96a85697bd853dc3c0f0b44111b5b480a41d1",
+      "size": 10240
+    },
+    "_next/static/media/vazirmatn-latin-ext-400-normal.4a4209c7.woff": {
+      "sha256": "3bf5328f441a3624fd781250a50c6558b30a0c1630374d43a5fcc73842cadba6",
+      "size": 14004
+    },
+    "_next/static/media/vazirmatn-latin-ext-500-normal.1278ceb8.woff": {
+      "sha256": "c0abcca486189d7b1904cc09eae6b4df7ce801f941a68915ac898040995d1db5",
+      "size": 14060
+    },
+    "_next/static/media/vazirmatn-latin-ext-500-normal.5b710d26.woff2": {
+      "sha256": "a32e113e49368ab95ab5ceec83dd159fb2ca3f552663299bef301d1e1a085323",
+      "size": 10384
+    },
+    "_next/static/media/vazirmatn-latin-ext-600-normal.683a0136.woff": {
+      "sha256": "76957e8e423efb9bf794afb6d33cd888537de57691d0f8a011710aa7a0759664",
+      "size": 14068
+    },
+    "_next/static/media/vazirmatn-latin-ext-600-normal.f0e62be7.woff2": {
+      "sha256": "d0b9448345c9e92dae00a334cf87c98ffdb0dd11de93998a2be70ed4d38b5a93",
+      "size": 10424
+    },
+    "_next/static/media/vazirmatn-latin-ext-700-normal.24887b32.woff": {
+      "sha256": "917ae30261942f3bde43058bb6f779297c6bd9fdaf8488e8655e0f5308e81a67",
+      "size": 14044
+    },
+    "_next/static/media/vazirmatn-latin-ext-700-normal.6a92243b.woff2": {
+      "sha256": "67d58b5e123961a17981ddd84641a6d52dad518f3176034f5e24b082ca256e73",
+      "size": 10436
+    },
+    "_next/static/media/xml-original.53293088.svg": {
+      "sha256": "0edaba97b87a3eff6153b480c71081db68ad170f54e21de2da0b4b89ff4d1bdf",
+      "size": 3278
+    },
+    "_next/static/media/yaml-plain.8b268d1f.svg": {
+      "sha256": "5b6096eafb1eb1462f3abdb1b349f9c5f28747cc0196f021ddb5f4813f7e0891",
+      "size": 548
+    },
+    "_next/static/ontr2WfQlNk5Bfl6FaIr2/_buildManifest.js": {
+      "sha256": "34968dc08e4b05cf604576f158a71df0b92fed5c9b5e1133371a93f0854cf03e",
+      "size": 619
+    },
+    "_next/static/ontr2WfQlNk5Bfl6FaIr2/_ssgManifest.js": {
+      "sha256": "678f6ce2cb80b1fe72fc67e7412be6e2ab6ada083111b64f7c40d35e3cba5e00",
+      "size": 80
+    },
+    "apple-icon.png": {
+      "sha256": "e3a4cf6be868414b9fcf914eb89d6eb5f294cf8fa932cb0239778f6767a4b25e",
+      "size": 18737
+    },
+    "apple-touch-icon.png": {
+      "sha256": "e3a4cf6be868414b9fcf914eb89d6eb5f294cf8fa932cb0239778f6767a4b25e",
+      "size": 18737
+    },
+    "favicon.ico": {
+      "sha256": "1618249988af5883131cbf2e18ce96031da427535bd45c876afbc793e0bf3080",
+      "size": 1719
+    },
+    "icon-192.png": {
+      "sha256": "2fd18afed469f37361aa5d5e9208e42b807ce8c771178c72a811db9aaab295be",
+      "size": 19509
+    },
+    "icon-32.png": {
+      "sha256": "5974b9c5d59eb77be9c1c4adae6914d89a74157d12dfcfa509281951e9528910",
+      "size": 1697
+    },
+    "icon-512.png": {
+      "sha256": "75a481a636448f6c8d2e7a5f362d5e2ee99b66f1730f8a6f6834ae49698a692a",
+      "size": 58709
+    },
+    "icon-maskable-512.png": {
+      "sha256": "ebfc2a2bb9fd9fd5bd99e634a521e62294b3a697ff0ea1397c16228c885fc463",
+      "size": 45365
+    },
+    "icon.jpg": {
+      "sha256": "350c6e3fef593b7730fa90379e627f4a4ec0dfa5c880b38461eeab1bfa2d9cfd",
+      "size": 383775
+    },
+    "icon.svg": {
+      "sha256": "bd9dc07acd8413ecd3f6901d6c00d5a0ac56fd8dbd6363f32dbe49a97ad4a49f",
+      "size": 2560
+    },
+    "index.html": {
+      "sha256": "d7fde6bab5721fd08986a60c05dd3397705a782ef48974a72c584e01952cb0d2",
+      "size": 56572
+    },
+    "index.txt": {
+      "sha256": "1d8b15efecd3873c86993d4241d1cffefc98e0928b9dc961b4d62a37d1ec0456",
+      "size": 7339
+    },
+    "manifest.webmanifest": {
+      "sha256": "9f1e6d5b0f39bc702dbe97d7c6150b7fe3b5d7114fed929a25423294c1cb7ca7",
+      "size": 714
+    },
+    "showcase/index.html": {
+      "sha256": "0bf4ed17833377343e727a2daa799c9985b382bb2b43f50b25545a57b2663d8d",
+      "size": 11069
+    },
+    "showcase/index.txt": {
+      "sha256": "8e224d080c93c135da0bf2689023834a04bf9bea3b605884e27dc7838565176d",
+      "size": 7345
+    },
+    "sw.js": {
+      "sha256": "9da78ab77b80fed750be7237264c4a64eedb6134b45046cf4257feaff4680473",
+      "size": 5167
+    }
+  }
+}

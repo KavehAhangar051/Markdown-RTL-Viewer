@@ -108,6 +108,38 @@ export interface TinySystemBridge {
   isLinux(): boolean;
 }
 
+export interface TinyDeltaFileHash {
+  readonly sha256: string;
+  readonly size: number;
+}
+
+export interface TinyDeltaManifest {
+  readonly version: string;
+  readonly publishedAt: string;
+  readonly baseUrl: string;
+  readonly releaseTag?: string;
+  readonly files: Readonly<Record<string, TinyDeltaFileHash>>;
+}
+
+export interface TinyDeltaStateResponse {
+  readonly ok: boolean;
+  readonly currentVersion: string;
+  readonly manifest: TinyDeltaManifest | null;
+  readonly patchedFiles?: Readonly<Record<string, string>>;
+}
+
+export interface TinyDeltaPatchFilePayload {
+  readonly relPath: string;
+  readonly content: string;
+}
+
+export interface TinyApplyDeltaResponse {
+  readonly ok: boolean;
+  readonly version?: string;
+  readonly updatedCount?: number;
+  readonly error?: string;
+}
+
 export interface TinyApiBridge {
   call(method: 'readMarkdownFile', params: { readonly path: string }): Promise<TinyReadFileResponse>;
   call(
@@ -116,6 +148,14 @@ export interface TinyApiBridge {
   ): Promise<TinySaveFileResponse>;
   call(method: 'takeOpenedFiles'): Promise<readonly TinyOpenedFileEntry[]>;
   call(method: 'getDesktopInfo'): Promise<TinyDesktopInfo>;
+  call(method: 'getDeltaState'): Promise<TinyDeltaStateResponse>;
+  call(
+    method: 'applyDeltaUpdate',
+    params: {
+      readonly manifest: TinyDeltaManifest;
+      readonly files: readonly TinyDeltaPatchFilePayload[];
+    }
+  ): Promise<TinyApplyDeltaResponse>;
   on(event: 'studio-menu-command', handler: (payload: TinyMenuCommandPayload) => void): () => void;
   on(event: 'files-opened', handler: (payload: TinyFilesOpenedPayload) => void): () => void;
   on(event: 'deep-link-opened', handler: (payload: TinyDeepLinkPayload) => void): () => void;

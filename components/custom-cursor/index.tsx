@@ -8,18 +8,33 @@
 
 import React, { useSyncExternalStore } from 'react';
 import { useReducedMotion } from 'motion/react';
+import { isLowEndDevice } from '@/utils/deviceDetector';
+import { isTinyDesktopRuntime } from '@/utils/tinyDesktopBridge';
 import { useCursorState } from './hooks/use-cursor-state';
 import { CursorSvg } from './components/cursor-svg';
 
 const emptySubscribe = () => () => {};
-const getCanRenderCursor = () => !window.matchMedia('(pointer: coarse)').matches;
+const getCanRenderCursor = () => {
+  if (window.matchMedia('(pointer: coarse)').matches) {
+    return false;
+  }
+
+  // In the native Windows desktop app, always enable the GPU-accelerated 3D cursor.
+  // In standard web browsers on low-end hardware, use the zero-latency native OS hardware cursor.
+  if (isTinyDesktopRuntime()) {
+    return true;
+  }
+
+  return !isLowEndDevice();
+};
+
 const getServerCanRenderCursor = () => false;
 
 /**
  * Custom kinematic cursor that provides responsive physical interactions on fine pointer devices.
- * Automatically deactivates only on touch interfaces or when OS accessibility reduced-motion is set.
+ * Preserves the native OS cursor whenever disabled (e.g., touch devices, reduced motion, or low-end web browsers).
  *
- * @returns {React.JSX.Element | null} The cursor component or null when unmounted / on touch devices.
+ * @returns {React.JSX.Element | null} The cursor component or null when native OS cursor is active.
  */
 export function CustomCursor() {
   const canRender = useSyncExternalStore(
@@ -28,10 +43,11 @@ export function CustomCursor() {
     getServerCanRenderCursor
   );
   const reduceMotion = useReducedMotion();
+  const isEnabled = Boolean(canRender && !reduceMotion);
 
-  const state = useCursorState();
+  const state = useCursorState(isEnabled);
 
-  if (!canRender || reduceMotion) {
+  if (!isEnabled) {
     return null;
   }
 
