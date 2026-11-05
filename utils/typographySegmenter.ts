@@ -45,28 +45,75 @@ function isLatinLetterCode(code: number): boolean {
   return (code >= 0x0041 && code <= 0x005a) || (code >= 0x0061 && code <= 0x007a);
 }
 
-/**
- * Scans ahead in text to identify the script of the first upcoming letter or digit.
- * Returns null if no letter or digit characters are found.
- *
- * @param {string} text - Raw string.
- * @param {number} startIndex - Starting search index.
- * @returns {ScriptType | null} Detected upcoming script or null.
- */
 function findFirstScriptInText(text: string, startIndex: number): ScriptType | null {
   const len = text.length;
 
   for (let i = startIndex; i < len; i++) {
     const code = text.charCodeAt(i);
 
-    if (isDigitCode(code)) return 'latin';
+    if (isDigitCode(code) || isLatinLetterCode(code)) return 'latin';
 
     if (isPersianCharCode(code)) return 'persian';
-
-    if (isLatinLetterCode(code)) return 'latin';
   }
 
   return null;
+}
+
+function isLatinOrDigitCode(code: number): boolean {
+  return isLatinLetterCode(code) || isDigitCode(code);
+}
+
+function isLatinWordConnectorCode(code: number): boolean {
+  // '.', '-', '_', '/', ':', '@'
+  return (
+    code === 0x002e ||
+    code === 0x002d ||
+    code === 0x005f ||
+    code === 0x002f ||
+    code === 0x003a ||
+    code === 0x0040
+  );
+}
+
+function isLatinSuffixSymbolCode(code: number): boolean {
+  // '+', '#', '%'
+  return code === 0x002b || code === 0x0023 || code === 0x0025;
+}
+
+function isSpaceBridgingLatin(text: string, spaceIndex: number): boolean {
+  const len = text.length;
+  let k = spaceIndex + 1;
+
+  while (k < len && text.charCodeAt(k) === 0x0020) {
+    k++;
+  }
+
+  return k < len && isLatinOrDigitCode(text.charCodeAt(k));
+}
+
+function hasClosedAsciiParenWithoutPersian(text: string, openParenIndex: number): boolean {
+  const len = text.length;
+  let depth = 1;
+
+  for (let k = openParenIndex + 1; k < len; k++) {
+    const code = text.charCodeAt(k);
+
+    if (isPersianCharCode(code)) {
+      return false;
+    }
+
+    if (code === 0x0028) {
+      depth++;
+    } else if (code === 0x0029) {
+      depth--;
+
+      if (depth === 0) {
+        return true;
+      }
+    }
+  }
+
+  return false;
 }
 
 /**
@@ -84,6 +131,8 @@ function buildSegment(rawSlice: string, script: ScriptType): ScriptSegment {
  * Segments an input string into consecutive runs of Persian vs Latin text chunks.
  * Uses range-based slicing instead of per-character string concatenation to minimize GC pressure.
  * Digits are routed to the Latin/Kode Mono font stack and normalized to ASCII 0-9 per typography specifications.
+ * Trailing spaces and prose parentheses/brackets are kept out of isolated LTR Latin segments so RTL spacing
+ * and Unicode Bidi paired-bracket mirroring work accurately.
  *
  * @param {string} text - Raw string to analyze.
  * @param {ScriptType} [defaultScript='persian'] - Fallback script when context has no letters.
@@ -95,43 +144,80 @@ export function segmentTextByScript(text: string, defaultScript: ScriptType = 'p
   const segments: ScriptSegment[] = [];
   let currentScript: ScriptType | null = null;
   let segmentStart = 0;
+  let openLatinParens = 0;
+  let hasSeenStrongChar = false;
   const len = text.length;
 
   for (let i = 0; i < len; i++) {
     const code = text.charCodeAt(i);
 
-    if (isDigitCode(code)) {
+    if (isDigitCode(code) || isLatinLetterCode(code)) {
+      hasSeenStrongChar = true;
+
       if (currentScript !== 'latin') {
         if (i > segmentStart) {
-          segments.push(buildSegment(text.slice(segmentStart, i), currentScript ?? 'persian'));
+          segments.push(buildSegment(text.slice(segmentStart, i), currentScript ?? defaultScript));
         }
 
         currentScript = 'latin';
         segmentStart = i;
+        openLatinParens = 0;
       }
     } else if (isPersianCharCode(code)) {
+      hasSeenStrongChar = true;
+
       if (currentScript !== 'persian') {
         if (i > segmentStart) {
-          segments.push(buildSegment(text.slice(segmentStart, i), currentScript ?? 'latin'));
+          segments.push(buildSegment(text.slice(segmentStart, i), currentScript ?? defaultScript));
         }
 
         currentScript = 'persian';
         segmentStart = i;
+        openLatinParens = 0;
       }
-    } else if (isLatinLetterCode(code)) {
-      if (currentScript !== 'latin') {
-        if (i > segmentStart) {
-          segments.push(buildSegment(text.slice(segmentStart, i), currentScript ?? 'persian'));
-        }
+    } else if (currentScript === 'latin') {
+      let keepInLatin = false;
 
-        currentScript = 'latin';
-        segmentStart = i;
+      if (defaultScript === 'latin' && !hasSeenStrongChar) {
+        keepInLatin = true;
+      } else if (code === 0x0028) {
+        if (
+          i > 0 &&
+          isLatinOrDigitCode(text.charCodeAt(i - 1)) &&
+          hasClosedAsciiParenWithoutPersian(text, i)
+        ) {
+          keepInLatin = true;
+          openLatinParens++;
+        }
+      } else if (code === 0x0029) {
+        if (openLatinParens > 0) {
+          keepInLatin = true;
+          openLatinParens--;
+        }
+      } else if (isLatinSuffixSymbolCode(code)) {
+        keepInLatin = true;
+      } else if (isLatinWordConnectorCode(code)) {
+        keepInLatin = i + 1 < len && isLatinOrDigitCode(text.charCodeAt(i + 1));
+      } else if (code === 0x0020) {
+        keepInLatin = openLatinParens > 0 || isSpaceBridgingLatin(text, i);
       }
-    } else {
-      // Neutral characters (whitespace, punctuation, symbols)
-      if (currentScript === null) {
-        currentScript = findFirstScriptInText(text, i) ?? defaultScript;
+
+      if (!keepInLatin) {
+        const shouldSwitchToPersian =
+          defaultScript === 'persian' || findFirstScriptInText(text, i) === 'persian';
+
+        if (shouldSwitchToPersian) {
+          if (i > segmentStart) {
+            segments.push(buildSegment(text.slice(segmentStart, i), 'latin'));
+          }
+
+          currentScript = 'persian';
+          segmentStart = i;
+          openLatinParens = 0;
+        }
       }
+    } else if (currentScript === null) {
+      currentScript = defaultScript;
     }
   }
 
