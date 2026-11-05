@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { LazyMotion, MotionConfig, domMax } from 'motion/react';
 import { isLowEndDevice, monitorFramePacingForLowEnd } from '@/utils/deviceDetector';
 
@@ -10,28 +10,25 @@ interface MotionProviderProps {
 
 /**
  * Global LazyMotion and MotionConfig provider.
- * Automatically detects low-end devices or <45 FPS frame pacing in Google Chrome
- * and activates `reducedMotion="always"` plus CSS GPU optimizations (`html.reduce-motion-low-end`)
- * to sustain smooth ~60 FPS rendering.
+ * Automatically detects low-end devices or <45 FPS frame pacing in Google Chrome / WebView2
+ * and activates GPU compositor optimizations (`html.reduce-motion-low-end`) while keeping
+ * all studio animations active at ~60 FPS (unless the user explicitly sets OS reduced motion).
  */
 export function MotionProvider({ children }: MotionProviderProps) {
-  const [forceReducedMotion, setForceReducedMotion] = useState<boolean>(false);
-
   useEffect(() => {
-    const applyLowEndMode = () => {
-      setForceReducedMotion(true);
+    const applyLowEndGpuMode = () => {
       document.documentElement.classList.add('reduce-motion-low-end');
       document.documentElement.dataset.lowEnd = 'true';
     };
 
     if (isLowEndDevice()) {
-      applyLowEndMode();
+      applyLowEndGpuMode();
 
       return;
     }
 
     const stopMonitoring = monitorFramePacingForLowEnd(() => {
-      applyLowEndMode();
+      applyLowEndGpuMode();
     });
 
     return () => {
@@ -41,7 +38,7 @@ export function MotionProvider({ children }: MotionProviderProps) {
 
   return (
     <LazyMotion features={domMax} strict={false}>
-      <MotionConfig reducedMotion={forceReducedMotion ? 'always' : 'user'}>
+      <MotionConfig reducedMotion="user">
         {children}
       </MotionConfig>
     </LazyMotion>

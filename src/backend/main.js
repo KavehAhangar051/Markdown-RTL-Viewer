@@ -154,8 +154,9 @@ export const api = {
 export async function init(app) {
   try {
     await app.win.setMinSize(720, 520);
+    await app.win.setSize(1920, 1080);
   } catch {
-    // Ignore on platforms/sessions that restrict minSize
+    // Ignore on platforms/sessions that restrict window sizing
   }
 
   try {
@@ -198,7 +199,6 @@ export async function init(app) {
       await app.win.setChrome({
         frame: false,
         menu: false,
-        vibrancy: 'hud',
       });
     }
   } catch {

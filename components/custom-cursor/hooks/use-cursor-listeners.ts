@@ -46,14 +46,28 @@ export function useCursorListeners({
   useEffect(() => {
     if (isTouchDevice()) return;
 
+    let moveRafId: number | null = null;
+    let latestX = 0;
+    let latestY = 0;
+
+    const flushMouseMove = () => {
+      moveRafId = null;
+      mouseX.set(latestX);
+      mouseY.set(latestY);
+    };
+
     const onMouseMove = (e: MouseEvent) => {
       if (!isVisibleRef.current) {
         isVisibleRef.current = true;
         setIsVisible(true);
       }
 
-      mouseX.set(e.clientX);
-      mouseY.set(e.clientY);
+      latestX = e.clientX;
+      latestY = e.clientY;
+
+      if (moveRafId === null) {
+        moveRafId = requestAnimationFrame(flushMouseMove);
+      }
     };
 
     const onMouseLeave = () => {
@@ -183,6 +197,8 @@ export function useCursorListeners({
       window.removeEventListener('blur', onBlurEvent);
       document.removeEventListener('mouseover', handleMouseOver);
       window.removeEventListener('scroll', onScroll);
+
+      if (moveRafId !== null) cancelAnimationFrame(moveRafId);
 
       if (hoverRafId !== null) cancelAnimationFrame(hoverRafId);
 

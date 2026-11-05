@@ -52,20 +52,31 @@ jobs:
           tinyjs version
           tinyjs doctor
 
+      - name: Extract App Version from tinyjs.json
+        id: meta
+        shell: pwsh
+        run: |
+          $config = Get-Content tinyjs.json -Raw | ConvertFrom-Json
+          $version = $config.version
+          $tag = if ("${{ github.ref }}" -like "refs/tags/*") { "${{ github.ref_name }}" } else { "v$version-windows" }
+          "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          "tag_name=$tag" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          Write-Host "Building RTL Markdown Studio v$version (Tag: $tag)"
+
       - name: Build Windows Executable (rtl-markdown-studio.exe)
         shell: pwsh
         run: |
           tinyjs build --cli
           @"
-          RTL Markdown Studio — Windows Desktop App (TinyJS + WebView2)
-          =============================================================
+          RTL Markdown Studio v${{ steps.meta.outputs.version }} — Portable Windows Desktop App (1920x1080)
+          ===============================================================================
 
-          راهنمای اجرا در ویندوز ۱۰ و ۱۱:
-          ۱. ابتدا تمامی محتویات فایل زیپ (RTL-Markdown-Studio-Windows-x64.zip) را در یک پوشه Extract (خارج از حالت فشرده) کنید.
+          این نسخه کاملاً پرتابل (Portable) است و نیازی به نصب ندارد:
+          ۱. ابتدا تمامی محتویات فایل زیپ را در یک پوشه Extract (خارج از حالت فشرده) کنید.
           ۲. فایل rtl-markdown-studio.exe را اجرا کنید (فایل launcher.exe باید در کنار آن در همان پوشه باقی بماند).
 
-          How to run on Windows 10 / 11:
-          1. Extract all files from RTL-Markdown-Studio-Windows-x64.zip into a folder.
+          Portable Windows 10 / 11 Edition (No Installer Required):
+          1. Extract all files from the ZIP archive into a folder.
           2. Run rtl-markdown-studio.exe (keep launcher.exe in the same directory).
           "@ | Out-File -FilePath dist\README-WINDOWS.txt -Encoding utf8
           Get-ChildItem -Path dist -Recurse
@@ -74,12 +85,14 @@ jobs:
         shell: pwsh
         run: |
           Compress-Archive -Path dist\* -DestinationPath RTL-Markdown-Studio-Windows-x64.zip -Force
+          Copy-Item RTL-Markdown-Studio-Windows-x64.zip "RTL-Markdown-Studio-v${{ steps.meta.outputs.version }}-Windows-x64-Portable.zip" -Force
 
       - name: Upload Windows Desktop App Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: RTL-Markdown-Studio-Windows-x64
+          name: RTL-Markdown-Studio-v${{ steps.meta.outputs.version }}-Windows-x64
           path: |
+            RTL-Markdown-Studio-v${{ steps.meta.outputs.version }}-Windows-x64-Portable.zip
             RTL-Markdown-Studio-Windows-x64.zip
             dist/rtl-markdown-studio.exe
             dist/launcher.exe
@@ -92,26 +105,27 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v2.0.0-windows' }}
-          name: "RTL Markdown Studio — Windows Desktop App (TinyJS x64)"
+          tag_name: ${{ steps.meta.outputs.tag_name }}
+          name: "RTL Markdown Studio v${{ steps.meta.outputs.version }} — Windows Portable (1920x1080 / 60FPS GPU)"
           body: |
-            ## نسخه دسکتاپ بومی ویندوز (TinyJS + WebView2)
+            ## نسخه دسکتاپ پرتابل ویندوز `v${{ steps.meta.outputs.version }}` (TinyJS + WebView2)
 
-            این نسخه به‌صورت خودکار توسط GitHub Actions ساخته و منتشر شده است.
+            این نسخه **کاملاً پرتابل (Portable)** است، نیازی به نصب ندارد و به‌صورت خودکار توسط GitHub Actions ساخته و منتشر شده است.
+
+            ### تغییرات نسخه `v${{ steps.meta.outputs.version }}`:
+            - **رزولوشن پیش‌فرض Full HD (`1920 × 1080`)** با تایتل‌بار سفارشی تیره بدون نوار سفید کلاسیک ویندوز
+            - **رندر ۶۰ فریم بر ثانیه (60 FPS) با حفظ ۱۰۰٪ انیمیشن‌ها روی سیستم‌های ضعیف**: حذف بار اضافی DWM Vibrancy و Blurهای چندمرحله‌ای، انتقال بزرگ‌نمایی داک به GPU Scale بدون Layout Reflow و همگام‌سازی نشانگر سه‌بعدی با `requestAnimationFrame`
+            - **نسخه پرتابل واقعی**: بدون نیاز به نصب؛ قابل اجرا از هر پوشه یا فلش مموری روی ویندوز ۱۰ و ۱۱
 
             ### راهنمای دانلود و اجرا روی ویندوز ۱۰ و ۱۱:
-            1. فایل **`RTL-Markdown-Studio-Windows-x64.zip`** را از بخش **Assets** پایین همین صفحه دانلود کنید.
+            1. فایل **`RTL-Markdown-Studio-v${{ steps.meta.outputs.version }}-Windows-x64-Portable.zip`** (یا `RTL-Markdown-Studio-Windows-x64.zip`) را از بخش **Assets** پایین همین صفحه دانلود کنید.
             2. فایل زیپ را در یک پوشه **Extract** (خارج از حالت فشرده) کنید.
             3. فایل **`rtl-markdown-studio.exe`** را اجرا کنید (توجه: فایل `launcher.exe` باید در کنار `rtl-markdown-studio.exe` در همان پوشه باشد).
-
-            ### امکانات نسخه ویندوز:
-            - اجرای بومی و سبک (~6MB) بر پایه **Windows WebView2** و **txiki.js** بدون نیاز به باندل کردن کرومیوم حجیم
-            - دیالوگ‌های بومی باز کردن و ذخیره فایل ویندوز (`Ctrl+O` / `Ctrl+S`)
-            - منوی بومی ویندوز (`File`, `Edit`, `View`, `Help`) و پشتیبانی از Drag & Drop مستقیم فایل از Windows Explorer
           draft: false
           prerelease: false
           make_latest: "true"
           files: |
+            RTL-Markdown-Studio-v${{ steps.meta.outputs.version }}-Windows-x64-Portable.zip
             RTL-Markdown-Studio-Windows-x64.zip
             dist/rtl-markdown-studio.exe
             dist/launcher.exe

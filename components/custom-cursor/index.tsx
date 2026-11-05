@@ -8,20 +8,18 @@
 
 import React, { useSyncExternalStore } from 'react';
 import { useReducedMotion } from 'motion/react';
-import { isLowEndDevice } from '@/utils/deviceDetector';
 import { useCursorState } from './hooks/use-cursor-state';
 import { CursorSvg } from './components/cursor-svg';
 
 const emptySubscribe = () => () => {};
-const getCanRenderCursor = () =>
-  !window.matchMedia('(pointer: coarse)').matches && !isLowEndDevice();
+const getCanRenderCursor = () => !window.matchMedia('(pointer: coarse)').matches;
 const getServerCanRenderCursor = () => false;
 
 /**
  * Custom kinematic cursor that provides responsive physical interactions on fine pointer devices.
- * Automatically deactivates on touch interfaces and low-end / reduced-motion devices to preserve 60 FPS.
+ * Automatically deactivates only on touch interfaces or when OS accessibility reduced-motion is set.
  *
- * @returns {React.JSX.Element | null} The cursor component or null when unmounted / on touch or low-end devices.
+ * @returns {React.JSX.Element | null} The cursor component or null when unmounted / on touch devices.
  */
 export function CustomCursor() {
   const canRender = useSyncExternalStore(

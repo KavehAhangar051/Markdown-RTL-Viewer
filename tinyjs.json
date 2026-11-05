@@ -3,18 +3,17 @@
   "name": "rtl-markdown-studio",
   "title": "RTL Markdown Studio",
   "id": "com.rtlstudio.markdown",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "minTinyjsVersion": "0.62.0",
-  "size": "1280x820",
+  "size": "1920x1080",
   "icon": "assets/icon.png",
   "backend": "src/backend/main.js",
-  "rememberWindows": true,
+  "rememberWindows": false,
   "offscreenRescue": true,
   "urlScheme": "rtlmarkdown",
   "fileExtensions": ["md", "markdown", "txt"],
   "openFolders": false,
   "chrome": {
-    "vibrancy": "hud",
     "menu": false
   },
   "frontend": {
@@ -28,8 +27,7 @@
     "browserAccelerators": false,
     "chrome": {
       "frame": false,
-      "menu": false,
-      "vibrancy": "hud"
+      "menu": false
     }
   },
   "macos": {

@@ -16,6 +16,7 @@ import {
   type SpringOptions,
 } from 'motion/react';
 import { useStudioUI } from '@/store/MarkdownContext';
+import { isLowEndDevice } from '@/utils/deviceDetector';
 import { DockLabel, DockIcon, DockLabelProps, DockIconProps } from '@/components/ui/dock-label';
 import { SPRING_LAYOUT, SPRING_PRESS } from '@/lib/ease';
 import { STUDIO_VT_NAMES, StudioViewTransition } from '@/utils/viewTransitions';
@@ -117,6 +118,8 @@ export const DockItem = React.memo(function DockItem({
   );
 
   const size = useSpring(targetSize, spring);
+  const gpuScale = useTransform(size, (s) => s / baseItemSize);
+  const useGpuScaleOnly = !reduceMotion && isLowEndDevice();
 
   const computedAriaLabel = ariaLabel || label || id || 'Dock item';
   const stateClass = getDockItemStateClass(Boolean(isActive), isDark);
@@ -128,8 +131,9 @@ export const DockItem = React.memo(function DockItem({
       id={id}
       type="button"
       style={{
-        width: reduceMotion ? baseItemSize : size,
-        height: reduceMotion ? baseItemSize : size,
+        width: reduceMotion || useGpuScaleOnly ? baseItemSize : size,
+        height: reduceMotion || useGpuScaleOnly ? baseItemSize : size,
+        scale: useGpuScaleOnly ? gpuScale : undefined,
       }}
       whileTap={reduceMotion ? undefined : { scale: 0.96 }}
       transition={SPRING_PRESS}
@@ -138,7 +142,7 @@ export const DockItem = React.memo(function DockItem({
       onFocus={() => isHovered.set(1)}
       onBlur={() => isHovered.set(0)}
       onClick={onClick}
-      className={`relative inline-flex items-center justify-center rounded-2xl border cursor-pointer transition-colors shadow-lg touch-manipulation min-w-[38px] min-h-[38px] sm:min-w-[44px] sm:min-h-[44px] focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 ${focusOffsetClass} ${stateClass} ${className}`}
+      className={`relative inline-flex items-center justify-center rounded-2xl border cursor-pointer transition-colors shadow-lg touch-manipulation transform-gpu will-change-transform min-w-[38px] min-h-[38px] sm:min-w-[44px] sm:min-h-[44px] focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 ${focusOffsetClass} ${stateClass} ${className}`}
       aria-label={computedAriaLabel}
       aria-pressed={isActive}
     >

@@ -699,19 +699,14 @@ body.light,
 }
 
 @media (pointer: fine) {
-  html:not(.reduce-motion-low-end),
-  html:not(.reduce-motion-low-end) body,
-  html:not(.reduce-motion-low-end) body * {
+  html,
+  body,
+  body * {
     cursor: none !important;
   }
 }
 
-/* Automatic Low-End Device 60FPS Mode (Google Chrome & Web Browsers) */
-html.reduce-motion-low-end,
-html.reduce-motion-low-end body {
-  scroll-behavior: auto !important;
-}
-
+/* Automatic Low-End Device 60FPS GPU Mode (keeps all animations active while removing heavy pixel-shader blurs) */
 html.reduce-motion-low-end .glass-panel,
 html.reduce-motion-low-end .glass-card,
 html.reduce-motion-low-end [class*="backdrop-blur"] {
@@ -720,24 +715,27 @@ html.reduce-motion-low-end [class*="backdrop-blur"] {
 }
 
 html.reduce-motion-low-end .glass-panel {
-  background: #0c0c0f !important;
+  background: rgba(12, 12, 15, 0.96) !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.55) !important;
+}
+
+html.reduce-motion-low-end .glass-card {
+  background: rgba(20, 20, 24, 0.96) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
 }
 
 html.light.reduce-motion-low-end .glass-panel,
 html.reduce-motion-low-end .light .glass-panel {
-  background: #ffffff !important;
+  background: rgba(255, 255, 255, 0.97) !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06) !important;
 }
 
-html.reduce-motion-low-end .animate-marquee,
-html.reduce-motion-low-end * {
-  animation-duration: 0.01ms !important;
-  animation-iteration-count: 1 !important;
-  transition-duration: 0.01ms !important;
+html.light.reduce-motion-low-end .glass-card,
+html.reduce-motion-low-end .light .glass-card {
+  background: rgba(255, 255, 255, 0.98) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04) !important;
 }
 
-html.reduce-motion-low-end ::view-transition-old(*),
-html.reduce-motion-low-end ::view-transition-new(*),
-html.reduce-motion-low-end ::view-transition-group(*) {
-  animation-duration: 0s !important;
-  animation-delay: 0s !important;
+html.reduce-motion-low-end .bg-noise {
+  background-image: none !important;
 }
