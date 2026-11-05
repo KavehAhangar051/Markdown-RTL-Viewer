@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { m, useReducedMotion } from 'motion/react';
-import { WrapText, CaseSensitive, Type } from 'lucide-react';
+import { WrapText, CaseSensitive, Type } from '@/components/animate-ui/icons';
 import { badgeContainerVariants, badgeItemVariants } from '@/components/motion/motion-variants';
 import { SPRING_PRESS } from '@/lib/ease';
 

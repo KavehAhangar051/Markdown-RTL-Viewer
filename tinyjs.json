@@ -1,0 +1,43 @@
+{
+  "$schema": "https://tinyjs.app/schema/tinyjs.schema.json",
+  "name": "rtl-markdown-studio",
+  "title": "RTL Markdown Studio",
+  "id": "com.rtlstudio.markdown",
+  "version": "2.0.0",
+  "minTinyjsVersion": "0.62.0",
+  "size": "1280x820",
+  "icon": "assets/icon.png",
+  "backend": "src/backend/main.js",
+  "rememberWindows": true,
+  "offscreenRescue": true,
+  "urlScheme": "rtlmarkdown",
+  "fileExtensions": ["md", "markdown", "txt"],
+  "openFolders": false,
+  "chrome": {
+    "vibrancy": "hud"
+  },
+  "frontend": {
+    "build": "npm run build:desktop-frontend",
+    "dist": "out",
+    "dev": "npm run dev",
+    "devUrl": "http://127.0.0.1:3000"
+  },
+  "windows": {
+    "icon": "assets/icon.png",
+    "browserAccelerators": false,
+    "chrome": {
+      "vibrancy": "hud",
+      "menu": true
+    }
+  },
+  "macos": {
+    "icon": "assets/icon.png",
+    "chrome": {
+      "vibrancy": "hud"
+    }
+  },
+  "linux": {
+    "icon": "assets/icon.png",
+    "windowPlacement": true
+  }
+}

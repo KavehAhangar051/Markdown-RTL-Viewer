@@ -7,7 +7,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { AlignRight, ShieldCheck, Activity, Terminal } from 'lucide-react';
+import { AlignRight, ShieldCheck, Activity, Terminal } from '@/components/animate-ui/icons';
 
 interface ShowcaseBentoProps {
   isDark: boolean;

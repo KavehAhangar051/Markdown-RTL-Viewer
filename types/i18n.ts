@@ -95,6 +95,9 @@ export interface Translations {
     desktopStep1: string;
     desktopStep2: string;
     desktopIframeHint: string;
+    tinyjsTitle: string;
+    tinyjsSubtitle: string;
+    tinyjsBuildCmd: string;
     offlineBadge: string;
     offlineTooltip: string;
   };

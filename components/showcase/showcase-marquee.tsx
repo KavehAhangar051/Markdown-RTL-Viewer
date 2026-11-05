@@ -15,7 +15,7 @@ import {
   Terminal,
   Activity,
   Binary,
-} from 'lucide-react';
+} from '@/components/animate-ui/icons';
 
 interface ShowcaseMarqueeProps {
   isDark: boolean;

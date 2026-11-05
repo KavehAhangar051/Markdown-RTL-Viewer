@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { m, useReducedMotion } from 'motion/react';
-import { Languages } from 'lucide-react';
+import { Languages } from '@/components/animate-ui/icons';
 import { useStudioUI } from '@/store/MarkdownContext';
 import { SPRING_PRESS } from '@/lib/ease';
 

@@ -8,7 +8,7 @@
 import React, { useEffect } from 'react';
 import { m, useReducedMotion } from 'motion/react';
 import { useStudioUI } from '@/store/MarkdownContext';
-import { Minimize2 } from 'lucide-react';
+import { Minimize2 } from '@/components/animate-ui/icons';
 import { DURATION, EASE_OUT, SPRING_PRESS } from '@/lib/ease';
 
 /**

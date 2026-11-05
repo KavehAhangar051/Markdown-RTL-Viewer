@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { m } from 'motion/react';
-import { Link2, Unlink } from 'lucide-react';
+import { Link2, Unlink } from '@/components/animate-ui/icons';
 import { SPRING_PRESS } from '@/lib/ease';
 import { ActionSwapIcon } from '@/components/motion/action-swap';
 

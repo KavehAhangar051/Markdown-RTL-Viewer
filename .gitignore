@@ -2,6 +2,8 @@ node_modules/
 .next/
 .next-dev/
 out/
+.build/
+dist/
 coverage/
 .DS_Store
 *.log
@@ -9,3 +11,5 @@ coverage/
 !.env.example
 tsconfig.tsbuildinfo
 .turbo/
+.aistudio/
+.playwright-cli/

@@ -9,6 +9,7 @@
  */
 
 import { useState, useCallback, useRef, useEffect } from 'react';
+import { getTinyBridge } from '@/utils/tinyDesktopBridge';
 
 export interface ClipboardReadResult {
   text: string | null;
@@ -18,8 +19,8 @@ export interface ClipboardReadResult {
 
 /**
  * Custom React hook for reading from and writing to the system clipboard.
- * Pulls browser inconsistencies downward: handles modern Async Clipboard API,
- * legacy execCommand fallback, and debounced copied-state timers automatically.
+ * Pulls browser inconsistencies downward: handles TinyJS native OS clipboard,
+ * modern Async Clipboard API, legacy execCommand fallback, and debounced copied-state timers.
  *
  * @param {number} [timeoutMs=2000] - Duration in milliseconds before resetting the copied state.
  * @returns {{ copied: boolean; copyToClipboard: (text: string) => Promise<boolean>; readFromClipboard: () => Promise<ClipboardReadResult> }}
@@ -37,22 +38,35 @@ export function useClipboard(timeoutMs = 2000) {
   }, []);
 
   /**
-   * Copies text to clipboard with transparent fallback for restricted iframe contexts.
+   * Copies text to clipboard with native TinyJS support and fallback for restricted iframe contexts.
    */
   const copyToClipboard = useCallback(
     async (text: string): Promise<boolean> => {
       if (typeof window === 'undefined') return false;
 
       let succeeded = false;
+      const tiny = getTinyBridge();
 
-      // 1. Primary path: Modern Clipboard API
-      try {
-        if (navigator?.clipboard?.writeText) {
-          await navigator.clipboard.writeText(text);
+      // 0. Native TinyJS desktop launcher clipboard
+      if (tiny) {
+        try {
+          await tiny.clipboard.write({ text });
           succeeded = true;
+        } catch {
+          succeeded = false;
         }
-      } catch {
-        // Fall back to legacy execCommand on permission or iframe sandbox restriction
+      }
+
+      // 1. Primary browser path: Modern Clipboard API
+      if (!succeeded) {
+        try {
+          if (navigator?.clipboard?.writeText) {
+            await navigator.clipboard.writeText(text);
+            succeeded = true;
+          }
+        } catch {
+          // Fall back to legacy execCommand on permission or iframe sandbox restriction
+        }
       }
 
       // 2. Fallback path: execCommand('copy') via temporary textarea
@@ -93,7 +107,27 @@ export function useClipboard(timeoutMs = 2000) {
    * Reads plain text from system clipboard, defining unreadable/denied states cleanly.
    */
   const readFromClipboard = useCallback(async (): Promise<ClipboardReadResult> => {
-    if (typeof window === 'undefined' || !navigator?.clipboard?.readText) {
+    if (typeof window === 'undefined') {
+      return { text: null, success: false, error: 'unsupported' };
+    }
+
+    const tiny = getTinyBridge();
+
+    if (tiny) {
+      try {
+        const clip = await tiny.clipboard.read();
+
+        if (clip.text) {
+          return { text: clip.text, success: true };
+        }
+
+        return { text: '', success: false, error: 'empty' };
+      } catch {
+        // Fall through to browser clipboard API
+      }
+    }
+
+    if (!navigator?.clipboard?.readText) {
       return { text: null, success: false, error: 'unsupported' };
     }
 

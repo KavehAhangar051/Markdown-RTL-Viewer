@@ -9,7 +9,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useStudioUI } from '@/store/MarkdownContext';
 import { Modal } from '@/components/ui/modal';
 import { Button } from '@/components/ui/button';
-import { Clipboard, Trash } from 'lucide-react';
+import { Clipboard, Trash } from '@/components/animate-ui/icons';
 
 /**
  * Paste Modal Component providing fallback paste area with auto-focus.

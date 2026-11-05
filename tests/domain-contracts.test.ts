@@ -336,6 +336,50 @@ function verifyViewTransitionContracts(): void {
   assert.equal(EMOJI_CODEPOINT_REGEX.test(SAMPLE_RTL_MARKDOWN_EN), false);
 }
 
+async function verifyTinyDesktopBridgeContracts(): Promise<void> {
+  const {
+    extractFileNameFromPath,
+    relativizeStaticExportHtml,
+    relativizeStaticExportCss,
+    relativizeWebpackPublicPath,
+    isTinyDesktopRuntime,
+    openMarkdownViaTinyDesktop,
+    saveMarkdownViaTinyDesktop,
+  } = await import('../utils/tinyDesktopBridge');
+
+  // Windows & POSIX path basename extraction
+  assert.equal(extractFileNameFromPath('C:\\Users\\Dev\\Documents\\notes.md'), 'notes.md');
+  assert.equal(extractFileNameFromPath('/home/dev/workspace/readme.MD'), 'readme.MD');
+  assert.equal(extractFileNameFromPath(''), 'document.md');
+
+  // Static export HTML relativization for TinyJS file:// WebView2 packaging
+  const rawHtml =
+    '<link rel="stylesheet" href="/_next/static/css/app.css"/><script src="/_next/static/chunks/main.js"></script><link rel="icon" href="/favicon.ico"/><script>self.__next_f.push([1,"{\\"href\\":\\"/icon.svg\\"}"])</script>';
+  const relHtml = relativizeStaticExportHtml(rawHtml);
+  assert.equal(relHtml.includes('href="./_next/static/css/app.css"'), true);
+  assert.equal(relHtml.includes('src="./_next/static/chunks/main.js"'), true);
+  assert.equal(relHtml.includes('href="./favicon.ico"'), true);
+  assert.equal(relHtml.includes('\\"href\\":\\"./icon.svg\\"'), true);
+
+  // Static export CSS font URL relativization
+  const rawCss =
+    '@font-face{src:url(/_next/static/media/vazirmatn.woff2) format("woff2"),url("/_next/static/media/kode-mono.woff2");}';
+  const relCss = relativizeStaticExportCss(rawCss);
+  assert.equal(relCss.includes('url(../media/vazirmatn.woff2)'), true);
+  assert.equal(relCss.includes('url("../media/kode-mono.woff2")'), true);
+
+  // Webpack runtime publicPath relativization for dynamic chunk loading over file://
+  const rawWebpack = '(()=>{r.tu=e=>e,r.p="/_next/",r.u=e=>"static/chunks/"+e+".js"})()';
+  assert.equal(relativizeWebpackPublicPath(rawWebpack).includes('r.p="./_next/"'), true);
+
+  // Outside TinyJS launcher, runtime detector and RPC adapters must cleanly report unavailable
+  assert.equal(isTinyDesktopRuntime(), false);
+  const openRes = await openMarkdownViaTinyDesktop();
+  assert.equal(openRes.status, 'unavailable');
+  const saveRes = await saveMarkdownViaTinyDesktop('# تست', 'test.md');
+  assert.equal(saveRes.status, 'unavailable');
+}
+
 async function runAllContractVerifications(): Promise<void> {
   verifyBoundedLruCacheContracts();
   verifyPersianAndDigitDryContracts();
@@ -343,6 +387,7 @@ async function runAllContractVerifications(): Promise<void> {
   verifyStatsAndSyncScrollContracts();
   await verifyFileValidationAndSyntaxHighlighterContracts();
   verifyViewTransitionContracts();
+  await verifyTinyDesktopBridgeContracts();
 }
 
 void runAllContractVerifications();

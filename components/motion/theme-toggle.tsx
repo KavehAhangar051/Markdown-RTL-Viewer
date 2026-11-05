@@ -6,7 +6,7 @@
  * Supports rectangle, circle, circle-blur, and blinds animation variants.
  */
 
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun } from "@/components/animate-ui/icons";
 import { useTheme } from "next-themes";
 import { useReducedMotion } from "motion/react";
 import { useEffect, useSyncExternalStore, type ComponentPropsWithoutRef } from "react";

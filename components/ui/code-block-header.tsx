@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { m, useReducedMotion } from 'motion/react';
-import { Copy, Check } from 'lucide-react';
+import { Copy, Check } from '@/components/animate-ui/icons';
 import { SPRING_PRESS, EASE_OUT } from '@/lib/ease';
 import { ActionSwapIcon } from '@/components/motion/action-swap';
 import { formatLanguageDisplayName } from '@/utils/syntaxHighlighter';
@@ -75,9 +75,9 @@ function CopyButtonContent({
       className="w-3.5 h-3.5"
     >
       {copied ? (
-        <Check aria-hidden="true" className="w-3.5 h-3.5 text-emerald-500 stroke-[2.5]" />
+        <Check animate aria-hidden="true" className="w-3.5 h-3.5 text-emerald-500 stroke-[2.5]" />
       ) : (
-        <Copy aria-hidden="true" className="w-3.5 h-3.5" />
+        <Copy animateOnHover aria-hidden="true" className="w-3.5 h-3.5" />
       )}
     </ActionSwapIcon>
   );

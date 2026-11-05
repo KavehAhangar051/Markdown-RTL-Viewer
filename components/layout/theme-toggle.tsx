@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { Sun, Moon } from 'lucide-react';
+import { Sun, Moon } from '@/components/animate-ui/icons';
 import { useThemeToggle } from '@/components/motion/theme-toggle';
 import { ActionSwapIcon } from '@/components/motion/action-swap';
 import { useStudioUI } from '@/store/MarkdownContext';
@@ -55,9 +55,9 @@ export function ThemeToggle(): React.JSX.Element {
               className="w-3.5 h-3.5"
             >
               {isDark ? (
-                <Sun aria-hidden="true" className="w-3.5 h-3.5 text-amber-400 transition-transform duration-300 group-hover:rotate-45" />
+                <Sun aria-hidden="true" className="w-3.5 h-3.5 text-amber-400" />
               ) : (
-                <Moon aria-hidden="true" className="w-3.5 h-3.5 text-emerald-600 transition-transform duration-300 group-hover:-rotate-12" />
+                <Moon aria-hidden="true" className="w-3.5 h-3.5 text-emerald-600" />
               )}
             </ActionSwapIcon>
           ) : (

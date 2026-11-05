@@ -7,7 +7,7 @@
 
 import React from 'react';
 import Image, { type StaticImageData } from 'next/image';
-import { FileText, Settings, Code2 } from 'lucide-react';
+import { FileText, Settings, Code2 } from '@/components/animate-ui/icons';
 import { normalizeLanguage } from '@/utils/syntaxHighlighter';
 
 import javascriptLogo from 'devicon/icons/javascript/javascript-original.svg';

@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { m, AnimatePresence, useReducedMotion } from 'motion/react';
-import { Check, Info, X } from 'lucide-react';
+import { Check, Info, X } from '@/components/animate-ui/icons';
 import {
   toastNotificationVariants,
   ERROR_SHAKE_X,
@@ -58,7 +58,7 @@ function ToastIcon({ type, reduceMotion }: ToastIconProps): React.JSX.Element {
   if (type === 'error') {
     return (
       <div className="shrink-0 text-rose-500" aria-hidden="true">
-        <X aria-hidden="true" className="w-4 h-4 stroke-[2.5]" />
+        <X animate aria-hidden="true" className="w-4 h-4 stroke-[2.5]" />
       </div>
     );
   }
@@ -66,7 +66,7 @@ function ToastIcon({ type, reduceMotion }: ToastIconProps): React.JSX.Element {
   if (type === 'info') {
     return (
       <div className="shrink-0 text-sky-500" aria-hidden="true">
-        <Info aria-hidden="true" className="w-4 h-4" />
+        <Info animate aria-hidden="true" className="w-4 h-4" />
       </div>
     );
   }
@@ -79,7 +79,7 @@ function ToastIcon({ type, reduceMotion }: ToastIconProps): React.JSX.Element {
         animate="animate"
         className="text-emerald-500"
       >
-        <Check aria-hidden="true" className="w-4 h-4 stroke-[2.5]" />
+        <Check animate aria-hidden="true" className="w-4 h-4 stroke-[2.5]" />
       </m.div>
     </div>
   );

@@ -7,7 +7,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { ArrowLeft, ArrowRight, Play, FileCode } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Play, FileCode } from '@/components/animate-ui/icons';
 
 interface ShowcaseHeroProps {
   isDark: boolean;

@@ -10,7 +10,7 @@ import { m, useReducedMotion } from 'motion/react';
 import { useStudioUI } from '@/store/MarkdownContext';
 import { Modal } from '@/components/ui/modal';
 import { Button } from '@/components/ui/button';
-import { CloudUpload, FileText } from 'lucide-react';
+import { CloudUpload, FileText } from '@/components/animate-ui/icons';
 import { processUploadedMarkdownFile } from '@/utils/fileHelpers';
 import { SPRING_PRESS } from '@/lib/ease';
 import { UPLOAD_ACCEPT_ATTR } from '@/constants/domain';
@@ -115,6 +115,7 @@ export function UploadModal(): React.JSX.Element {
           transition={{ duration: 0.6, repeat: isDragging ? Infinity : 0 }}
         >
           <CloudUpload
+            animate={isDragging ? true : undefined}
             aria-hidden="true"
             className={`w-12 h-12 mb-3 transition-colors ${getCloudUploadIconClass(isDragging, isDark)}`}
           />

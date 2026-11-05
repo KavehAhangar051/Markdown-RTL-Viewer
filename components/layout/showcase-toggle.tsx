@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { Sparkles, Code2 } from 'lucide-react';
+import { Sparkles, Code2 } from '@/components/animate-ui/icons';
 import { useStudioUI } from '@/store/MarkdownContext';
 
 export function ShowcaseToggle(): React.JSX.Element {

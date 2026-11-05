@@ -129,6 +129,15 @@ npm run start
 npm run build:export
 ```
 
+### 5. Windows Native Desktop App (TinyJS + WebView2)
+You can download the pre-built Windows executable directly from **[GitHub Releases](https://github.com/KavehAhangar051/Markdown-RTL-Viewer/releases)** (`RTL-Markdown-Studio-Windows-x64.zip` — extract the folder and run `rtl-markdown-studio.exe`).
+
+To build the native ~6 MB Windows executable from source:
+```powershell
+irm https://tinyjs.app/install.ps1 | iex
+npm run desktop:build
+```
+
 ---
 
 ## 📐 Architecture Decision Records (ADRs)
@@ -148,6 +157,7 @@ Key architectural paradigms and technical trade-offs are thoroughly documented:
 - **[ADR-0011](./adr/0011-zero-dependency-dual-language-i18n.md):** Zero-dependency type-safe dictionary for `fa` / `en`.
 - **[ADR-0012](./adr/0012-lru-caching-and-off-thread-processing.md):** Multi-tier bounded LRU caches & worker delegation.
 - **[ADR-0013](./adr/0013-github-pages-static-deployment.md):** Static Next.js export with automated GitHub Actions CI/CD.
+- **[ADR-0014](./adr/0014-tinyjs-windows-desktop-architecture.md):** Native Windows Desktop App via TinyJS (`WebView2` + `txiki.js`).
 
 ---
 

@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { m } from 'motion/react';
-import { Eye, FileCode } from 'lucide-react';
+import { Eye, FileCode } from '@/components/animate-ui/icons';
 import { SPRING_PRESS } from '@/lib/ease';
 import { ambientAuraVariants } from '@/components/motion/motion-variants';
 

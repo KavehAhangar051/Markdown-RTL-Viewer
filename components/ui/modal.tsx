@@ -8,7 +8,7 @@
 import React from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { m, AnimatePresence, useReducedMotion } from 'motion/react';
-import { X } from 'lucide-react';
+import { X } from '@/components/animate-ui/icons';
 import { useStudioUI } from '@/store/MarkdownContext';
 import { modalBackdropVariants, modalContentVariants } from '@/components/motion/motion-variants';
 import { SPRING_PRESS } from '@/lib/ease';

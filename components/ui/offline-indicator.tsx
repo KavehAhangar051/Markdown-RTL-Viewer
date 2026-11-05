@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { WifiOff } from 'lucide-react';
+import { WifiOff } from '@/components/animate-ui/icons';
 import { useOnlineStatus } from '@/hooks/useOnlineStatus';
 import { useStudioUI } from '@/store/MarkdownContext';
 
@@ -37,7 +37,7 @@ export function OfflineIndicator(): React.JSX.Element | null {
           : 'bg-amber-50 text-amber-800 border-amber-300'
       }`}
     >
-      <WifiOff className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+      <WifiOff animate className="w-3.5 h-3.5 text-amber-500 shrink-0" />
       <span className="hidden sm:inline">{t.pwa.offlineBadge}</span>
     </div>
   );

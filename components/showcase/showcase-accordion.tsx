@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { Sparkles, Gauge, Compass } from 'lucide-react';
+import { Sparkles, Gauge, Compass } from '@/components/animate-ui/icons';
 
 interface ShowcaseAccordionProps {
   isDark: boolean;
@@ -115,7 +115,7 @@ export function ShowcaseAccordion({ isDark, isFa }: ShowcaseAccordionProps): Rea
               {/* Slice Header with Badge */}
               <div className="relative z-10 flex items-center justify-between">
                 <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-emerald-500/10 border border-emerald-500/20 text-emerald-500">
-                  <Icon className="w-5 h-5" />
+                  <Icon animate={isActive ? true : undefined} className="w-5 h-5" />
                 </div>
                 <span className="text-[11px] font-mono tracking-wider uppercase px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                   {slice.badge}

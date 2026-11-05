@@ -7,6 +7,7 @@
  */
 
 import { useState, useEffect, useCallback, useSyncExternalStore } from 'react';
+import { isTinyDesktopRuntime } from '@/utils/tinyDesktopBridge';
 
 interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[];
@@ -103,6 +104,8 @@ function getStandaloneSnapshot(): boolean {
     return false;
   }
   return (
+    isTinyDesktopRuntime() ||
+    window.location.protocol === 'file:' ||
     window.matchMedia('(display-mode: standalone)').matches ||
     window.matchMedia('(display-mode: window-controls-overlay)').matches ||
     (window.navigator as Navigator & { standalone?: boolean }).standalone ===
@@ -193,7 +196,11 @@ export function usePWAInstall(): PWAInstallState {
   const isInstalled = isStandalone || installedViaPrompt;
 
   useEffect(() => {
-    if (typeof window === 'undefined') {
+    if (
+      typeof window === 'undefined' ||
+      isTinyDesktopRuntime() ||
+      window.location.protocol === 'file:'
+    ) {
       return;
     }
 

@@ -16,6 +16,7 @@ import { EditorView } from '@/components/views/editor-view';
 import { PreviewView } from '@/components/views/preview-view';
 import { ToastNotification } from '@/components/ui/toast-notification';
 import { useSyncScroll } from '@/hooks/useSyncScroll';
+import { useTinyDesktopIntegration } from '@/hooks/useTinyDesktopIntegration';
 import { viewModeVariants } from '@/components/motion/motion-variants';
 import { SharedPanelTransition } from '@/components/motion/studio-view-transition';
 import { StudioShowcase } from '@/components/showcase/studio-showcase';
@@ -105,6 +106,9 @@ function MainAppContent() {
 
   const isDark = theme === 'dark';
   const isFa = language === 'fa';
+
+  // Wire native TinyJS desktop menu bar, file associations, drag-and-drop, and window title
+  useTinyDesktopIntegration();
 
   // Synchronize scrolling between editor and preview in Split View mode
   useSyncScroll({

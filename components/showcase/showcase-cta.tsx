@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { ArrowLeft, ArrowRight, Play, FileCode, Code2, ExternalLink } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Play, FileCode, Code2, ExternalLink } from '@/components/animate-ui/icons';
 
 interface ShowcaseCtaProps {
   isDark: boolean;

@@ -9,7 +9,7 @@ import React, { useState, useCallback, useRef } from 'react';
 import { useReducedMotion } from 'motion/react';
 import { useMarkdownContext } from '@/store/MarkdownContext';
 import { useActiveLinePosition } from '@/hooks/useActiveLinePosition';
-import { FileText } from 'lucide-react';
+import { FileText } from '@/components/animate-ui/icons';
 import { EditorStatsBadges } from './editor-stats-badges';
 import { EditorActiveLine } from './editor-active-line';
 import { SyncScrollToggleButton } from './sync-scroll-toggle';

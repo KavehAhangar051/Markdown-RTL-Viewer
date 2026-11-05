@@ -8,7 +8,7 @@
 import React from 'react';
 import { useReducedMotion } from 'motion/react';
 import { useStudioUI, usePreviewDocument } from '@/store/MarkdownContext';
-import { Eye } from 'lucide-react';
+import { Eye } from '@/components/animate-ui/icons';
 import { AsciiLineLoader } from '@/components/motion/loader';
 import { ViewFadeTransition } from '@/components/motion/studio-view-transition';
 import { PreviewEmptyState } from './preview-empty-state';

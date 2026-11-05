@@ -8,7 +8,7 @@
 
 import React, { useCallback } from 'react';
 import { m, useReducedMotion } from 'motion/react';
-import { Copy, Check } from 'lucide-react';
+import { Copy, Check } from '@/components/animate-ui/icons';
 import { useStudioUI } from '@/store/MarkdownContext';
 import { useClipboard } from '@/hooks/useClipboard';
 import { CLIPBOARD_RESET_DURATION_MS } from '@/constants/domain';
@@ -127,9 +127,9 @@ export const MathDisplayBlock = React.memo(function MathDisplayBlock({
           className="w-3.5 h-3.5"
         >
           {copied ? (
-            <Check aria-hidden="true" className="w-3.5 h-3.5 text-emerald-500 stroke-[2.5]" />
+            <Check animate aria-hidden="true" className="w-3.5 h-3.5 text-emerald-500 stroke-[2.5]" />
           ) : (
-            <Copy aria-hidden="true" className="w-3.5 h-3.5" />
+            <Copy animateOnHover aria-hidden="true" className="w-3.5 h-3.5" />
           )}
         </ActionSwapIcon>
       </m.button>
