@@ -8,9 +8,9 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { Sparkles, Gauge, Compass } from '@/components/animate-ui/icons';
-import showcaseArchitectureImg from '@/src/assets/images/showcase_architecture_1793882928709.jpg';
-import showcaseSpeedImg from '@/src/assets/images/showcase_speed_1793882932360.jpg';
-import showcaseMotionImg from '@/src/assets/images/showcase_motion_1793882934091.jpg';
+import showcaseArchitectureImg from '@/src/assets/images/showcase_architecture_1793987854682.jpg';
+import showcaseSpeedImg from '@/src/assets/images/showcase_speed_1793987858626.jpg';
+import showcaseMotionImg from '@/src/assets/images/showcase_motion_1793987857476.jpg';
 
 interface ShowcaseAccordionProps {
   isDark: boolean;

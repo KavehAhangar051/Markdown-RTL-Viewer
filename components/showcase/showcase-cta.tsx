@@ -16,7 +16,7 @@ import {
   ExternalLink,
   Download,
 } from '@/components/animate-ui/icons';
-import showcaseCtaHorizonImg from '@/src/assets/images/showcase_cta_horizon_1793885754907.jpg';
+import showcaseCtaHorizonImg from '@/src/assets/images/markdown_studio_banner_1793987843264.jpg';
 
 interface ShowcaseCtaProps {
   isDark: boolean;
@@ -44,17 +44,17 @@ export function ShowcaseCta({
               : 'bg-zinc-950 border-zinc-800 shadow-zinc-400/30'
           }`}
         >
-          {/* 16:9 Bespoke 3D Perspective Horizon Image */}
+          {/* 16:9 Bespoke 3D Studio Backdrop */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
             <Image
               src={showcaseCtaHorizonImg}
-              alt="Architectural 3D Perspective Horizon"
+              alt="RTL Markdown Studio Split-Screen Workspace"
               fill
               sizes="(max-width: 1280px) 100vw, 1280px"
-              className="object-cover opacity-85 group-hover:scale-[1.03] transition-transform duration-700 ease-out transform-gpu"
+              className="object-cover opacity-55 group-hover:scale-[1.03] transition-transform duration-700 ease-out transform-gpu"
               referrerPolicy="no-referrer"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-zinc-950/35" />
+            <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/70 to-zinc-950/45" />
           </div>
 
           {/* High-Contrast Editorial Headline */}
@@ -113,7 +113,7 @@ export function ShowcaseCta({
               >
                 RTL Markdown Studio
               </span>
-              <span className="text-xs font-mono text-emerald-500 tabular-nums">v2.3.3</span>
+              <span className="text-xs font-mono text-emerald-500 tabular-nums">v2.3.4</span>
             </div>
             <p className={`text-xs leading-relaxed ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
               {isFa

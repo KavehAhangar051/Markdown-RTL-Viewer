@@ -8,10 +8,10 @@
 import React from 'react';
 import Image from 'next/image';
 import { AlignRight, ShieldCheck, Activity, Terminal } from '@/components/animate-ui/icons';
-import showcaseEditorialImg from '@/src/assets/images/showcase_editorial_1793882927612.jpg';
-import markdownStudioBannerImg from '@/src/assets/images/markdown_studio_banner_1793882933695.jpg';
-import showcasePrivacyVaultImg from '@/src/assets/images/showcase_privacy_vault_1793885752501.jpg';
-import showcaseSyntaxPrismImg from '@/src/assets/images/showcase_syntax_prism_1793885754672.jpg';
+import showcaseEditorialImg from '@/src/assets/images/showcase_editorial_1793987847359.jpg';
+import markdownStudioBannerImg from '@/src/assets/images/showcase_katex_math_1793987848751.jpg';
+import showcasePrivacyVaultImg from '@/src/assets/images/showcase_privacy_vault_1793987850632.jpg';
+import showcaseSyntaxPrismImg from '@/src/assets/images/showcase_syntax_prism_1793987852860.jpg';
 
 interface ShowcaseBentoProps {
   isDark: boolean;

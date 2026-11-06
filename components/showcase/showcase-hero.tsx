@@ -8,8 +8,8 @@
 import React from 'react';
 import Image from 'next/image';
 import { ArrowLeft, ArrowRight, Play, FileCode } from '@/components/animate-ui/icons';
-import showcaseTypographyImg from '@/src/assets/images/showcase_typography_1793882927470.jpg';
-import markdownStudioBannerImg from '@/src/assets/images/markdown_studio_banner_1793882933695.jpg';
+import showcaseTypographyImg from '@/src/assets/images/showcase_typography_1793987844503.jpg';
+import markdownStudioBannerImg from '@/src/assets/images/markdown_studio_banner_1793987843264.jpg';
 
 interface ShowcaseHeroProps {
   isDark: boolean;
