@@ -3,7 +3,7 @@
   "name": "rtl-markdown-studio",
   "title": "RTL Markdown Studio",
   "id": "com.rtlstudio.markdown",
-  "version": "2.3.4",
+  "version": "2.3.5",
   "minTinyjsVersion": "0.62.0",
   "size": "1920x1080",
   "icon": "assets/icon.png",

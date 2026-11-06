@@ -41,8 +41,20 @@ async function warmLoadedPageAssets(): Promise<void> {
   }
 
   try {
-    const assetCache = await caches.open('rtl-studio-assets-v3');
-    const shellCache = await caches.open('rtl-studio-shell-v3');
+    const allKeys = await caches.keys();
+    await Promise.allSettled(
+      allKeys
+        .filter(
+          (k) =>
+            k.startsWith('rtl-studio-') &&
+            k !== 'rtl-studio-assets-v2.3.5' &&
+            k !== 'rtl-studio-shell-v2.3.5'
+        )
+        .map((k) => caches.delete(k))
+    );
+
+    const assetCache = await caches.open('rtl-studio-assets-v2.3.5');
+    const shellCache = await caches.open('rtl-studio-shell-v2.3.5');
 
     await shellCache
       .add(new Request(window.location.pathname || '/', { cache: 'no-cache' }))
@@ -68,12 +80,16 @@ async function warmLoadedPageAssets(): Promise<void> {
         }
       });
 
+    document.querySelectorAll<HTMLImageElement>('img[src]').forEach((img) => {
+      const src = img.currentSrc || img.src;
+      if (src && src.startsWith(window.location.origin)) {
+        resourceUrls.add(src);
+      }
+    });
+
     await Promise.allSettled(
       Array.from(resourceUrls).map(async (url) => {
-        const existing = await assetCache.match(url);
-        if (!existing) {
-          await assetCache.add(url);
-        }
+        await assetCache.add(new Request(url, { cache: 'reload' }));
       })
     );
   } catch {

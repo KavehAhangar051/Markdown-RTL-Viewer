@@ -90,6 +90,29 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <span id="pre-ascii-char">|</span>
               <script>
                 (function() {
+                  try {
+                    if ('caches' in window) {
+                      caches.keys().then(function(keys) {
+                        var stale = keys.filter(function(k) {
+                          return k.indexOf('rtl-studio-') === 0 && k.indexOf('v2.3.5') === -1;
+                        });
+                        if (stale.length > 0) {
+                          Promise.all(stale.map(function(k) { return caches.delete(k); })).then(function() {
+                            if ('serviceWorker' in navigator) {
+                              navigator.serviceWorker.getRegistrations().then(function(regs) {
+                                Promise.all(regs.map(function(r) { return r.unregister(); })).then(function() {
+                                  if (!sessionStorage.getItem('__rtl_sw_v235_purged')) {
+                                    sessionStorage.setItem('__rtl_sw_v235_purged', '1');
+                                    window.location.reload();
+                                  }
+                                });
+                              });
+                            }
+                          });
+                        }
+                      });
+                    }
+                  } catch (e) {}
                   window.addEventListener('beforeinstallprompt', function(e) {
                     e.preventDefault();
                     window.__deferredPwaPrompt = e;

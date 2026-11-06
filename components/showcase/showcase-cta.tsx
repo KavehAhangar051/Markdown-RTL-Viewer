@@ -53,6 +53,7 @@ export function ShowcaseCta({
               sizes="(max-width: 1280px) 100vw, 1280px"
               className="object-cover opacity-55 group-hover:scale-[1.03] transition-transform duration-700 ease-out transform-gpu"
               referrerPolicy="no-referrer"
+              priority
             />
             <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/70 to-zinc-950/45" />
           </div>
@@ -113,7 +114,7 @@ export function ShowcaseCta({
               >
                 RTL Markdown Studio
               </span>
-              <span className="text-xs font-mono text-emerald-500 tabular-nums">v2.3.4</span>
+              <span className="text-xs font-mono text-emerald-500 tabular-nums">v2.3.5</span>
             </div>
             <p className={`text-xs leading-relaxed ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
               {isFa

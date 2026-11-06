@@ -102,6 +102,7 @@ export function ShowcaseAccordion({ isDark, isFa }: ShowcaseAccordionProps): Rea
                     isActive ? 'scale-105 opacity-85' : 'scale-100 opacity-50'
                   }`}
                   referrerPolicy="no-referrer"
+                  priority
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-zinc-950/15" />
               </div>

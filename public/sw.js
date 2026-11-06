@@ -4,8 +4,8 @@
  * Implements Network-First for document navigations and Cache-First for static bundles, fonts, and icons.
  */
 
-const SHELL_CACHE_NAME = 'rtl-studio-shell-v3';
-const ASSET_CACHE_NAME = 'rtl-studio-assets-v3';
+const SHELL_CACHE_NAME = 'rtl-studio-shell-v2.3.5';
+const ASSET_CACHE_NAME = 'rtl-studio-assets-v2.3.5';
 
 const PRECACHE_ASSETS = [
   '',
@@ -68,8 +68,8 @@ self.addEventListener('activate', (event) => {
 });
 
 /**
- * Determines whether a same-origin URL represents an immutable or static asset
- * that should be served via Cache-First strategy.
+ * Determines whether a same-origin URL represents a static asset
+ * that should be cached for offline fallback.
  *
  * @param {URL} url - Request URL object.
  * @returns {boolean} True if static asset.
@@ -78,6 +78,7 @@ function isStaticAsset(url) {
   const path = url.pathname;
   return (
     path.includes('/_next/static/') ||
+    path.includes('/_next/image') ||
     path.endsWith('.js') ||
     path.endsWith('.css') ||
     path.endsWith('.woff2') ||
@@ -145,25 +146,26 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 2. Static assets (JS chunks, CSS, Fonts, Icons): Cache-First with Network Fallback
+  // 2. Static assets (JS chunks, CSS, Fonts, Images): Network-First with Offline Cache Fallback
   if (isStaticAsset(url)) {
     event.respondWith(
-      caches.match(request).then((cachedResponse) => {
-        if (cachedResponse) {
-          return cachedResponse;
-        }
-        return fetch(request)
-          .then((networkResponse) => {
-            if (networkResponse && networkResponse.status === 200) {
-              const responseClone = networkResponse.clone();
-              caches.open(ASSET_CACHE_NAME).then((cache) => {
-                cache.put(request, responseClone);
-              });
-            }
-            return networkResponse;
-          })
-          .catch(() => caches.match(rootUrl));
-      })
+      fetch(request)
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const responseClone = networkResponse.clone();
+            caches.open(ASSET_CACHE_NAME).then((cache) => {
+              cache.put(request, responseClone);
+            });
+          }
+          return networkResponse;
+        })
+        .catch(async () => {
+          const cachedResponse = await caches.match(request);
+          if (cachedResponse) {
+            return cachedResponse;
+          }
+          return caches.match(rootUrl);
+        })
     );
     return;
   }

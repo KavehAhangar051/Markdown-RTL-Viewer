@@ -62,6 +62,7 @@ export function ShowcaseBento({ isDark, isFa }: ShowcaseBentoProps): React.JSX.E
               sizes="(max-width: 768px) 100vw, 50vw"
               className="object-cover opacity-80 group-hover:opacity-95 group-hover:scale-105 transition-all duration-700 ease-out transform-gpu"
               referrerPolicy="no-referrer"
+              priority
             />
             <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-zinc-950/15" />
           </div>
@@ -100,6 +101,7 @@ export function ShowcaseBento({ isDark, isFa }: ShowcaseBentoProps): React.JSX.E
               sizes="(max-width: 768px) 100vw, 50vw"
               className="object-cover opacity-75 group-hover:opacity-90 group-hover:scale-105 transition-all duration-700 ease-out transform-gpu"
               referrerPolicy="no-referrer"
+              priority
             />
             <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-zinc-950/15" />
           </div>
@@ -139,6 +141,7 @@ export function ShowcaseBento({ isDark, isFa }: ShowcaseBentoProps): React.JSX.E
               sizes="(max-width: 768px) 100vw, 25vw"
               className="object-cover opacity-80 group-hover:opacity-95 group-hover:scale-105 transition-all duration-700 ease-out transform-gpu"
               referrerPolicy="no-referrer"
+              priority
             />
             <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-zinc-950/15" />
           </div>
@@ -178,6 +181,7 @@ export function ShowcaseBento({ isDark, isFa }: ShowcaseBentoProps): React.JSX.E
               sizes="(max-width: 768px) 100vw, 25vw"
               className="object-cover opacity-80 group-hover:opacity-95 group-hover:scale-105 transition-all duration-700 ease-out transform-gpu"
               referrerPolicy="no-referrer"
+              priority
             />
             <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-zinc-950/15" />
           </div>

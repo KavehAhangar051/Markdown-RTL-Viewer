@@ -112,6 +112,34 @@ export async function readLocalAssetText(
 }
 
 /**
+ * Rewrites hashed `_next/static/media/<slug>_<ts>.<hash>.jpg` references in delta-patched
+ * HTML or JS to `manifest.baseUrl/images/<kebab>.jpg` only when the local `.exe` predates
+ * the newly added image hash.
+ */
+function rewriteDeltaMediaFallbacks(
+  source: string,
+  missingMediaRelPaths: ReadonlySet<string>,
+  remoteBaseUrl: string
+): string {
+  if (missingMediaRelPaths.size === 0) {
+    return source;
+  }
+
+  return source.replace(
+    /(?:\.\/|\/)?(_next\/static\/media\/([a-z_]+)_[0-9]+\.[0-9a-f]+\.jpg)/gi,
+    (fullMatch, relMediaPath: string, slugKey: string) => {
+      if (!missingMediaRelPaths.has(relMediaPath)) {
+        return fullMatch;
+      }
+
+      const kebabSlug = slugKey.toLowerCase().replace(/_/g, '-');
+
+      return `${remoteBaseUrl}/images/${kebabSlug}.jpg`;
+    }
+  );
+}
+
+/**
  * Hot-boots the patched frontend bundle (`patchedFiles`) directly inside the active TinyJS
  * WebView2 window by converting modified CSS/JS slots into in-memory `<style>` and `Blob` URLs
  * and replacing the document in-place while preserving `window.tiny`.
@@ -147,6 +175,37 @@ export async function bootTinyDesktopPatchedBundle(
   if (!html) {
     return false;
   }
+
+  const remoteBaseUrl = (
+    manifest.baseUrl ||
+    'https://raw.githubusercontent.com/KavehAhangar051/Markdown-RTL-Viewer/main/public'
+  ).replace(/\/+$/, '');
+
+  // Detect any hashed media images in the delta HTML that aren't bundled in an older local .exe
+  const mediaMatches = new Set<string>();
+  const mediaRegex = /_next\/static\/media\/[a-z_]+_[0-9]+\.[0-9a-f]+\.jpg/gi;
+
+  for (const m of html.matchAll(mediaRegex)) {
+    if (m[0]) mediaMatches.add(m[0]);
+  }
+
+  const missingMediaRelPaths = new Set<string>();
+
+  await Promise.all(
+    Array.from(mediaMatches).map(async (relMedia) => {
+      try {
+        const res = await fetch(`./${relMedia}`, { cache: 'no-store' });
+
+        if (!res.ok) {
+          missingMediaRelPaths.add(relMedia);
+        }
+      } catch {
+        missingMediaRelPaths.add(relMedia);
+      }
+    })
+  );
+
+  html = rewriteDeltaMediaFallbacks(html, missingMediaRelPaths, remoteBaseUrl);
 
   const slotToContent = new Map<string, { relPath: string; content: string }>();
 
@@ -187,7 +246,13 @@ export async function bootTinyDesktopPatchedBundle(
         return fullMatch;
       }
 
-      const blob = new Blob([directJs], { type: 'application/javascript' });
+      const resolvedJs = rewriteDeltaMediaFallbacks(
+        directJs,
+        missingMediaRelPaths,
+        remoteBaseUrl
+      );
+
+      const blob = new Blob([resolvedJs], { type: 'application/javascript' });
       const blobUrl = URL.createObjectURL(blob);
 
       return `${attr}="${blobUrl}"`;
